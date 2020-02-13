@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+using GiveAidCharity.Models.Main;
 
 namespace GiveAidCharity.Models.HelperClass
 {
@@ -45,6 +44,7 @@ namespace GiveAidCharity.Models.HelperClass
 
     public class CausesListViewModel
     {
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public double Goal { get; set; }
@@ -55,5 +55,25 @@ namespace GiveAidCharity.Models.HelperClass
         [DataType(DataType.DateTime)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime ExpireDate { get; set; }
+        public int FollowCount { get; set; }
+    }
+
+
+    public class CausesDetailViewModel
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public double Goal { get; set; }
+        public double CurrentFund { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime StartDate { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime ExpireDate { get; set; }
+        public Project.ProjectStatusEnum Status { get; set; }
+        public int FollowCount { get; set; }
+        public virtual ICollection<ProjectImage> ProjectImages { get; set; }
+        public virtual ICollection<ProjectComment> ProjectComments { get; set; }
     }
 }
