@@ -101,6 +101,8 @@ namespace GiveAidCharity.Migrations
                         ApplicationUserId = c.String(maxLength: 128),
                         Name = c.String(nullable: false),
                         Description = c.String(),
+                        CoverImg = c.String(nullable: false),
+                        Content = c.String(nullable: false),
                         Goal = c.Double(nullable: false),
                         CurrentFund = c.Double(nullable: false),
                         StartDate = c.DateTime(nullable: false),

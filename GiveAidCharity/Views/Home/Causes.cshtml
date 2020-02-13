@@ -1,108 +1,78 @@
-﻿
+﻿@model IEnumerable<GiveAidCharity.Models.HelperClass.CausesListViewModel>
+
 @{
     ViewBag.Title = "Causes";
+    var totalPage = ((int?)ViewBag.TotalPage).Value;
+    var currentPage = ((int?)ViewBag.CurrentPage).Value;
+    var limit = ((int?)ViewBag.Limit).Value;
+    var currentPara = "?page=" + ViewBag.CurrentPage +
+                      "&limit=" + ViewBag.Limit;
 }
 
 <section class="ftco-section">
     <div class="container">
         <div class="row">
-            <div class="col-md-4 ftco-animate">
-                <div class="cause-entry">
-                    <a href="#" class="img" style="background-image: url(/Content/HomepageTheme/images/cause-1.jpg);"></a>
-                    <div class="text p-3 p-md-4">
-                        <h3><a href="#">Clean water for the urban area</a></h3>
-                        <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life</p>
-                        <span class="donation-time mb-3 d-block">Last donation 1w ago</span>
-                        <div class="progress custom-progress-success">
-                            <div class="progress-bar bg-primary" role="progressbar" style="width: 28%" aria-valuenow="28" aria-valuemin="0" aria-valuemax="100"></div>
+            @* ReSharper disable once UnusedVariable *@
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4 ftco-animate">
+                    <div class="cause-entry">
+                        <a href="#" class="img" style="background-image: url(/Content/HomepageTheme/images/cause-1.jpg);"></a>
+                        <div class="text p-3 p-md-4">
+                            <h3><a href="#">Clean water for the urban area</a></h3>
+                            <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life</p>
+                            <span class="donation-time mb-3 d-block">Last donation 1w ago</span>
+                            <div class="progress custom-progress-success">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: 28%" aria-valuenow="28" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <span class="fund-raised d-block">$12,000 raised of $30,000</span>
                         </div>
-                        <span class="fund-raised d-block">$12,000 raised of $30,000</span>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4 ftco-animate">
-                <div class="cause-entry">
-                    <a href="#" class="img" style="background-image: url(/Content/HomepageTheme/images/cause-2.jpg);"></a>
-                    <div class="text p-3 p-md-4">
-                        <h3><a href="#">Clean water for the urban area</a></h3>
-                        <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life</p>
-                        <span class="donation-time mb-3 d-block">Last donation 1w ago</span>
-                        <div class="progress custom-progress-success">
-                            <div class="progress-bar bg-primary" role="progressbar" style="width: 28%" aria-valuenow="28" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <span class="fund-raised d-block">$12,000 raised of $30,000</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 ftco-animate">
-                <div class="cause-entry">
-                    <a href="#" class="img" style="background-image: url(/Content/HomepageTheme/images/cause-3.jpg);"></a>
-                    <div class="text p-3 p-md-4">
-                        <h3><a href="#">Clean water for the urban area</a></h3>
-                        <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life</p>
-                        <span class="donation-time mb-3 d-block">Last donation 1w ago</span>
-                        <div class="progress custom-progress-success">
-                            <div class="progress-bar bg-primary" role="progressbar" style="width: 28%" aria-valuenow="28" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <span class="fund-raised d-block">$12,000 raised of $30,000</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 ftco-animate">
-                <div class="cause-entry">
-                    <a href="#" class="img" style="background-image: url(/Content/HomepageTheme/images/cause-4.jpg);"></a>
-                    <div class="text p-3 p-md-4">
-                        <h3><a href="#">Clean water for the urban area</a></h3>
-                        <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life</p>
-                        <span class="donation-time mb-3 d-block">Last donation 1w ago</span>
-                        <div class="progress custom-progress-success">
-                            <div class="progress-bar bg-primary" role="progressbar" style="width: 28%" aria-valuenow="28" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <span class="fund-raised d-block">$12,000 raised of $30,000</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 ftco-animate">
-                <div class="cause-entry">
-                    <a href="#" class="img" style="background-image: url(/Content/HomepageTheme/images/cause-5.jpg);"></a>
-                    <div class="text p-3 p-md-4">
-                        <h3><a href="#">Clean water for the urban area</a></h3>
-                        <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life</p>
-                        <span class="donation-time mb-3 d-block">Last donation 1w ago</span>
-                        <div class="progress custom-progress-success">
-                            <div class="progress-bar bg-primary" role="progressbar" style="width: 28%" aria-valuenow="28" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <span class="fund-raised d-block">$12,000 raised of $30,000</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 ftco-animate">
-                <div class="cause-entry">
-                    <a href="#" class="img" style="background-image: url(/Content/HomepageTheme/images/cause-6.jpg);"></a>
-                    <div class="text p-3 p-md-4">
-                        <h3><a href="#">Clean water for the urban area</a></h3>
-                        <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life</p>
-                        <span class="donation-time mb-3 d-block">Last donation 1w ago</span>
-                        <div class="progress custom-progress-success">
-                            <div class="progress-bar bg-primary" role="progressbar" style="width: 28%" aria-valuenow="28" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <span class="fund-raised d-block">$12,000 raised of $30,000</span>
-                    </div>
-                </div>
-            </div>
+            }
         </div>
         <div class="row mt-5">
             <div class="col text-center">
                 <div class="block-27">
-                    <ul>
-                        <li><a href="#">&lt;</a></li>
-                        <li class="active"><span>1</span></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
-                        <li><a href="#">&gt;</a></li>
-                    </ul>
+                    @if (totalPage > 0)
+                    {
+                        <ul>
+                            @if (currentPage > 3)
+                            {
+                                <li><a href="@currentPara&page=@(1)&limit=@(limit)">&lt;&lt;</a></li>
+                            }
+                            @if (currentPage > 1)
+                            {
+                                <li><a href="@currentPara&page=@(currentPage - 1)&limit=@(limit)">&lt;</a></li>
+                            }
+                            @if (currentPage > 2)
+                            {
+                                <li><a href="@currentPara&page=@(currentPage - 2)&limit=@(limit)">@(currentPage - 2)</a></li>
+                            }
+                            @if (currentPage > 1)
+                            {
+                                <li><a href="@currentPara&page=@(currentPage - 1)&limit=@(limit)">@(currentPage - 1)</a></li>
+                            }
+                            <li class="active"><a href="@currentPara&page=@(currentPage)&limit=@(limit)">@currentPage</a></li>
+                            @if (totalPage - currentPage > 0)
+                            {
+                                <li><a href="@currentPara&page=@(currentPage + 1)&limit=@(limit)">@(currentPage + 1)</a></li>
+                            }
+                            @if (totalPage - currentPage > 1)
+                            {
+                                <li><a href="@currentPara&page=@(currentPage + 2)&limit=@(limit)">@(currentPage + 2)</a></li>
+                            }
+                            @if (currentPage < totalPage)
+                            {
+                                <li><a href="@currentPara&page=@(currentPage + 1)&limit=@(limit)">&gt;</a></li>
+                            }
+
+                            @if (currentPage < totalPage - 2)
+                            {
+                                <li><a href="@currentPara&page=@(totalPage)&limit=@(limit)">&gt;&gt;</a></li>
+                            }
+                        </ul>
+                    }
                 </div>
             </div>
         </div>
@@ -137,3 +107,62 @@
     </div>
 </section>
 
+
+
+
+
+
+@*<p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Goal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentFund)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExpireDate)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Goal)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CurrentFund)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExpireDate)
+                </td>
+                <td>
+
+                </td>
+            </tr>
+        }
+
+    </table>*@

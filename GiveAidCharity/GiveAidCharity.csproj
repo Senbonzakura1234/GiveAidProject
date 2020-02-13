@@ -180,9 +180,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202002130836148_Initial.cs" />
-    <Compile Include="Migrations\202002130836148_Initial.Designer.cs">
-      <DependentUpon>202002130836148_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\202002130944349_Initial.cs" />
+    <Compile Include="Migrations\202002130944349_Initial.Designer.cs">
+      <DependentUpon>202002130944349_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -738,7 +738,6 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <Content Include="Views\Home\Causes.cshtml" />
     <Content Include="Views\Home\CauseDetail.cshtml" />
     <Content Include="Views\Home\Donations.cshtml" />
     <Content Include="Views\Shared\_AuthenLayout.cshtml" />
@@ -746,6 +745,7 @@
     <Content Include="Views\Shared\_DashboardLoginPartial.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Project\CreateProject.cshtml" />
+    <Content Include="Views\Home\Causes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -762,8 +762,8 @@
     <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202002130836148_Initial.resx">
-      <DependentUpon>202002130836148_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202002130944349_Initial.resx">
+      <DependentUpon>202002130944349_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
