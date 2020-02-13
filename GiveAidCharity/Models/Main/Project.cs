@@ -28,7 +28,9 @@ namespace GiveAidCharity.Models.Main
         [Required]
         public string CoverImg { get; set; }
         [Required]
-        public string Content { get; set; }
+        public string ContentPart1 { get; set; }
+        [Required]
+        public string ContentPart2 { get; set; }
 
         [Required]
         [Range(0, double.MaxValue)]

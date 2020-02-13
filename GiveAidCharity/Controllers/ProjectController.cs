@@ -64,7 +64,8 @@ namespace GiveAidCharity.Controllers
                 ExpireDate = item.ExpireDate,
                 Goal = item.Goal,
                 CoverImg = item.CoverImg,
-                Content = item.Content
+                ContentPart1 = item.ContentPart1,
+                ContentPart2 = item.ContentPart2
             };
             _db.Projects.Add(project);
             await _db.SaveChangesAsync();

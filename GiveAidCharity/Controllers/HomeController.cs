@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
@@ -133,7 +132,9 @@ namespace GiveAidCharity.Controllers
                 Description = project.Description,
                 FollowCount = project.Follows.Count,
                 ProjectImages = images,
-                ProjectComments = comments
+                ProjectComments = comments,
+                ContentPart1 = project.ContentPart1,
+                ContentPart2 = project.ContentPart2
             };
             return View(cause);
         }

@@ -19,7 +19,9 @@ namespace GiveAidCharity.Models.HelperClass
         [Required]
         public string CoverImg { get; set; }
         [Required]
-        public string Content { get; set; }
+        public string ContentPart1 { get; set; }
+        [Required]
+        public string ContentPart2 { get; set; }
 
         //[ProjectStartDate(ErrorMessage = "Project can't be started sooner then 10 days from today")]
         [DisplayName("Start Date")]
@@ -65,6 +67,10 @@ namespace GiveAidCharity.Models.HelperClass
         public string Description { get; set; }
         public double Goal { get; set; }
         public double CurrentFund { get; set; }
+        [Required]
+        public string ContentPart1 { get; set; }
+        [Required]
+        public string ContentPart2 { get; set; }
         [DataType(DataType.DateTime)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime StartDate { get; set; }

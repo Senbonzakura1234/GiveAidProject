@@ -1,5 +1,6 @@
 namespace GiveAidCharity.Migrations
 {
+    using System;
     using System.Data.Entity.Migrations;
     
     public partial class Initial : DbMigration
@@ -14,7 +15,9 @@ namespace GiveAidCharity.Migrations
                         ApplicationUserId = c.String(maxLength: 128),
                         ProjectId = c.String(maxLength: 128),
                         Title = c.String(nullable: false),
-                        Content = c.String(nullable: false),
+                        ContentPart1 = c.String(nullable: false),
+                        ContentPart2 = c.String(nullable: false),
+                        ContentPart3 = c.String(),
                         Status = c.Int(nullable: false),
                         CreatedAt = c.DateTime(nullable: false),
                         UpdatedAt = c.DateTime(nullable: false),
@@ -101,7 +104,8 @@ namespace GiveAidCharity.Migrations
                         Name = c.String(nullable: false),
                         Description = c.String(),
                         CoverImg = c.String(nullable: false),
-                        Content = c.String(nullable: false),
+                        ContentPart1 = c.String(nullable: false),
+                        ContentPart2 = c.String(nullable: false),
                         Goal = c.Double(nullable: false),
                         CurrentFund = c.Double(nullable: false),
                         StartDate = c.DateTime(nullable: false),
