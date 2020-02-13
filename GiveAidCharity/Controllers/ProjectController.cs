@@ -47,7 +47,8 @@ namespace GiveAidCharity.Controllers
         // GET: Project
         public ActionResult CreateProject()
         {
-            return View();
+            var item = new ProjectCreateViewModel();
+            return View(item);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -64,7 +65,9 @@ namespace GiveAidCharity.Controllers
                 Description = item.Description,
                 StartDate = item.StartDate,
                 ExpireDate = item.ExpireDate,
-                Goal = item.Goal
+                Goal = item.Goal,
+                CoverImg = item.CoverImg,
+                Content = item.Content
             };
             _db.Projects.Add(project);
             await _db.SaveChangesAsync();

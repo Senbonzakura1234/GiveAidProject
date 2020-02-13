@@ -25,6 +25,13 @@ namespace GiveAidCharity.Models.Main
         [Required]
         public string Name { get; set; }
         public string Description { get; set; }
+
+        [Url]
+        [Required]
+        public string CoverImg { get; set; }
+        [Required]
+        public string Content { get; set; }
+
         [Required]
         [Range(0, double.MaxValue)]
         public double Goal { get; set; }

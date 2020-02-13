@@ -13,7 +13,7 @@ namespace GiveAidCharity.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202002130836148_Initial"; }
+            get { return "202002130944349_Initial"; }
         }
         
         string IMigrationMetadata.Source
