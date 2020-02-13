@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>@ViewBag.Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="https://res.cloudinary.com/senbonzakura/image/upload/v1581506235/Give%20Aid%20Project/2647372207_824b08c6-bf87-4cf4-afbf-5c54273b18e1_yfu8vo.png" type="image/png">
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Overpass:300,400,400i,600,700" rel="stylesheet">
+    @Styles.Render("~/Content/Site.css")
+    @Styles.Render("~/Content/bootstrap")
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/HomepageTheme/css/open-iconic-bootstrap.min.css")
+    @Styles.Render("~/Content/HomepageTheme/css/animate.css")
+
+    @Styles.Render("~/Content/HomepageTheme/css/owl.carousel.min.css")
+    @Styles.Render("~/Content/HomepageTheme/css/owl.theme.default.min.css")
+    @Styles.Render("~/Content/HomepageTheme/css/magnific-popup.css")
+
+    @Styles.Render("~/Content/HomepageTheme/css/aos.css")
+
+    @Styles.Render("~/Content/HomepageTheme/css/ionicons.min.css")
+
+    @Styles.Render("~/Content/HomepageTheme/css/bootstrap-datepicker.css")
+    @Styles.Render("~/Content/HomepageTheme/css/jquery.timepicker.css")
+
+    @Styles.Render("~/Content/HomepageTheme/css/flaticon.css")
+    @Styles.Render("~/Content/HomepageTheme/css/icomoon.css")
+    @Styles.Render("~/Content/HomepageTheme/css/style.css")
+    @Styles.Render("~/Content/HomepageTheme/css/custom.css")
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="#/">Welfare</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
+
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active"><a href="#" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Donate</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Blog</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Events</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="DropdownMiscellaneous" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            Info
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="DropdownMiscellaneous">
+                            <a class="dropdown-item" href="@Url.Action("About","Home")">About</a>
+                            <a class="dropdown-item" href="@Url.Action("Contact","Home")">Contact</a>
+                            <a class="dropdown-item" href="#">Causes</a>
+                            <a class="dropdown-item" href="#">Gallery</a>
+                        </div>
+                    </li>
+                    @Html.Partial("_LoginPartial")
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- END nav -->
+    <div class="hero-wrap" style="background-image: url('/Content/HomepageTheme/images/bg_7.jpg');" data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-center justify-content-center" data-scrollax-parent="true">
+                <div class="col-md-7 ftco-animate text-center" data-scrollax=" properties: { translateY: '70%' }">
+                    @RenderSection("hero_wrap", false)
+                </div>
+            </div>
+        </div>
+    </div>
+    @RenderBody()
+
+    <footer class="ftco-footer ftco-section img">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-md-3">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">About Us</h2>
+                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+                        <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
+                            <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                            <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                            <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">Recent Blog</h2>
+                        <div class="block-21 mb-4 d-flex">
+                            <a class="blog-img mr-4" style="background-image: url(/Content/HomepageTheme/images/image_1.jpg);"></a>
+                            <div class="text">
+                                <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about</a></h3>
+                                <div class="meta">
+                                    <div><a href="#"><span class="icon-calendar"></span> July 12, 2018</a></div>
+                                    <div><a href="#"><span class="icon-person"></span> Admin</a></div>
+                                    <div><a href="#"><span class="icon-chat"></span> 19</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="block-21 mb-4 d-flex">
+                            <a class="blog-img mr-4" style="background-image: url(/Content/HomepageTheme/images/image_2.jpg);"></a>
+                            <div class="text">
+                                <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about</a></h3>
+                                <div class="meta">
+                                    <div><a href="#"><span class="icon-calendar"></span> July 12, 2018</a></div>
+                                    <div><a href="#"><span class="icon-person"></span> Admin</a></div>
+                                    <div><a href="#"><span class="icon-chat"></span> 19</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="ftco-footer-widget mb-4 ml-md-4">
+                        <h2 class="ftco-heading-2">Site Links</h2>
+                        <ul class="list-unstyled">
+                            <li><a href="#" class="py-2 d-block">Home</a></li>
+                            <li><a href="#" class="py-2 d-block">About</a></li>
+                            <li><a href="#" class="py-2 d-block">Donate</a></li>
+                            <li><a href="#" class="py-2 d-block">Causes</a></li>
+                            <li><a href="#" class="py-2 d-block">Event</a></li>
+                            <li><a href="#" class="py-2 d-block">Blog</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">Have a Questions?</h2>
+                        <div class="block-23 mb-3">
+                            <ul>
+                                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
+                                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
+                                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+
+                    <p>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        Copyright &copy;
+                        <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+
+    <!-- loader -->
+    <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" /><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00" /></svg></div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/Content/HomepageTheme/js/jquery-migrate-3.0.1.min.js")
+    @Scripts.Render("~/Content/HomepageTheme/js/popper.min.js")
+    @Scripts.Render("~/Content/HomepageTheme/js/bootstrap.min.js")
+    @Scripts.Render("~/Content/HomepageTheme/js/jquery.easing.1.3.js")
+    @Scripts.Render("~/Content/HomepageTheme/js/jquery.waypoints.min.js")
+
+    @Scripts.Render("~/Content/HomepageTheme/js/jquery.stellar.min.js")
+    @Scripts.Render("~/Content/HomepageTheme/js/owl.carousel.min.js")
+    @Scripts.Render("~/Content/HomepageTheme/js/jquery.magnific-popup.min.js")
+    @Scripts.Render("~/Content/HomepageTheme/js/aos.js")
+
+    @Scripts.Render("~/Content/HomepageTheme/js/jquery.animateNumber.min.js")
+    @Scripts.Render("~/Content/HomepageTheme/js/bootstrap-datepicker.js")
+    @Scripts.Render("~/Content/HomepageTheme/js/jquery.timepicker.min.js")
+    @Scripts.Render("~/Content/HomepageTheme/js/scrollax.min.js")
+
+    @Scripts.Render("~/Content/HomepageTheme/js/main.js")
+    @Scripts.Render("~/Content/HomepageTheme/js/custom.js")
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

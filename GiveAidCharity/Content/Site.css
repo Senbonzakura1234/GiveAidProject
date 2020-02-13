@@ -1,0 +1,7 @@
+﻿a {
+    text-decoration: none !important;
+}
+
+.owl-carousel {
+    touch-action: manipulation !important;
+}

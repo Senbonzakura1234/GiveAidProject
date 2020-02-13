@@ -1,0 +1,62 @@
+﻿@using GiveAidCharity.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_AuthenLayout.cshtml";
+}
+
+
+@using (Html.BeginForm("Login", "Account", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login100-form validate-form", role = "form" }))
+{
+    <span class="login100-form-title p-b-49">
+        Login
+    </span>
+
+    <div class="wrap-input100 validate-input" data-validate="">
+        @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.Email, new { @class = "input100", placeholder = "Type your email" })
+        <span class="focus-input100" data-symbol="&#xf206;"></span>
+    </div>
+    <small>@Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger text-right" })</small>
+
+
+    <div class="wrap-input100 validate-input m-t-23" data-validate="">
+        @Html.LabelFor(m => m.Password, new { @class = "control-label" })
+        @Html.PasswordFor(m => m.Password, new { @class = "input100", placeholder = "Type your email" })
+        <span class="focus-input100" data-symbol="&#xf190;"></span>
+    </div>
+    <small>@Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger text-right" })</small>
+
+    <div class="text-right p-t-8 p-b-31">
+        <a href="#">
+            Forgot password?
+        </a>
+    </div>
+
+    <div class="container-login100-form-btn">
+        <div class="wrap-login100-form-btn">
+            <div class="login100-form-bgbtn"></div>
+            <button type="submit" class="login100-form-btn">
+                Login
+            </button>
+        </div>
+    </div>
+
+
+
+}
+@Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+
+
+<div class="flex-col-c p-t-30">
+    <span class="txt1 p-b-17">
+        Or Register Using
+    </span>
+
+    <a href="@Url.Action("Register","Account")" class="txt2">
+        Register
+    </a>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

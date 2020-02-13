@@ -1,0 +1,43 @@
+﻿.pagination > li > a {
+    background-color: white;
+    color: #b66dff !important;
+    border: 0 !important;
+    transition: 0.3s ease all;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover {
+    border: 0 !important;
+    color: #fff !important;
+    background: linear-gradient(to right, #da8cff, #9a55ff) !important;
+    background-image: linear-gradient(to right, rgb(218, 140, 255), rgb(154, 85, 255)) !important;
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-repeat: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: initial;
+}
+
+.pagination > .active > a {
+    border: 0 !important;
+    color: #fff !important;
+    background: linear-gradient(to right, #da8cff, #9a55ff) !important;
+    background-image: linear-gradient(to right, rgb(218, 140, 255), rgb(154, 85, 255)) !important;
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-repeat: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: initial;
+}
+
+.pagination > .active > a:hover {
+    opacity: 0.8;
+}

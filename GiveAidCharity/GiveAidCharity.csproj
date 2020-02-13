@@ -1,0 +1,810 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9948D5A6-E673-4C5D-8881-B098F0BC464A}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GiveAidCharity</RootNamespace>
+    <AssemblyName>GiveAidCharity</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort>44351</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TypeScriptToolsVersion>3.7</TypeScriptToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.3\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.3\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.3\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.4.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.4.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Facebook, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.4.1.0\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.4.1.0\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.4.1.0\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.4.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.4.1.0\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.4.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ProjectController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202002130836148_Initial.cs" />
+    <Compile Include="Migrations\202002130836148_Initial.Designer.cs">
+      <DependentUpon>202002130836148_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\HelperClass\ExtraAttributes.cs" />
+    <Compile Include="Models\HelperClass\ViewModels.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Main\Blog.cs" />
+    <Compile Include="Models\Main\Comment.cs" />
+    <Compile Include="Models\Main\ExtraClass.cs" />
+    <Compile Include="Models\Main\Image.cs" />
+    <Compile Include="Models\Main\Project.cs" />
+    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\AuthenTheme\css\custom.css" />
+    <Content Include="Content\AuthenTheme\css\main.css" />
+    <Content Include="Content\AuthenTheme\css\util.css" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\css\font-awesome.css" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\css\font-awesome.min.css" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\HELP-US-OUT.txt" />
+    <Content Include="Content\AuthenTheme\fonts\iconic\css\material-design-iconic-font.css" />
+    <Content Include="Content\AuthenTheme\fonts\iconic\css\material-design-iconic-font.min.css" />
+    <Content Include="Content\AuthenTheme\fonts\iconic\fonts\Material-Design-Iconic-Font.svg" />
+    <Content Include="Content\AuthenTheme\images\bg-01.jpg" />
+    <Content Include="Content\AuthenTheme\images\icons\favicon.ico" />
+    <Content Include="Content\AuthenTheme\js\custom.js" />
+    <Content Include="Content\AuthenTheme\js\main.js" />
+    <Content Include="Content\AuthenTheme\vendor\animate\animate.css" />
+    <Content Include="Content\AuthenTheme\vendor\animsition\css\animsition.css" />
+    <Content Include="Content\AuthenTheme\vendor\animsition\css\animsition.min.css" />
+    <Content Include="Content\AuthenTheme\vendor\animsition\js\animsition.js" />
+    <Content Include="Content\AuthenTheme\vendor\animsition\js\animsition.min.js" />
+    <Content Include="Content\AuthenTheme\vendor\bootstrap\css\bootstrap-grid.css" />
+    <Content Include="Content\AuthenTheme\vendor\bootstrap\css\bootstrap-grid.min.css" />
+    <Content Include="Content\AuthenTheme\vendor\bootstrap\css\bootstrap-reboot.css" />
+    <Content Include="Content\AuthenTheme\vendor\bootstrap\css\bootstrap-reboot.min.css" />
+    <Content Include="Content\AuthenTheme\vendor\bootstrap\css\bootstrap.css" />
+    <Content Include="Content\AuthenTheme\vendor\bootstrap\css\bootstrap.min.css" />
+    <Content Include="Content\AuthenTheme\vendor\bootstrap\js\bootstrap.js" />
+    <Content Include="Content\AuthenTheme\vendor\bootstrap\js\bootstrap.min.js" />
+    <Content Include="Content\AuthenTheme\vendor\bootstrap\js\popper.js" />
+    <Content Include="Content\AuthenTheme\vendor\bootstrap\js\popper.min.js" />
+    <Content Include="Content\AuthenTheme\vendor\bootstrap\js\tooltip.js" />
+    <Content Include="Content\AuthenTheme\vendor\countdowntime\countdowntime.js" />
+    <Content Include="Content\AuthenTheme\vendor\css-hamburgers\hamburgers.css" />
+    <Content Include="Content\AuthenTheme\vendor\css-hamburgers\hamburgers.min.css" />
+    <Content Include="Content\AuthenTheme\vendor\daterangepicker\daterangepicker.css" />
+    <Content Include="Content\AuthenTheme\vendor\daterangepicker\daterangepicker.js" />
+    <Content Include="Content\AuthenTheme\vendor\daterangepicker\moment.js" />
+    <Content Include="Content\AuthenTheme\vendor\daterangepicker\moment.min.js" />
+    <Content Include="Content\AuthenTheme\vendor\jquery\jquery-3.2.1.min.js" />
+    <Content Include="Content\AuthenTheme\vendor\perfect-scrollbar\perfect-scrollbar.css" />
+    <Content Include="Content\AuthenTheme\vendor\perfect-scrollbar\perfect-scrollbar.min.js" />
+    <Content Include="Content\AuthenTheme\vendor\select2\select2.css" />
+    <Content Include="Content\AuthenTheme\vendor\select2\select2.js" />
+    <Content Include="Content\AuthenTheme\vendor\select2\select2.min.css" />
+    <Content Include="Content\AuthenTheme\vendor\select2\select2.min.js" />
+    <Content Include="Content\bootstrap-grid.css" />
+    <Content Include="Content\bootstrap-grid.min.css" />
+    <Content Include="Content\bootstrap-reboot.css" />
+    <Content Include="Content\bootstrap-reboot.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\DashboardTheme\css\custom.css" />
+    <Content Include="Content\DashboardTheme\css\paginate.css" />
+    <Content Include="Content\DashboardTheme\css\slider-range.css" />
+    <Content Include="Content\DashboardTheme\css\style.css" />
+    <Content Include="Content\DashboardTheme\js\chart.js" />
+    <Content Include="Content\DashboardTheme\js\custom.js" />
+    <Content Include="Content\DashboardTheme\js\dashboard.js" />
+    <Content Include="Content\DashboardTheme\js\file-upload.js" />
+    <Content Include="Content\DashboardTheme\js\hoverable-collapse.js" />
+    <Content Include="Content\DashboardTheme\js\misc.js" />
+    <Content Include="Content\DashboardTheme\js\off-canvas.js" />
+    <Content Include="Content\DashboardTheme\js\todo.js" />
+    <Content Include="Content\DashboardTheme\js\todolist.js" />
+    <Content Include="Content\DashboardTheme\vendors\chart.js\Chart.min.js" />
+    <Content Include="Content\DashboardTheme\vendors\css\vendor.bundle.base.css" />
+    <Content Include="Content\DashboardTheme\vendors\js\vendor.bundle.base.js" />
+    <Content Include="Content\DashboardTheme\vendors\mdi\css\materialdesignicons.min.css" />
+    <Content Include="Content\HomepageTheme\css\ajax-loader.gif" />
+    <Content Include="Content\HomepageTheme\css\animate.css" />
+    <Content Include="Content\HomepageTheme\css\aos.css" />
+    <Content Include="Content\HomepageTheme\css\bootstrap-datepicker.css" />
+    <Content Include="Content\HomepageTheme\css\bootstrap.min.css" />
+    <Content Include="Content\HomepageTheme\css\bootstrap\bootstrap-grid.css" />
+    <Content Include="Content\HomepageTheme\css\bootstrap\bootstrap-reboot.css" />
+    <Content Include="Content\HomepageTheme\css\css\bootstrap-reboot.css" />
+    <Content Include="Content\HomepageTheme\css\css\mixins\_text-hide.css" />
+    <Content Include="Content\HomepageTheme\css\custom.css" />
+    <Content Include="Content\HomepageTheme\css\flaticon.css" />
+    <Content Include="Content\HomepageTheme\css\icomoon.css" />
+    <Content Include="Content\HomepageTheme\css\ionicons.min.css" />
+    <Content Include="Content\HomepageTheme\css\jquery.timepicker.css" />
+    <Content Include="Content\HomepageTheme\css\magnific-popup.css" />
+    <Content Include="Content\HomepageTheme\css\open-iconic-bootstrap.min.css" />
+    <Content Include="Content\HomepageTheme\css\owl.carousel.min.css" />
+    <Content Include="Content\HomepageTheme\css\owl.theme.default.min.css" />
+    <Content Include="Content\HomepageTheme\css\style.css" />
+    <Content Include="Content\HomepageTheme\fonts\flaticon\backup.txt" />
+    <Content Include="Content\HomepageTheme\fonts\flaticon\font\flaticon.css" />
+    <Content Include="Content\HomepageTheme\fonts\flaticon\font\flaticon.html" />
+    <Content Include="Content\HomepageTheme\fonts\flaticon\font\Flaticon.svg" />
+    <Content Include="Content\HomepageTheme\fonts\icomoon\icomoon.svg" />
+    <Content Include="Content\HomepageTheme\fonts\ionicons\css\ionicons.min.css" />
+    <Content Include="Content\HomepageTheme\fonts\ionicons\fonts\ionicons.svg" />
+    <Content Include="Content\HomepageTheme\fonts\open-iconic\open-iconic.svg" />
+    <Content Include="Content\HomepageTheme\images\bg_1.jpg" />
+    <Content Include="Content\HomepageTheme\images\bg_2.jpg" />
+    <Content Include="Content\HomepageTheme\images\bg_3.jpg" />
+    <Content Include="Content\HomepageTheme\images\bg_4.jpg" />
+    <Content Include="Content\HomepageTheme\images\bg_5.jpg" />
+    <Content Include="Content\HomepageTheme\images\bg_6.jpg" />
+    <Content Include="Content\HomepageTheme\images\bg_7.jpg" />
+    <Content Include="Content\HomepageTheme\images\cause-1.jpg" />
+    <Content Include="Content\HomepageTheme\images\cause-2.jpg" />
+    <Content Include="Content\HomepageTheme\images\cause-3.jpg" />
+    <Content Include="Content\HomepageTheme\images\cause-4.jpg" />
+    <Content Include="Content\HomepageTheme\images\cause-5.jpg" />
+    <Content Include="Content\HomepageTheme\images\cause-6.jpg" />
+    <Content Include="Content\HomepageTheme\images\event-1.jpg" />
+    <Content Include="Content\HomepageTheme\images\event-2.jpg" />
+    <Content Include="Content\HomepageTheme\images\event-3.jpg" />
+    <Content Include="Content\HomepageTheme\images\event-4.jpg" />
+    <Content Include="Content\HomepageTheme\images\event-5.jpg" />
+    <Content Include="Content\HomepageTheme\images\event-6.jpg" />
+    <Content Include="Content\HomepageTheme\images\image_1.jpg" />
+    <Content Include="Content\HomepageTheme\images\image_2.jpg" />
+    <Content Include="Content\HomepageTheme\images\image_3.jpg" />
+    <Content Include="Content\HomepageTheme\images\image_4.jpg" />
+    <Content Include="Content\HomepageTheme\images\image_5.jpg" />
+    <Content Include="Content\HomepageTheme\images\image_6.jpg" />
+    <Content Include="Content\HomepageTheme\images\loc.png" />
+    <Content Include="Content\HomepageTheme\images\person_1.jpg" />
+    <Content Include="Content\HomepageTheme\images\person_2.jpg" />
+    <Content Include="Content\HomepageTheme\images\person_3.jpg" />
+    <Content Include="Content\HomepageTheme\images\person_4.jpg" />
+    <Content Include="Content\HomepageTheme\images\person_5.jpg" />
+    <Content Include="Content\HomepageTheme\images\person_6.jpg" />
+    <Content Include="Content\HomepageTheme\images\person_7.jpg" />
+    <Content Include="Content\HomepageTheme\images\person_8.jpg" />
+    <Content Include="Content\HomepageTheme\images\person_9.jpg" />
+    <Content Include="Content\HomepageTheme\js\aos.js" />
+    <Content Include="Content\HomepageTheme\js\bootstrap-datepicker.js" />
+    <Content Include="Content\HomepageTheme\js\bootstrap.min.js" />
+    <Content Include="Content\HomepageTheme\js\custom.js" />
+    <Content Include="Content\HomepageTheme\js\google-map.js" />
+    <Content Include="Content\HomepageTheme\js\jquery-3.2.1.min.js" />
+    <Content Include="Content\HomepageTheme\js\jquery-migrate-3.0.1.min.js" />
+    <Content Include="Content\HomepageTheme\js\jquery.animateNumber.min.js" />
+    <Content Include="Content\HomepageTheme\js\jquery.easing.1.3.js" />
+    <Content Include="Content\HomepageTheme\js\jquery.magnific-popup.min.js" />
+    <Content Include="Content\HomepageTheme\js\jquery.min.js" />
+    <Content Include="Content\HomepageTheme\js\jquery.stellar.min.js" />
+    <Content Include="Content\HomepageTheme\js\jquery.timepicker.min.js" />
+    <Content Include="Content\HomepageTheme\js\jquery.waypoints.min.js" />
+    <Content Include="Content\HomepageTheme\js\main.js" />
+    <Content Include="Content\HomepageTheme\js\owl.carousel.min.js" />
+    <Content Include="Content\HomepageTheme\js\popper.min.js" />
+    <Content Include="Content\HomepageTheme\js\range.js" />
+    <Content Include="Content\HomepageTheme\js\scrollax.min.js" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootstrap.bundle.js" />
+    <Content Include="Scripts\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\bootstrap.min.js.map" />
+    <Content Include="Scripts\bootstrap.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.js.map" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-reboot.min.css.map" />
+    <Content Include="Content\bootstrap-reboot.css.map" />
+    <Content Include="Content\bootstrap-grid.min.css.map" />
+    <Content Include="Content\bootstrap-grid.css.map" />
+    <Content Include="Scripts\esm\popper-utils.js" />
+    <Content Include="Scripts\esm\popper-utils.min.js" />
+    <Content Include="Scripts\esm\popper.js" />
+    <Content Include="Scripts\esm\popper.min.js" />
+    <Content Include="Scripts\index.js.flow" />
+    <Content Include="Scripts\esm\popper.min.js.map" />
+    <Content Include="Scripts\esm\popper.js.map" />
+    <Content Include="Scripts\esm\popper-utils.min.js.map" />
+    <Content Include="Scripts\esm\popper-utils.js.map" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\fonts\FontAwesome.otf" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\less\animated.less" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\less\bordered-pulled.less" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\less\core.less" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\less\fixed-width.less" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\less\font-awesome.less" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\less\icons.less" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\less\larger.less" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\less\list.less" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\less\mixins.less" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\less\path.less" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\less\rotated-flipped.less" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\less\screen-reader.less" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\less\stacked.less" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\less\variables.less" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\scss\font-awesome.scss" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\scss\_animated.scss" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\scss\_bordered-pulled.scss" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\scss\_core.scss" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\scss\_fixed-width.scss" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\scss\_icons.scss" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\scss\_larger.scss" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\scss\_list.scss" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\scss\_mixins.scss" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\scss\_path.scss" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\scss\_rotated-flipped.scss" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\scss\_screen-reader.scss" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\scss\_stacked.scss" />
+    <Content Include="Content\AuthenTheme\fonts\font-awesome-4.7.0\scss\_variables.scss" />
+    <Content Include="Content\AuthenTheme\fonts\iconic\fonts\Material-Design-Iconic-Font.eot" />
+    <Content Include="Content\AuthenTheme\fonts\iconic\fonts\Material-Design-Iconic-Font.ttf" />
+    <Content Include="Content\AuthenTheme\fonts\iconic\fonts\Material-Design-Iconic-Font.woff" />
+    <Content Include="Content\AuthenTheme\fonts\iconic\fonts\Material-Design-Iconic-Font.woff2" />
+    <Content Include="Content\AuthenTheme\fonts\poppins\Poppins-Black.ttf" />
+    <Content Include="Content\AuthenTheme\fonts\poppins\Poppins-BlackItalic.ttf" />
+    <Content Include="Content\AuthenTheme\fonts\poppins\Poppins-Bold.ttf" />
+    <Content Include="Content\AuthenTheme\fonts\poppins\Poppins-BoldItalic.ttf" />
+    <Content Include="Content\AuthenTheme\fonts\poppins\Poppins-ExtraBold.ttf" />
+    <Content Include="Content\AuthenTheme\fonts\poppins\Poppins-ExtraBoldItalic.ttf" />
+    <Content Include="Content\AuthenTheme\fonts\poppins\Poppins-ExtraLight.ttf" />
+    <Content Include="Content\AuthenTheme\fonts\poppins\Poppins-ExtraLightItalic.ttf" />
+    <Content Include="Content\AuthenTheme\fonts\poppins\Poppins-Italic.ttf" />
+    <Content Include="Content\AuthenTheme\fonts\poppins\Poppins-Light.ttf" />
+    <Content Include="Content\AuthenTheme\fonts\poppins\Poppins-LightItalic.ttf" />
+    <Content Include="Content\AuthenTheme\fonts\poppins\Poppins-Medium.ttf" />
+    <Content Include="Content\AuthenTheme\fonts\poppins\Poppins-MediumItalic.ttf" />
+    <Content Include="Content\AuthenTheme\fonts\poppins\Poppins-Regular.ttf" />
+    <Content Include="Content\AuthenTheme\fonts\poppins\Poppins-SemiBold.ttf" />
+    <Content Include="Content\AuthenTheme\fonts\poppins\Poppins-SemiBoldItalic.ttf" />
+    <Content Include="Content\AuthenTheme\fonts\poppins\Poppins-Thin.ttf" />
+    <Content Include="Content\AuthenTheme\fonts\poppins\Poppins-ThinItalic.ttf" />
+    <Content Include="Content\AuthenTheme\vendor\bootstrap\css\bootstrap-grid.css.map" />
+    <Content Include="Content\AuthenTheme\vendor\bootstrap\css\bootstrap-grid.min.css.map" />
+    <Content Include="Content\AuthenTheme\vendor\bootstrap\css\bootstrap-reboot.css.map" />
+    <Content Include="Content\AuthenTheme\vendor\bootstrap\css\bootstrap-reboot.min.css.map" />
+    <Content Include="Content\AuthenTheme\vendor\bootstrap\css\bootstrap.css.map" />
+    <Content Include="Content\AuthenTheme\vendor\bootstrap\css\bootstrap.min.css.map" />
+    <Content Include="Content\DashboardTheme\css\style.css.map" />
+    <Content Include="Content\DashboardTheme\fonts\Ubuntu\Ubuntu-Bold.eot" />
+    <Content Include="Content\DashboardTheme\fonts\Ubuntu\Ubuntu-Bold.ttf" />
+    <Content Include="Content\DashboardTheme\fonts\Ubuntu\Ubuntu-Bold.woff" />
+    <Content Include="Content\DashboardTheme\fonts\Ubuntu\Ubuntu-Bold.woff2" />
+    <Content Include="Content\DashboardTheme\fonts\Ubuntu\Ubuntu-Light.eot" />
+    <Content Include="Content\DashboardTheme\fonts\Ubuntu\Ubuntu-Light.ttf" />
+    <Content Include="Content\DashboardTheme\fonts\Ubuntu\Ubuntu-Light.woff" />
+    <Content Include="Content\DashboardTheme\fonts\Ubuntu\Ubuntu-Light.woff2" />
+    <Content Include="Content\DashboardTheme\fonts\Ubuntu\Ubuntu-Medium.eot" />
+    <Content Include="Content\DashboardTheme\fonts\Ubuntu\Ubuntu-Medium.ttf" />
+    <Content Include="Content\DashboardTheme\fonts\Ubuntu\Ubuntu-Medium.woff" />
+    <Content Include="Content\DashboardTheme\fonts\Ubuntu\Ubuntu-Medium.woff2" />
+    <Content Include="Content\DashboardTheme\fonts\Ubuntu\Ubuntu-Regular.eot" />
+    <Content Include="Content\DashboardTheme\fonts\Ubuntu\Ubuntu-Regular.ttf" />
+    <Content Include="Content\DashboardTheme\fonts\Ubuntu\Ubuntu-Regular.woff" />
+    <Content Include="Content\DashboardTheme\fonts\Ubuntu\Ubuntu-Regular.woff2" />
+    <Content Include="Content\DashboardTheme\scss\components\_badges.scss" />
+    <Content Include="Content\DashboardTheme\scss\components\_bootstrap-progress.scss" />
+    <Content Include="Content\DashboardTheme\scss\components\_breadcrumbs.scss" />
+    <Content Include="Content\DashboardTheme\scss\components\_buttons.scss" />
+    <Content Include="Content\DashboardTheme\scss\components\_cards.scss" />
+    <Content Include="Content\DashboardTheme\scss\components\_checkbox-radio.scss" />
+    <Content Include="Content\DashboardTheme\scss\components\_dropdown.scss" />
+    <Content Include="Content\DashboardTheme\scss\components\_forms.scss" />
+    <Content Include="Content\DashboardTheme\scss\components\_icons.scss" />
+    <Content Include="Content\DashboardTheme\scss\components\_lists.scss" />
+    <Content Include="Content\DashboardTheme\scss\components\_preview.scss" />
+    <Content Include="Content\DashboardTheme\scss\components\_tables.scss" />
+    <Content Include="Content\DashboardTheme\scss\components\_todo-list.scss" />
+    <Content Include="Content\DashboardTheme\scss\landing-screens\_auth.scss" />
+    <Content Include="Content\DashboardTheme\scss\mixins\_animation.scss" />
+    <Content Include="Content\DashboardTheme\scss\mixins\_background.scss" />
+    <Content Include="Content\DashboardTheme\scss\mixins\_badges.scss" />
+    <Content Include="Content\DashboardTheme\scss\mixins\_blockqoute.scss" />
+    <Content Include="Content\DashboardTheme\scss\mixins\_breadcrumbs.scss" />
+    <Content Include="Content\DashboardTheme\scss\mixins\_buttons.scss" />
+    <Content Include="Content\DashboardTheme\scss\mixins\_cards.scss" />
+    <Content Include="Content\DashboardTheme\scss\mixins\_misc.scss" />
+    <Content Include="Content\DashboardTheme\scss\mixins\_pagination.scss" />
+    <Content Include="Content\DashboardTheme\scss\mixins\_popovers.scss" />
+    <Content Include="Content\DashboardTheme\scss\mixins\_text.scss" />
+    <Content Include="Content\DashboardTheme\scss\mixins\_tooltips.scss" />
+    <Content Include="Content\DashboardTheme\scss\style.scss" />
+    <Content Include="Content\DashboardTheme\scss\_dashboard.scss" />
+    <Content Include="Content\DashboardTheme\scss\_demo.scss" />
+    <Content Include="Content\DashboardTheme\scss\_fonts.scss" />
+    <Content Include="Content\DashboardTheme\scss\_footer.scss" />
+    <Content Include="Content\DashboardTheme\scss\_functions.scss" />
+    <Content Include="Content\DashboardTheme\scss\_layouts.scss" />
+    <Content Include="Content\DashboardTheme\scss\_misc.scss" />
+    <Content Include="Content\DashboardTheme\scss\_navbar.scss" />
+    <Content Include="Content\DashboardTheme\scss\_reset.scss" />
+    <Content Include="Content\DashboardTheme\scss\_sidebar.scss" />
+    <Content Include="Content\DashboardTheme\scss\_typography.scss" />
+    <Content Include="Content\DashboardTheme\scss\_utilities.scss" />
+    <Content Include="Content\DashboardTheme\scss\_variables.scss" />
+    <Content Include="Content\DashboardTheme\scss\_vertical-wrapper.scss" />
+    <Content Include="Content\DashboardTheme\scss\_widget-grid.scss" />
+    <Content Include="Content\DashboardTheme\vendors\js\bootstrap.min.js.map" />
+    <Content Include="Content\DashboardTheme\vendors\mdi\css\materialdesignicons.min.css.map" />
+    <Content Include="Content\DashboardTheme\vendors\mdi\fonts\materialdesignicons-webfont.eot" />
+    <Content Include="Content\DashboardTheme\vendors\mdi\fonts\materialdesignicons-webfont.ttf" />
+    <Content Include="Content\DashboardTheme\vendors\mdi\fonts\materialdesignicons-webfont.woff" />
+    <Content Include="Content\DashboardTheme\vendors\mdi\fonts\materialdesignicons-webfont.woff2" />
+    <Content Include="Content\HomepageTheme\.DS_Store" />
+    <Content Include="Content\HomepageTheme\css\.DS_Store" />
+    <Content Include="Content\HomepageTheme\css\bootstrap\.DS_Store" />
+    <Content Include="Content\HomepageTheme\css\css\.DS_Store" />
+    <Content Include="Content\HomepageTheme\fonts\.DS_Store" />
+    <Content Include="Content\HomepageTheme\fonts\flaticon\.DS_Store" />
+    <Content Include="Content\HomepageTheme\fonts\flaticon\font\Flaticon.eot" />
+    <Content Include="Content\HomepageTheme\fonts\flaticon\font\Flaticon.ttf" />
+    <Content Include="Content\HomepageTheme\fonts\flaticon\font\Flaticon.woff" />
+    <Content Include="Content\HomepageTheme\fonts\flaticon\font\_flaticon.scss" />
+    <Content Include="Content\HomepageTheme\fonts\flaticon\license\license.pdf" />
+    <Content Include="Content\HomepageTheme\fonts\icomoon\.DS_Store" />
+    <Content Include="Content\HomepageTheme\fonts\icomoon\icomoon.eot" />
+    <Content Include="Content\HomepageTheme\fonts\icomoon\icomoon.ttf" />
+    <Content Include="Content\HomepageTheme\fonts\icomoon\icomoon.woff" />
+    <Content Include="Content\HomepageTheme\fonts\ionicons\css\_ionicons.scss" />
+    <Content Include="Content\HomepageTheme\fonts\ionicons\fonts\.DS_Store" />
+    <Content Include="Content\HomepageTheme\fonts\ionicons\fonts\ionicons.eot" />
+    <Content Include="Content\HomepageTheme\fonts\ionicons\fonts\ionicons.ttf" />
+    <Content Include="Content\HomepageTheme\fonts\ionicons\fonts\ionicons.woff" />
+    <Content Include="Content\HomepageTheme\fonts\ionicons\fonts\ionicons.woff2" />
+    <Content Include="Content\HomepageTheme\fonts\open-iconic\open-iconic.eot" />
+    <Content Include="Content\HomepageTheme\fonts\open-iconic\open-iconic.otf" />
+    <Content Include="Content\HomepageTheme\fonts\open-iconic\open-iconic.ttf" />
+    <Content Include="Content\HomepageTheme\fonts\open-iconic\open-iconic.woff" />
+    <Content Include="Content\HomepageTheme\images\.DS_Store" />
+    <Content Include="Content\HomepageTheme\js\.DS_Store" />
+    <Content Include="Content\HomepageTheme\prepros-6.config" />
+    <Content Include="Content\HomepageTheme\scss\.DS_Store" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\bootstrap-grid.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\bootstrap-reboot.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\bootstrap.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_alert.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_background-variant.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_badge.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_border-radius.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_box-shadow.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_breakpoints.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_buttons.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_caret.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_clearfix.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_float.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_forms.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_gradients.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_grid-framework.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_grid.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_hover.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_image.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_list-group.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_lists.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_nav-divider.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_pagination.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_reset-text.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_resize.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_screen-reader.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_size.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_table-row.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_text-emphasis.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_text-hide.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_text-truncate.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_transition.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\mixins\_visibility.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\utilities\_align.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\utilities\_background.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\utilities\_borders.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\utilities\_clearfix.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\utilities\_display.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\utilities\_embed.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\utilities\_flex.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\utilities\_float.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\utilities\_position.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\utilities\_screenreaders.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\utilities\_shadows.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\utilities\_sizing.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\utilities\_spacing.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\utilities\_text.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\utilities\_visibility.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_alert.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_badge.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_breadcrumb.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_button-group.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_buttons.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_card.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_carousel.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_close.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_code.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_custom-forms.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_dropdown.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_forms.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_functions.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_grid.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_images.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_input-group.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_jumbotron.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_list-group.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_media.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_mixins.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_modal.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_nav.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_navbar.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_pagination.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_popover.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_print.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_progress.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_reboot.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_root.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_tables.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_tooltip.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_transitions.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_type.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_utilities.scss" />
+    <Content Include="Content\HomepageTheme\scss\bootstrap\_variables.scss" />
+    <Content Include="Content\HomepageTheme\scss\style.scss" />
+    <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.4.1.js" />
+    <Content Include="Scripts\jquery-3.4.1.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\popper-utils.js" />
+    <Content Include="Scripts\popper-utils.min.js" />
+    <Content Include="Scripts\popper.js" />
+    <Content Include="Scripts\popper.min.js" />
+    <Content Include="Scripts\src\index.js" />
+    <Content Include="Scripts\src\methods\defaults.js" />
+    <Content Include="Scripts\src\methods\destroy.js" />
+    <Content Include="Scripts\src\methods\disableEventListeners.js" />
+    <Content Include="Scripts\src\methods\enableEventListeners.js" />
+    <Content Include="Scripts\src\methods\placements.js" />
+    <Content Include="Scripts\src\methods\update.js" />
+    <Content Include="Scripts\src\modifiers\applyStyle.js" />
+    <Content Include="Scripts\src\modifiers\arrow.js" />
+    <Content Include="Scripts\src\modifiers\computeStyle.js" />
+    <Content Include="Scripts\src\modifiers\flip.js" />
+    <Content Include="Scripts\src\modifiers\hide.js" />
+    <Content Include="Scripts\src\modifiers\index.js" />
+    <Content Include="Scripts\src\modifiers\inner.js" />
+    <Content Include="Scripts\src\modifiers\keepTogether.js" />
+    <Content Include="Scripts\src\modifiers\offset.js" />
+    <Content Include="Scripts\src\modifiers\preventOverflow.js" />
+    <Content Include="Scripts\src\modifiers\shift.js" />
+    <Content Include="Scripts\src\utils\clockwise.js" />
+    <Content Include="Scripts\src\utils\computeAutoPlacement.js" />
+    <Content Include="Scripts\src\utils\debounce.js" />
+    <Content Include="Scripts\src\utils\find.js" />
+    <Content Include="Scripts\src\utils\findCommonOffsetParent.js" />
+    <Content Include="Scripts\src\utils\findIndex.js" />
+    <Content Include="Scripts\src\utils\getBordersSize.js" />
+    <Content Include="Scripts\src\utils\getBoundaries.js" />
+    <Content Include="Scripts\src\utils\getBoundingClientRect.js" />
+    <Content Include="Scripts\src\utils\getClientRect.js" />
+    <Content Include="Scripts\src\utils\getFixedPositionOffsetParent.js" />
+    <Content Include="Scripts\src\utils\getOffsetParent.js" />
+    <Content Include="Scripts\src\utils\getOffsetRect.js" />
+    <Content Include="Scripts\src\utils\getOffsetRectRelativeToArbitraryNode.js" />
+    <Content Include="Scripts\src\utils\getOppositePlacement.js" />
+    <Content Include="Scripts\src\utils\getOppositeVariation.js" />
+    <Content Include="Scripts\src\utils\getOuterSizes.js" />
+    <Content Include="Scripts\src\utils\getParentNode.js" />
+    <Content Include="Scripts\src\utils\getPopperOffsets.js" />
+    <Content Include="Scripts\src\utils\getReferenceNode.js" />
+    <Content Include="Scripts\src\utils\getReferenceOffsets.js" />
+    <Content Include="Scripts\src\utils\getRoot.js" />
+    <Content Include="Scripts\src\utils\getRoundedOffsets.js" />
+    <Content Include="Scripts\src\utils\getScroll.js" />
+    <Content Include="Scripts\src\utils\getScrollParent.js" />
+    <Content Include="Scripts\src\utils\getStyleComputedProperty.js" />
+    <Content Include="Scripts\src\utils\getSupportedPropertyName.js" />
+    <Content Include="Scripts\src\utils\getViewportOffsetRectRelativeToArtbitraryNode.js" />
+    <Content Include="Scripts\src\utils\getWindow.js" />
+    <Content Include="Scripts\src\utils\getWindowSizes.js" />
+    <Content Include="Scripts\src\utils\includeScroll.js" />
+    <Content Include="Scripts\src\utils\index.js" />
+    <Content Include="Scripts\src\utils\isBrowser.js" />
+    <Content Include="Scripts\src\utils\isFixed.js" />
+    <Content Include="Scripts\src\utils\isFunction.js" />
+    <Content Include="Scripts\src\utils\isIE.js" />
+    <Content Include="Scripts\src\utils\isModifierEnabled.js" />
+    <Content Include="Scripts\src\utils\isModifierRequired.js" />
+    <Content Include="Scripts\src\utils\isNumeric.js" />
+    <Content Include="Scripts\src\utils\isOffsetContainer.js" />
+    <Content Include="Scripts\src\utils\removeEventListeners.js" />
+    <Content Include="Scripts\src\utils\runModifiers.js" />
+    <Content Include="Scripts\src\utils\setAttributes.js" />
+    <Content Include="Scripts\src\utils\setStyles.js" />
+    <Content Include="Scripts\src\utils\setupEventListeners.js" />
+    <Content Include="Scripts\umd\popper-utils.js" />
+    <Content Include="Scripts\umd\popper-utils.min.js" />
+    <Content Include="Scripts\umd\popper.js" />
+    <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Account\ConfirmEmail.cshtml" />
+    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\SendCode.cshtml" />
+    <Content Include="Views\Account\VerifyCode.cshtml" />
+    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
+    <Content Include="Views\Manage\ChangePassword.cshtml" />
+    <Content Include="Views\Manage\Index.cshtml" />
+    <Content Include="Views\Manage\ManageLogins.cshtml" />
+    <Content Include="Views\Manage\SetPassword.cshtml" />
+    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
+    <Content Include="Views\Shared\Lockout.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Scripts\umd\popper.min.js.map" />
+    <Content Include="Scripts\umd\popper.js.map" />
+    <Content Include="Scripts\umd\popper.js.flow" />
+    <Content Include="Scripts\umd\popper-utils.min.js.map" />
+    <Content Include="Scripts\umd\popper-utils.js.map" />
+    <Content Include="Scripts\README.md" />
+    <Content Include="Scripts\popper.min.js.map" />
+    <Content Include="Scripts\popper.js.map" />
+    <Content Include="Scripts\popper-utils.min.js.map" />
+    <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Views\Home\Causes.cshtml" />
+    <Content Include="Views\Home\CauseDetail.cshtml" />
+    <Content Include="Views\Home\Donations.cshtml" />
+    <Content Include="Views\Shared\_AuthenLayout.cshtml" />
+    <Content Include="Views\Shared\_DashboardLayout.cshtml" />
+    <Content Include="Views\Shared\_DashboardLoginPartial.cshtml" />
+    <Content Include="Views\Dashboard\Index.cshtml" />
+    <Content Include="Views\Project\CreateProject.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.4.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Scripts\index.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202002130836148_Initial.resx">
+      <DependentUpon>202002130836148_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>56337</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>https://localhost:44351/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>
