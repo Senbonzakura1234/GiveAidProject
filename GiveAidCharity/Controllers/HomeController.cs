@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using GiveAidCharity.Models;
 using GiveAidCharity.Models.HelperClass;
+using GiveAidCharity.Models.Main;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -133,12 +135,20 @@ namespace GiveAidCharity.Controllers
                 ProjectImages = images,
                 ProjectComments = comments
             };
-            return View();
+            return View(cause);
         }
 
-        public ActionResult Donations()
+        public async Task<ActionResult> Donations()
         {
-            return View();
+
+            var donations = await _db.Donations.Where(d => d.Project.Status != Project.ProjectStatusEnum.Canceled
+                                                           || d.Project.Status != Project.ProjectStatusEnum.Suspended).Take(9)
+                .ToListAsync();
+            var listDonations = (from item in donations let cause = new CausesListViewModel {Id = item.ProjectId, Name = item.Project.Name} 
+                select new DonationsListViewModel {UserId = item.ApplicationUserId, Avatar = item.ApplicationUser.Avatar,
+                    Username = item.ApplicationUser.UserName, Amount = item.Amount, Cause = cause}).ToList();
+
+            return View(listDonations);
         }
     }
 }

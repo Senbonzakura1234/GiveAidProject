@@ -34,17 +34,21 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container">
-            <a class="navbar-brand" href="#/">Welfare</a>
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                @*<img src="https://res.cloudinary.com/senbonzakura/image/upload/v1581505882/Give%20Aid%20Project/2647372207_824b08c6-bf87-4cf4-afbf-5c54273b18e1_votmhh.png" alt="" 
+                     style="max-height: 100px"/>*@
+                GIVE AID
+            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="oi oi-menu"></span> Menu
             </button>
 
             <div class="collapse navbar-collapse" id="ftco-nav">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active"><a href="#" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Donate</a></li>
+                    <li class="nav-item active"><a href="@Url.Action("Index", "Home")" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="@Url.Action("Donations", "Home")" class="nav-link">Donations</a></li>
+                    <li class="nav-item"><a href="@Url.Action("Causes", "Home")" class="nav-link">Causes</a></li>
                     <li class="nav-item"><a href="#" class="nav-link">Blog</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Events</a></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="DropdownMiscellaneous" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                             Info
@@ -52,7 +56,7 @@
                         <div class="dropdown-menu" aria-labelledby="DropdownMiscellaneous">
                             <a class="dropdown-item" href="@Url.Action("About","Home")">About</a>
                             <a class="dropdown-item" href="@Url.Action("Contact","Home")">Contact</a>
-                            <a class="dropdown-item" href="#">Causes</a>
+                            <a class="dropdown-item" href="#">Events</a>
                             <a class="dropdown-item" href="#">Gallery</a>
                         </div>
                     </li>

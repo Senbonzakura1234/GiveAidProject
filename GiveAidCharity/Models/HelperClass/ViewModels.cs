@@ -76,4 +76,16 @@ namespace GiveAidCharity.Models.HelperClass
         public virtual ICollection<ProjectImage> ProjectImages { get; set; }
         public virtual ICollection<ProjectComment> ProjectComments { get; set; }
     }
+
+    public class DonationsListViewModel
+    {
+        public string UserId { get; set; }
+        public string Username { get; set; }
+        public string Avatar { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime DonateDate { get; set; }
+        public double Amount { get; set; }
+        public CausesListViewModel Cause { get; set; }
+    }
 }

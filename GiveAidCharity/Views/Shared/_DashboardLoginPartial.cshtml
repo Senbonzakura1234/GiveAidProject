@@ -1,9 +1,9 @@
-﻿@*@using Microsoft.AspNet.Identity*@
+﻿@using Microsoft.AspNet.Identity
 @{
-    //string SubStringWithDot(string text)
-    //{
-    //    return text == null ? string.Empty : text.Length > 12 ? text.Substring(0, 9) + "..." : text;
-    //}
+    string SubStringWithDot(string text)
+    {
+        return text == null ? string.Empty : text.Length > 12 ? text.Substring(0, 9) + "..." : text;
+    }
 }
 @* ReSharper disable  Html.IdNotResolved *@
 
@@ -15,8 +15,8 @@
             <span class="login-status online"></span>
         </div>
         <div class="nav-profile-text d-flex flex-column">
-            @*@SubStringWithDot(User.Identity.GetUserName())*@
-            <span class="font-weight-bold mb-2">Admin</span>
+           
+            <span class="font-weight-bold mb-2"> @SubStringWithDot(User.Identity.GetUserName()) </span>
             <span class="text-secondary text-small">
                 Admin
             </span>
@@ -35,7 +35,7 @@
         <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
     </a>
 
-    @*<div class="collapse" id="drop-down-profile">
+    <div class="collapse" id="drop-down-profile">
             <ul class="nav flex-column sub-menu">
                 @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "d-none" }))
                 {
@@ -48,7 +48,7 @@
                        href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
                 </li>
             </ul>
-        </div>*@
+        </div>
 </li>
 
 
