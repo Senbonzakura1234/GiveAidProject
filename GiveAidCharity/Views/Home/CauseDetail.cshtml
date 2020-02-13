@@ -1,8 +1,14 @@
-﻿@{
+﻿@model GiveAidCharity.Models.HelperClass.CausesDetailViewModel
+
+@{
     ViewBag.Title = "Cause Detail";
 }
 @* ReSharper disable  MarkupTextTypo *@
-
+@section hero_wrap
+{
+    <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }"><span class="mr-2"><a href="@Url.Action("Index")">Home</a></span> <span class="mr-2"><a href="@Url.Action("Causes")">Causes</a></span> <span>Cause Details</span></p>
+    <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Cause Details</h1>
+}
 <section class="ftco-section ftco-degree-bg">
     <div class="container">
         <div class="row">
@@ -155,84 +161,76 @@
                 </div>
 
             </div> <!-- .col-md-8 -->
-            <div class="col-md-4 sidebar ftco-animate">
-                <div class="sidebar-box">
-                    <form action="#" class="search-form">
-                        <div class="form-group">
-                            <span class="icon fa fa-search"></span>
-                            <input type="text" class="form-control" placeholder="Type a keyword and hit enter">
-                        </div>
-                    </form>
-                </div>
-                <div class="sidebar-box ftco-animate">
-                    <div class="categories">
-                        <h3>Categories</h3>
-                        <li><a href="#">Tour <span>(12)</span></a></li>
-                        <li><a href="#">Hotel <span>(22)</span></a></li>
-                        <li><a href="#">Coffee <span>(37)</span></a></li>
-                        <li><a href="#">Drinks <span>(42)</span></a></li>
-                        <li><a href="#">Foods <span>(14)</span></a></li>
-                        <li><a href="#">Travel <span>(140)</span></a></li>
-                    </div>
-                </div>
-
-                <div class="sidebar-box ftco-animate">
-                    <h3>Recent Blog</h3>
-                    <div class="block-21 mb-4 d-flex">
-                        <a class="blog-img mr-4" style="background-image: url(/Content/HomepageTheme/images/image_1.jpg);"></a>
-                        <div class="text">
-                            <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
-                            <div class="meta">
-                                <div><a href="#"><span class="icon-calendar"></span> July 12, 2018</a></div>
-                                <div><a href="#"><span class="icon-person"></span> Admin</a></div>
-                                <div><a href="#"><span class="icon-chat"></span> 19</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="block-21 mb-4 d-flex">
-                        <a class="blog-img mr-4" style="background-image: url(/Content/HomepageTheme/images/image_2.jpg);"></a>
-                        <div class="text">
-                            <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
-                            <div class="meta">
-                                <div><a href="#"><span class="icon-calendar"></span> July 12, 2018</a></div>
-                                <div><a href="#"><span class="icon-person"></span> Admin</a></div>
-                                <div><a href="#"><span class="icon-chat"></span> 19</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="block-21 mb-4 d-flex">
-                        <a class="blog-img mr-4" style="background-image: url(/Content/HomepageTheme/images/image_3.jpg);"></a>
-                        <div class="text">
-                            <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
-                            <div class="meta">
-                                <div><a href="#"><span class="icon-calendar"></span> July 12, 2018</a></div>
-                                <div><a href="#"><span class="icon-person"></span> Admin</a></div>
-                                <div><a href="#"><span class="icon-chat"></span> 19</a></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="sidebar-box ftco-animate">
-                    <h3>Tag Cloud</h3>
-                    <div class="tagcloud">
-                        <a href="#" class="tag-cloud-link">dish</a>
-                        <a href="#" class="tag-cloud-link">menu</a>
-                        <a href="#" class="tag-cloud-link">food</a>
-                        <a href="#" class="tag-cloud-link">sweet</a>
-                        <a href="#" class="tag-cloud-link">tasty</a>
-                        <a href="#" class="tag-cloud-link">delicious</a>
-                        <a href="#" class="tag-cloud-link">desserts</a>
-                        <a href="#" class="tag-cloud-link">drinks</a>
-                    </div>
-                </div>
-
-                <div class="sidebar-box ftco-animate">
-                    <h3>Paragraph</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem necessitatibus voluptate quod mollitia delectus aut, sunt placeat nam vero culpa sapiente consectetur similique, inventore eos fugit cupiditate numquam!</p>
-                </div>
-            </div>
+            @Html.Partial("_CauseDetailSideBar")
 
         </div>
     </div>
 </section> <!-- .section -->
+@*<h2>CauseDetail</h2>
+
+    <div>
+        <h4>CausesDetailViewModel</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Goal)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Goal)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CurrentFund)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CurrentFund)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.StartDate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ExpireDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ExpireDate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.FollowCount)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.FollowCount)
+            </dd>
+
+        </dl>
+    </div>
+    <p>
+
+        @Html.ActionLink("Back to List", "Index")
+    </p>*@

@@ -8,7 +8,11 @@
     var currentPara = "?page=" + ViewBag.CurrentPage +
                       "&limit=" + ViewBag.Limit;
 }
-
+@section hero_wrap
+{
+    <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }"><span class="mr-2"><a href="@Url.Action("Index")">Home</a></span> <span>Causes</span></p>
+    <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Causes</h1>
+}
 <section class="ftco-section">
     <div class="container">
         <div class="row">
@@ -17,9 +21,9 @@
             {
                 <div class="col-md-4 ftco-animate">
                     <div class="cause-entry">
-                        <a href="#" class="img" style="background-image: url(/Content/HomepageTheme/images/cause-1.jpg);"></a>
+                        <a href="@Url.Action("CauseDetail", "Home", new{id = item.Id})" class="img" style="background-image: url(/Content/HomepageTheme/images/cause-1.jpg);"></a>
                         <div class="text p-3 p-md-4">
-                            <h3><a href="#">Clean water for the urban area</a></h3>
+                            <h3><a href="@Url.Action("CauseDetail", "Home", new{id = item.Id})">Clean water for the urban area</a></h3>
                             <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life</p>
                             <span class="donation-time mb-3 d-block">Last donation 1w ago</span>
                             <div class="progress custom-progress-success">

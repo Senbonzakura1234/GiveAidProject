@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using GiveAidCharity.Models;
 using GiveAidCharity.Models.HelperClass;
-using GiveAidCharity.Models.Main;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -79,12 +78,14 @@ namespace GiveAidCharity.Controllers
             var projectsList = await _db.Projects.ToListAsync();
             var causesList = projectsList.Select(t => new CausesListViewModel
                 {
+                    Id = t.Id,
                     Name = t.Name,
                     CurrentFund = t.CurrentFund,
                     Goal = t.Goal,
                     Description = t.Description,
                     StartDate = t.StartDate,
-                    ExpireDate = t.ExpireDate
+                    ExpireDate = t.ExpireDate,
+                    FollowCount = t.Follows.Count
                 })
                 .ToList();
 
@@ -104,8 +105,34 @@ namespace GiveAidCharity.Controllers
             return View(causesList);
         }
 
-        public ActionResult CauseDetail()
+        public async Task<ActionResult> CauseDetail(string id)
         {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var project = await _db.Projects.FindAsync(id);
+            if (project == null)
+            {
+                return HttpNotFound();
+            }
+
+            var images = await _db.ProjectImages.Where(p => p.ProjectId == id).ToListAsync();
+            var comments = await _db.ProjectComments.Where(p => p.ProjectId == id).ToListAsync();
+
+            var cause = new CausesDetailViewModel
+            {
+                Name = project.Name,
+                Status = project.Status,
+                StartDate = project.StartDate,
+                ExpireDate = project.ExpireDate,
+                Goal = project.Goal,
+                CurrentFund = project.CurrentFund,
+                Description = project.Description,
+                FollowCount = project.Follows.Count,
+                ProjectImages = images,
+                ProjectComments = comments
+            };
             return View();
         }
 
