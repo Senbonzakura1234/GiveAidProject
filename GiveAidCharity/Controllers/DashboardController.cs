@@ -2,6 +2,7 @@
 
 namespace GiveAidCharity.Controllers
 {
+    [Authorize]
     public class DashboardController : Controller
     {
         public ActionResult Index()
