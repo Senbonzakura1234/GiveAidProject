@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using GiveAidCharity.Models;
+// ReSharper disable  RedundantCaseLabel
 
 namespace GiveAidCharity.Controllers
 {
@@ -27,26 +28,14 @@ namespace GiveAidCharity.Controllers
 
         public ApplicationSignInManager SignInManager
         {
-            get
-            {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            }
-            private set 
-            { 
-                _signInManager = value; 
-            }
+            get => _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+            private set => _signInManager = value;
         }
 
         public ApplicationUserManager UserManager
         {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
+            get => _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            private set => _userManager = value;
         }
 
         //
@@ -69,10 +58,13 @@ namespace GiveAidCharity.Controllers
             {
                 return View(model);
             }
-
+            var user = await UserManager.FindByEmailAsync(model.Email);
+            model.RememberMe = true;
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var result = user != null
+                ? await SignInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, false)
+                : SignInStatus.Failure;
             switch (result)
             {
                 case SignInStatus.Success:
@@ -80,10 +72,12 @@ namespace GiveAidCharity.Controllers
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, model.RememberMe });
                 case SignInStatus.Failure:
+                    ModelState.AddModelError("", @"Wrong Email or Password");
+                    return View(model);
                 default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
+                    ModelState.AddModelError("", @"Invalid login attempt.");
                     return View(model);
             }
         }
@@ -117,7 +111,7 @@ namespace GiveAidCharity.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, model.RememberMe, model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -126,7 +120,7 @@ namespace GiveAidCharity.Controllers
                     return View("Lockout");
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Invalid code.");
+                    ModelState.AddModelError("", @"Invalid code.");
                     return View(model);
             }
         }
@@ -146,14 +140,17 @@ namespace GiveAidCharity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(model);
+            IdentityResult result;
+            var userCheck = await UserManager.FindByEmailAsync(model.Email);
+            if (userCheck == null)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
+                result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    await SignInManager.SignInAsync(user, true, true);
+
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -162,8 +159,12 @@ namespace GiveAidCharity.Controllers
 
                     return RedirectToAction("Index", "Home");
                 }
-                AddErrors(result);
             }
+            else
+            {
+                result = IdentityResult.Failed();
+            }
+            AddErrors(result);
 
             // If we got this far, something failed, redisplay form
             return View(model);
@@ -311,7 +312,7 @@ namespace GiveAidCharity.Controllers
             {
                 return View("Error");
             }
-            return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+            return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, model.ReturnUrl, model.RememberMe });
         }
 
         //
@@ -326,7 +327,7 @@ namespace GiveAidCharity.Controllers
             }
 
             // Sign in the user with this external login provider if the user already has a login
-            var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
+            var result = await SignInManager.ExternalSignInAsync(loginInfo, true);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -340,7 +341,7 @@ namespace GiveAidCharity.Controllers
                     // If the user does not have an account, then prompt the user to create an account
                     ViewBag.ReturnUrl = returnUrl;
                     ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
+                    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Username = loginInfo.Email, Email = loginInfo.Email});
             }
         }
 
@@ -364,15 +365,24 @@ namespace GiveAidCharity.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user);
-                if (result.Succeeded)
+                IdentityResult result;
+                var checkUser = await UserManager.FindByNameAsync(model.Username);
+                if (checkUser != null)
                 {
-                    result = await UserManager.AddLoginAsync(user.Id, info.Login);
+                    result = IdentityResult.Failed();
+                }
+                else
+                {
+                    var user = new ApplicationUser { UserName = model.Username, Email = model.Email };
+                    result = await UserManager.CreateAsync(user);
                     if (result.Succeeded)
                     {
-                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                        return RedirectToLocal(returnUrl);
+                        result = await UserManager.AddLoginAsync(user.Id, info.Login);
+                        if (result.Succeeded)
+                        {
+                            await SignInManager.SignInAsync(user, true, true);
+                            return RedirectToLocal(returnUrl);
+                        }
                     }
                 }
                 AddErrors(result);
@@ -386,10 +396,15 @@ namespace GiveAidCharity.Controllers
         // POST: /Account/LogOff
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult LogOff()
+        public ActionResult LogOff(string currentUrl)
         {
+            if (string.IsNullOrWhiteSpace(currentUrl))
+            {
+                currentUrl = Url.Action("Index", "Home");
+            }
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            Session.Abandon();
+            return Redirect(currentUrl);
         }
 
         //
@@ -424,13 +439,7 @@ namespace GiveAidCharity.Controllers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
-        }
+        private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
 
         private void AddErrors(IdentityResult result)
         {
