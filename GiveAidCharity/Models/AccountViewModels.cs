@@ -1,9 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
 namespace GiveAidCharity.Models
 {
+    public class EditProfileViewModel
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        [Url]
+        public string Avatar { get; set; }
+        public string Description { get; set; }
+        public string Address { get; set; }
+        public string Zipcode { get; set; }
+        public string CompanyName { get; set; }
+        public ApplicationUser.GenderEnum Gender { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime? Birthday { get; set; }
+
+    }
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
@@ -56,9 +73,9 @@ namespace GiveAidCharity.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Email")]
-        [EmailAddress]
-        public string Email { get; set; }
+        [Display(Name = "Username")]
+        [RegularExpression(@"^\S*$", ErrorMessage = "No white space allowed")]
+        public string Username { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -72,10 +89,10 @@ namespace GiveAidCharity.Models
     public class RegisterViewModel
     {
         [Required]
-        [EmailAddress]
-        [Remote("AjaxCheckEmail", "Api", HttpMethod = "POST", ErrorMessage = "Email already exists")]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
+        [RegularExpression("^[a-zA-Z0-9]*$", ErrorMessage = "Only Alphabets and Numbers allowed.")]
+        [Remote("AjaxCheckUserName", "Api", HttpMethod = "POST", ErrorMessage = "Username already exists")]
+        [Display(Name = "Username")]
+        public string Username { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]

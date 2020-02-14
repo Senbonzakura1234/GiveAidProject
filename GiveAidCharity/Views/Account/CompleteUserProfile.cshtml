@@ -1,0 +1,80 @@
+﻿@model GiveAidCharity.Models.EditProfileViewModel
+
+@{
+    ViewBag.Title = "CompleteUserProfile";
+    Layout = "~/Views/Shared/_AuthenLayout.cshtml";
+}
+
+@section wrapClass {wrap-profile}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <span class="login100-form-title p-b-30">
+        <span>
+            <img src="https://res.cloudinary.com/senbonzakura/image/upload/v1581598494/Give%20Aid%20Project/LogoDark_tgnbjg.png" alt="" style="max-height: 65px" />
+        </span>
+        Register
+    </span>
+
+    <div class="form-row">
+        <div class="col-md-6 form-group">
+            <div class="wrap-input100 validate-input" data-validate="">
+                @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "input100", placeholder = "Type your " + Html.DisplayFor(m => m.FirstName) })
+                <span class="focus-input100" data-symbol="&#xf206;"></span>
+            </div>
+        </div>
+        <div class="col-md-6 form-group">
+            <div class="wrap-input100 validate-input" data-validate="">
+                @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "input100", placeholder = "Type your " + Html.DisplayFor(m => m.FirstName) })
+                <span class="focus-input100" data-symbol="&#xf206;"></span>
+            </div>
+        </div>
+        <div class="col-md-6 form-group">
+            <div class="wrap-input100 validate-input" data-validate="">
+                @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "input100", placeholder = "Type your " + Html.DisplayFor(m => m.FirstName) })
+                <span class="focus-input100" data-symbol="&#xf206;"></span>
+            </div>
+        </div>
+        <div class="col-md-6 form-group">
+            <div class="wrap-input100 validate-input" data-validate="">
+                @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "input100", placeholder = "Type your " + Html.DisplayFor(m => m.FirstName) })
+                <span class="focus-input100" data-symbol="&#xf206;"></span>
+            </div>
+        </div>
+        <div class="col-md-6 form-group">
+            <div class="wrap-input100 validate-input" data-validate="">
+                @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "input100", placeholder = "Type your " + Html.DisplayFor(m => m.FirstName) })
+                <span class="focus-input100" data-symbol="&#xf206;"></span>
+            </div>
+        </div>
+        <div class="col-md-6 form-group">
+            <div class="wrap-input100 validate-input" data-validate="">
+                @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "input100", placeholder = "Type your " + Html.DisplayFor(m => m.FirstName) })
+                <span class="focus-input100" data-symbol="&#xf206;"></span>
+            </div>
+        </div>
+    </div>
+    <small>@Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger text-right" })</small>
+
+
+    <div class="container-login100-form-btn p-t-31">
+        <div class="wrap-login100-form-btn">
+            <div class="login100-form-bgbtn"></div>
+            <button type="submit" class="login100-form-btn">
+                Save
+            </button>
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
