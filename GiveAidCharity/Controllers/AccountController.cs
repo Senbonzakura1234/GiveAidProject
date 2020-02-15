@@ -8,6 +8,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using GiveAidCharity.Models;
+using Microsoft.Ajax.Utilities;
+
 // ReSharper disable  RedundantCaseLabel
 
 namespace GiveAidCharity.Controllers
@@ -181,6 +183,58 @@ namespace GiveAidCharity.Controllers
             };
             return View(profileEdit);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CompleteUserProfile(EditProfileViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            user.UpdatedAt = DateTime.Now;
+            if (model.FirstName != null)
+            {
+                user.FirstName = model.FirstName;
+            }
+            if (model.LastName != null)
+            {
+                user.LastName = model.LastName;
+            }
+            if (model.Birthday != null)
+            {
+                user.Birthday = model.Birthday;
+            }
+            if (model.Avatar != null)
+            {
+                user.Avatar = model.Avatar;
+            }
+            if (model.Description != null)
+            {
+                user.Description = model.Description;
+            }
+            if (!model.CompanyName.IsNullOrWhiteSpace())
+            {
+                user.CompanyName = model.CompanyName;
+            }
+            if (!model.Address.IsNullOrWhiteSpace())
+            {
+                user.Address = model.Address;
+            }
+
+            if (!model.Zipcode.IsNullOrWhiteSpace())
+            {
+                user.Zipcode = model.Zipcode;
+            }
+
+            user.Gender = model.Gender;
+
+            await UserManager.UpdateAsync(user);
+            return RedirectToAction("Index", "Home");
+        }
+
+        
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
