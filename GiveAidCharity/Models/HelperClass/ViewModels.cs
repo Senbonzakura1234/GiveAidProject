@@ -64,8 +64,10 @@ namespace GiveAidCharity.Models.HelperClass
     public class CausesDetailViewModel
     {
         public string Name { get; set; }
+        public string HostId { get; set; }
         public string Description { get; set; }
         public double Goal { get; set; }
+        public string CoverImg { get; set; }
         public double CurrentFund { get; set; }
         [Required]
         public string ContentPart1 { get; set; }
@@ -79,10 +81,18 @@ namespace GiveAidCharity.Models.HelperClass
         public DateTime ExpireDate { get; set; }
         public Project.ProjectStatusEnum Status { get; set; }
         public int FollowCount { get; set; }
-        public virtual ICollection<ProjectImage> ProjectImages { get; set; }
-        public virtual ICollection<ProjectComment> ProjectComments { get; set; }
+        public virtual List<ProjectImage> ProjectImages { get; set; }
+        public virtual List<ProjectComment> ProjectComments { get; set; }
     }
+    public class SingleDonationViewModel {
 
+    }
+    public class DonationsGroupByUserViewModel
+    {
+        public string UserId { get; set; }
+        public virtual List<SingleDonationViewModel> DonationGroups { get; set; }
+        public double TotalGroupAmount { get; set; }
+    }
     public class DonationsListViewModel
     {
         public string UserId { get; set; }
