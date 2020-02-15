@@ -181,12 +181,15 @@ iframe {
 }
 
 .wrap-login100 {
-  width: 500px;
-  background: #fff;
-  border-radius: 10px;
-  overflow: hidden;
+    max-width: 100%;
+    width: 500px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
 }
-
+.wrap-profile {
+    width: 900px;
+}
 
 /*------------------------------------------------------------------
 [ Form ]*/
@@ -266,7 +269,7 @@ iframe {
   bottom: 0;
   left: 0;
   padding-left: 13px;
-  padding-top: 3px;
+  padding-top: 5px;
 }
 
 .focus-input100::before {

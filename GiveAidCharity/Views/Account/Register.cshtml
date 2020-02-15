@@ -8,6 +8,7 @@
 
 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
+    @Html.AntiForgeryToken()
     <span class="login100-form-title p-b-30">
         <span>
             <img src="https://res.cloudinary.com/senbonzakura/image/upload/v1581598494/Give%20Aid%20Project/LogoDark_tgnbjg.png" alt="" style="max-height: 65px" />
@@ -16,11 +17,11 @@
     </span>
 
     <div class="wrap-input100 validate-input" data-validate="">
-        @Html.LabelFor(m => m.Email, new { @class = "control-label" })
-        @Html.TextBoxFor(m => m.Email, new { @class = "input100", placeholder = "Type your email" })
+        @Html.LabelFor(m => m.Username, new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.Username, new { @class = "input100", placeholder = "Type your email" })
         <span class="focus-input100" data-symbol="&#xf206;"></span>
     </div>
-    <small>@Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger text-right" })</small>
+    <small>@Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger text-right" })</small>
 
 
     <div class="wrap-input100 validate-input m-t-23" data-validate="">
