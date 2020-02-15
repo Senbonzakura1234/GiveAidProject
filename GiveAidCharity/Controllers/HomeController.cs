@@ -118,9 +118,8 @@ namespace GiveAidCharity.Controllers
                 return HttpNotFound();
             }
 
-            var images = await _db.ProjectImages.Where(p => p.ProjectId == id).ToListAsync();
+            var images = await _db.ProjectImages.Where(p => p.ProjectId == id && p.Description != null).ToListAsync();
             var comments = await _db.ProjectComments.Where(p => p.ProjectId == id).ToListAsync();
-
             var cause = new CausesDetailViewModel
             {
                 Name = project.Name,
@@ -128,6 +127,7 @@ namespace GiveAidCharity.Controllers
                 StartDate = project.StartDate,
                 ExpireDate = project.ExpireDate,
                 Goal = project.Goal,
+                CoverImg = project.CoverImg,
                 CurrentFund = project.CurrentFund,
                 Description = project.Description,
                 FollowCount = project.Follows.Count,
