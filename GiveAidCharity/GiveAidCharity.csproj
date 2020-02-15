@@ -176,6 +176,7 @@
     <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IPNPayPalController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PartialPartController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
@@ -749,6 +750,7 @@
     <Content Include="Views\Home\CauseDetail.cshtml" />
     <Content Include="Views\Shared\_CauseDetailSideBar.cshtml" />
     <Content Include="Views\Home\Donations.cshtml" />
+    <Content Include="Views\IPNPayPal\Index.cshtml" />
     <Content Include="Views\Account\CompleteUserProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
