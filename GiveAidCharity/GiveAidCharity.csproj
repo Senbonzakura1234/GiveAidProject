@@ -615,6 +615,8 @@
     <Content Include="Content\HomepageTheme\scss\bootstrap\_utilities.scss" />
     <Content Include="Content\HomepageTheme\scss\bootstrap\_variables.scss" />
     <Content Include="Content\HomepageTheme\scss\style.scss" />
+    <None Include="Properties\PublishProfiles\giveaidcharity - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\giveaidcharity - Web Deploy1.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />

@@ -21,13 +21,13 @@
                     <span class="fund-raised d-block">$@Html.DisplayFor(model => model.CurrentFund) raised of $@Html.DisplayFor(model => model.Goal)</span>
                 </p>
                 <p>
-                    <img src="@Model.CoverImg" alt="" class="img-fluid">
+                    <img src="@Model.CoverImg" alt="" class="img-fluid" style="width: 100%">
                 </p>
                 <p>@Html.DisplayFor(model => model.ContentPart1)</p>
                 <p>@Html.DisplayFor(model => model.ContentPart2)</p>
                 @foreach (var item in Model.ProjectImages)
                 {
-                    <p><img src="@item.Url" alt="" class="img-fluid"></p>
+                    <p><img src="@item.Url" alt="" class="img-fluid" style="width: 100%"></p>
                     <p>@item.Description</p>
                 }
                 <div class="tag-widget post-tag-container mb-5 mt-5">
@@ -41,11 +41,17 @@
 
                 <div class="about-author d-flex p-5 bg-light">
                     <div class="bio align-self-md-center mr-5">
-                        <img src="~/Content/HomepageTheme/images/person_1.jpg" alt="Image placeholder" class="img-fluid mb-4">
+                        <img src="@(Model.HostAvatar ?? "../../Content/HomepageTheme/images/person_1.jpg")" alt="Image placeholder" class="img-fluid mb-4">
                     </div>
                     <div class="desc align-self-md-center">
-                        <h3>@Html.DisplayFor(model => model.)</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem necessitatibus voluptate quod mollitia delectus aut, sunt placeat nam vero culpa sapiente consectetur similique, inventore eos fugit cupiditate numquam!</p>
+                        <h3>@Html.DisplayFor(model => model.HostName)</h3>
+                        <p>
+                            @(Model.HostDescription ?? "Lorem ipsum dolor sit amet, consectetur adipisicing elit. " +
+                              "Ducimus itaque, autem necessitatibus voluptate quod mollitia delectus aut, " +
+                              "sunt placeat nam vero culpa sapiente consectetur similique, " +
+                              "inventore eos fugit cupiditate numquam!")
+                        </p>
+                        <p> @Model.HostEmail  @Model.HostPhone </p>
                     </div>
                 </div>
 
@@ -53,24 +59,20 @@
                 <div class="pt-5 mt-5">
                     <h3 class="mb-5">@Model.ProjectComments.Count Comments</h3>
                     <ul class="comment-list">
-                        @foreach (var item in Model.ProjectComments)
+                        @foreach (var item in Model.ProjectComments.Where(item => item.ParentId == null))
                         {
-                            if (item.ParentId == null)
-                            {
-                        <li class="comment">
-                            <div class="vcard bio">
-                                <img src="~/Content/HomepageTheme/images/person_1.jpg" alt="Image placeholder">
-                            </div>
-                            <div class="comment-body">
-                                <h3>@item.ApplicationUser.UserName</h3>
-                                <div class="meta">@item.CreatedAt</div>
-                                <p>@item.Content</p>
-                                <p><a href="#" class="reply">Reply</a></p>
-                            </div>
-                            <ul class="children">
-                                @foreach (var childcomment in Model.ProjectComments)
-                                {
-                                    if (childcomment.ParentId == item.Id)
+                            <li class="comment">
+                                <div class="vcard bio">
+                                    <img src="~/Content/HomepageTheme/images/person_1.jpg" alt="Image placeholder">
+                                </div>
+                                <div class="comment-body">
+                                    <h3>@item.ApplicationUser.UserName</h3>
+                                    <div class="meta">@item.CreatedAt</div>
+                                    <p>@item.Content</p>
+                                    <p><a href="#" class="reply">Reply</a></p>
+                                </div>
+                                <ul class="children">
+                                    @foreach (var childcomment in Model.ProjectComments.Where(childcomment => childcomment.ParentId == item.Id))
                                     {
                                         <li class="comment">
                                             <div class="vcard bio">
@@ -84,12 +86,8 @@
                                             </div>
                                         </li>
                                     }
-                                }
-                            </ul>
-                        </li>
-                            }
-
-                        
+                                </ul>
+                            </li>
                         }
                     </ul>
                     <!-- END comment-list -->

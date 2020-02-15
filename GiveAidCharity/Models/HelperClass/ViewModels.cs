@@ -64,7 +64,11 @@ namespace GiveAidCharity.Models.HelperClass
     public class CausesDetailViewModel
     {
         public string Name { get; set; }
-        public string HostId { get; set; }
+        public string HostName { get; set; }
+        public string HostAvatar { get; set; }
+        public string HostDescription { get; set; }
+        public string HostEmail { get; set; }
+        public string HostPhone { get; set; }
         public string Description { get; set; }
         public double Goal { get; set; }
         public string CoverImg { get; set; }

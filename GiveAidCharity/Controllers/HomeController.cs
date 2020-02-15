@@ -118,6 +118,7 @@ namespace GiveAidCharity.Controllers
                 return HttpNotFound();
             }
 
+            var host = await UserManager.FindByIdAsync(project.ApplicationUserId);
             var images = await _db.ProjectImages.Where(p => p.ProjectId == id && p.Description != null).ToListAsync();
             var comments = await _db.ProjectComments.Where(p => p.ProjectId == id).ToListAsync();
             var cause = new CausesDetailViewModel
@@ -134,7 +135,12 @@ namespace GiveAidCharity.Controllers
                 ProjectImages = images,
                 ProjectComments = comments,
                 ContentPart1 = project.ContentPart1,
-                ContentPart2 = project.ContentPart2
+                ContentPart2 = project.ContentPart2,
+                HostName = host == null? "" : host.UserName,
+                HostDescription = host == null ? "" : host.Description,
+                HostEmail = host == null ? "" : host.Email,
+                HostPhone = host == null ? "" : host.PhoneNumber,
+                HostAvatar = host == null ? "" : host.Avatar
             };
             return View(cause);
         }
