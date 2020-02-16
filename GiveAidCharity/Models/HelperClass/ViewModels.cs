@@ -64,6 +64,7 @@ namespace GiveAidCharity.Models.HelperClass
 
     public class CausesDetailViewModel
     {
+        public string Id { get; set; }
         public string Name { get; set; }
         public string HostName { get; set; }
         public string HostAvatar { get; set; }
@@ -90,7 +91,14 @@ namespace GiveAidCharity.Models.HelperClass
         public virtual List<ProjectComment> ProjectComments { get; set; }
     }
     public class SingleDonationViewModel {
-
+        public string UserId { get; set; }
+        public string Username { get; set; }
+        public double Amount { get; set; }
+        public string CauseId { get; set; }
+        public string Avatar { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime DonateDate { get; set; }
     }
     public class DonationsGroupByUserViewModel
     {
@@ -98,6 +106,7 @@ namespace GiveAidCharity.Models.HelperClass
         public virtual List<SingleDonationViewModel> DonationGroups { get; set; }
         public double TotalGroupAmount { get; set; }
     }
+
     public class DonationsListViewModel
     {
         public string UserId { get; set; }

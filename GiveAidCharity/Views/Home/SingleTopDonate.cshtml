@@ -1,0 +1,18 @@
+﻿@model IEnumerable<GiveAidCharity.Models.HelperClass.SingleDonationViewModel>
+
+@foreach (var item in Model)
+{
+    <div class="col-md-12 d-flex mb-sm-4 ftco-animate">
+        <div class="staff w-100">
+            <div class="d-flex">
+                <div class="img" style="background-image: url(@item.Avatar);"></div>
+                <div class="info ml-4">
+                    <h5><a href="#">@item.Username</a></h5>
+                    <div class="text">
+                        <p>Total Donated <span>$@item.Amount</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

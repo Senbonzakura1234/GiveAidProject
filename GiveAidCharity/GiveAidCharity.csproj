@@ -754,6 +754,8 @@
     <Content Include="Views\Home\Donations.cshtml" />
     <Content Include="Views\IPNPayPal\Index.cshtml" />
     <Content Include="Views\Account\CompleteUserProfile.cshtml" />
+    <Content Include="Views\Home\SingleTopDonate.cshtml" />
+    <Content Include="Views\Home\CausesDonate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
