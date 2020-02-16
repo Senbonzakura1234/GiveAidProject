@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
@@ -124,6 +125,7 @@ namespace GiveAidCharity.Controllers
             var comments = await _db.ProjectComments.Where(p => p.ProjectId == id).ToListAsync();
             var cause = new CausesDetailViewModel
             {
+                Id = project.Id,
                 Name = project.Name,
                 Status = project.Status,
                 StartDate = project.StartDate,
@@ -146,6 +148,93 @@ namespace GiveAidCharity.Controllers
             return View(cause);
         }
 
+        public ActionResult SingleTopDonate(string id)
+        {
+            var listDonate = _db.Donations.Where(d => d.ProjectId == id &&
+                                                            d.Status == Donation.DonationStatusEnum.Success).ToList();
+            var listDonateViewModel = new List<SingleDonationViewModel>();
+            if (listDonate.Count > 0)
+            {
+                for (int i = 0; i < listDonate.Count; i++)
+                {
+                    listDonateViewModel.Add(new SingleDonationViewModel
+                    {
+                        Amount = listDonate[i].Amount,
+                        CauseId = listDonate[i].ProjectId,
+                        DonateDate = listDonate[i].CreatedAt,
+                        UserId = listDonate[i].ApplicationUserId,
+                        Username = listDonate[i].ApplicationUser.UserName,
+                        Avatar = listDonate[i].ApplicationUser.Avatar
+                    });
+                }
+            }
+
+            var listDonateViewModelGroupBy = listDonateViewModel.GroupBy(ld => ld.UserId).Select(ld => new SingleDonationViewModel
+            {
+                Amount = ld.Sum(b => b.Amount),
+                CauseId = ld.FirstOrDefault()?.CauseId,
+                DonateDate = ld.FirstOrDefault().DonateDate,
+                UserId = ld.FirstOrDefault()?.UserId,
+                Username = ld.FirstOrDefault()?.Username,
+                Avatar = ld.FirstOrDefault()?.Avatar
+            }).OrderByDescending(ld => ld.Amount).Take(3).ToList();
+
+            return PartialView(listDonateViewModelGroupBy);
+        }
+
+        public ActionResult CausesDonate(string id, int? page, int? limit)
+        {
+            var listDonate = _db.Donations.Where(d => d.ProjectId == id &&
+                                                      d.Status == Donation.DonationStatusEnum.Success).ToList();
+            var listDonateViewModel = new List<SingleDonationViewModel>();
+            if (listDonate.Count > 0)
+            {
+                for (int i = 0; i < listDonate.Count; i++)
+                {
+                    listDonateViewModel.Add(new SingleDonationViewModel
+                    {
+                        Amount = listDonate[i].Amount,
+                        CauseId = listDonate[i].ProjectId,
+                        DonateDate = listDonate[i].CreatedAt,
+                        UserId = listDonate[i].ApplicationUserId,
+                        Username = listDonate[i].ApplicationUser.UserName,
+                        Avatar = listDonate[i].ApplicationUser.Avatar
+                    });
+                }
+            }
+
+            var listDonateViewModelGroupBy = listDonateViewModel.GroupBy(ld => ld.UserId).Select(ld => new SingleDonationViewModel
+            {
+                Amount = ld.Sum(b => b.Amount),
+                CauseId = ld.FirstOrDefault()?.CauseId,
+                DonateDate = ld.FirstOrDefault().DonateDate,
+                UserId = ld.FirstOrDefault()?.UserId,
+                Username = ld.FirstOrDefault()?.Username,
+                Avatar = ld.FirstOrDefault()?.Avatar
+            }).OrderByDescending(ld => ld.Amount).ToList();
+
+            if(page == null)
+            {
+                page = 1;
+            }
+
+            if (limit == null)
+            {
+                limit = 9;
+            }
+
+            ViewBag.TotalPage = Math.Ceiling((double)listDonateViewModelGroupBy.Count / limit.Value);
+            ViewBag.CurrentPage = page;
+
+            ViewBag.Limit = limit;
+
+            ViewBag.TotalItem = listDonateViewModelGroupBy.Count;
+
+            listDonateViewModelGroupBy = listDonateViewModelGroupBy.Skip((page.Value - 1) * limit.Value).Take(limit.Value).ToList();
+
+            return View(listDonateViewModelGroupBy);
+        }
+
         public async Task<ActionResult> Donations()
         {
 
@@ -157,6 +246,46 @@ namespace GiveAidCharity.Controllers
                     Username = item.ApplicationUser.UserName, Amount = item.Amount, Cause = cause}).ToList();
 
             return View(listDonations);
+        }
+
+        //public async Task<ActionResult> Test()
+        //{
+        //    var res = await _db.Projects.ToListAsync();
+        //    foreach (var item in res)
+        //    {
+        //        item.CurrentFund = 0;
+        //        foreach (var donate in item.Donations)
+        //        {
+        //            if (donate.Status == Donation.DonationStatusEnum.Success)
+        //            {
+        //                item.CurrentFund += donate.Amount;
+        //            }
+        //        }
+
+        //        _db.Entry(item).State = EntityState.Modified;
+        //        await _db.SaveChangesAsync();
+        //    }
+
+        //    return null;
+        //}
+        //public async Task<ActionResult> Test()
+        //{
+        //    var res = await _db.Users.ToArrayAsync();
+        //    foreach (var item in res)
+        //    {
+        //        item.Avatar =
+        //            "https://res.cloudinary.com/bangnguyen/image/upload/v1581844808/ProjectCharity/person_1_kvy425.jpg";
+
+        //        _db.Entry(item).State = EntityState.Modified;
+        //        await _db.SaveChangesAsync();
+        //    }
+
+        //    return null;
+        //}
+        [HttpPost]
+        public ActionResult Donate(double amount, string projectId)
+        {
+            return null;
         }
     }
 }

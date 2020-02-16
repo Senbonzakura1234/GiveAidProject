@@ -1,4 +1,5 @@
-﻿@model IEnumerable<GiveAidCharity.Models.HelperClass.CausesListViewModel>
+﻿@using System.Globalization
+@model IEnumerable<GiveAidCharity.Models.HelperClass.CausesListViewModel>
 
 @{
     ViewBag.Title = "Causes";
@@ -31,7 +32,9 @@
                             <p>@item.Description</p>
                             <span class="donation-time mb-3 d-block">Last donation 1w ago</span>
                             <div class="progress custom-progress-success">
-                                <div class="progress-bar bg-primary" role="progressbar" style="width: @(item.CurrentFund*100/item.Goal)%" aria-valuenow="@(item.CurrentFund*100/item.Goal)" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar bg-primary" role="progressbar" 
+                                     style="width: @((item.CurrentFund < item.Goal? 100*item.CurrentFund/ item.Goal : 100).ToString(CultureInfo.InvariantCulture))%" 
+                                     aria-valuenow="@((item.CurrentFund < item.Goal? 100*item.CurrentFund/ item.Goal : 100).ToString(CultureInfo.InvariantCulture))" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <span class="fund-raised d-block">$@item.CurrentFund raised of $@item.Goal</span>
                         </div>
