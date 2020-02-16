@@ -47,6 +47,7 @@ namespace GiveAidCharity.Models.HelperClass
     public class CausesListViewModel
     {
         public string Id { get; set; }
+        public string CoverImg { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public double Goal { get; set; }

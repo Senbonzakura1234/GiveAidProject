@@ -86,7 +86,8 @@ namespace GiveAidCharity.Controllers
                     Description = t.Description,
                     StartDate = t.StartDate,
                     ExpireDate = t.ExpireDate,
-                    FollowCount = t.Follows.Count
+                    FollowCount = t.Follows.Count,
+                    CoverImg = t.CoverImg
                 })
                 .ToList();
 
