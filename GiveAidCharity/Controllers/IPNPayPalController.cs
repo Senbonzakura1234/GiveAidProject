@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -91,6 +92,7 @@ namespace GiveAidCharity.Controllers
         {
             if (verificationResponse.Equals("VERIFIED"))
             {
+                Debug.WriteLine("okay");
                 // check that Payment_status=Completed
                 // check that Txn_id has not been previously processed
                 // check that Receiver_email is your Primary PayPal email
@@ -99,10 +101,12 @@ namespace GiveAidCharity.Controllers
             }
             else if (verificationResponse.Equals("INVALID"))
             {
+                Debug.WriteLine("not okay");
                 //Log for manual investigation
             }
             else
             {
+                Debug.WriteLine("error");
                 //Log error
             }
         }

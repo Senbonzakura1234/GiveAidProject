@@ -4,16 +4,4 @@
     <div class="container">
         <h2>@ViewBag.Title.</h2>
         <h3>@ViewBag.Message</h3>
-
-        <p>Use this area to provide additional information.</p>
-        <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top">
-            <input type="hidden" name="cmd" value="_donations" />
-            <input type="hidden" name="business" value="sb-aqu7j906731@personal.example.com" />
-            <input type="hidden" name="item_name" value="Make earth great again !" />
-            <input type="hidden" name="currency_code" value="USD" />
-            <input type="hidden" name="return" value="https://giveaidcharity.azurewebsites.net/IPNPayPal/Success" />
-            <input type="hidden" name="notify_url" value="http://giveaidcharity.azurewebsites.net/IPNPayPal/ipn">
-            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-            <img alt="" src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
-        </form>
     </div>
