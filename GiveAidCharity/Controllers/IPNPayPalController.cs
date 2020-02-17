@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,17 +8,18 @@ using System.Web.Mvc;
 
 namespace GiveAidCharity.Controllers
 {
+    // ReSharper disable once InconsistentNaming
     public class IPNPayPalController : Controller
     {
-        private static int ipnRequestCount = 0;
+        private static int _ipnRequestCount;
         public ActionResult Index()
         {
             return View();
         }
         public ActionResult Ipn()
         {
-            ipnRequestCount++;
-            ViewBag.Message = "Count ipn request. " + ipnRequestCount;
+            _ipnRequestCount++;
+            ViewBag.Message = "Count ipn request. " + _ipnRequestCount;
             return View("Index");
         }
 
@@ -66,12 +65,14 @@ namespace GiveAidCharity.Controllers
                 streamOut.Close();
 
                 //Send the request to PayPal and get the response
-                var streamIn = new StreamReader(verificationRequest.GetResponse().GetResponseStream());
+                var streamIn = new StreamReader(verificationRequest.GetResponse().GetResponseStream() ?? throw new InvalidOperationException());
                 verificationResponse = streamIn.ReadToEnd();
                 streamIn.Close();
 
             }
+#pragma warning disable 168
             catch (Exception exception)
+#pragma warning restore 168
             {
                 //Capture exception for manual investigation
             }
@@ -80,12 +81,13 @@ namespace GiveAidCharity.Controllers
         }
 
 
-        private void LogRequest(HttpRequestBase request)
+        // ReSharper disable once UnusedParameter.Local
+        private static void LogRequest(HttpRequestBase request)
         {
             // Persist the request values into a database or temporary data store
         }
 
-        private void ProcessVerificationResponse(string verificationResponse)
+        private static void ProcessVerificationResponse(string verificationResponse)
         {
             if (verificationResponse.Equals("VERIFIED"))
             {
