@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using GiveAidCharity.Models;
 
 namespace GiveAidCharity.Controllers
 {
@@ -13,6 +16,7 @@ namespace GiveAidCharity.Controllers
     public class IPNPayPalController : Controller
     {
         private static int _ipnRequestCount;
+        private static readonly ApplicationDbContext dbContext = new ApplicationDbContext();
         public ActionResult Index()
         {
             return View();
@@ -44,6 +48,7 @@ namespace GiveAidCharity.Controllers
 
         private void VerifyTask(HttpRequestBase ipnRequest)
         {
+            Debug.WriteLine(ipnRequest);
             var verificationResponse = string.Empty;
 
             try
@@ -71,9 +76,9 @@ namespace GiveAidCharity.Controllers
                 streamIn.Close();
 
             }
-#pragma warning disable 168
+
             catch (Exception exception)
-#pragma warning restore 168
+
             {
                 //Capture exception for manual investigation
             }
@@ -85,7 +90,7 @@ namespace GiveAidCharity.Controllers
         // ReSharper disable once UnusedParameter.Local
         private static void LogRequest(HttpRequestBase request)
         {
-            // Persist the request values into a database or temporary data store
+           
         }
 
         private static void ProcessVerificationResponse(string verificationResponse)
@@ -93,6 +98,10 @@ namespace GiveAidCharity.Controllers
             if (verificationResponse.Equals("VERIFIED"))
             {
                 Debug.WriteLine("okay");
+                var project = dbContext.Projects.Find("02b751ab-548c-4695-8f3a-44e87be832ef");
+                project.Description = "ok";
+                dbContext.Entry(project).State = EntityState.Modified;
+                dbContext.SaveChanges();
                 // check that Payment_status=Completed
                 // check that Txn_id has not been previously processed
                 // check that Receiver_email is your Primary PayPal email
@@ -101,13 +110,17 @@ namespace GiveAidCharity.Controllers
             }
             else if (verificationResponse.Equals("INVALID"))
             {
-                Debug.WriteLine("not okay");
-                //Log for manual investigation
+                var project = dbContext.Projects.Find("02b751ab-548c-4695-8f3a-44e87be832ef");
+                project.Description = "not ok";
+                dbContext.Entry(project).State = EntityState.Modified;
+                dbContext.SaveChanges();
             }
             else
             {
-                Debug.WriteLine("error");
-                //Log error
+                var project = dbContext.Projects.Find("02b751ab-548c-4695-8f3a-44e87be832ef");
+                project.Description = "error";
+                dbContext.Entry(project).State = EntityState.Modified;
+                dbContext.SaveChanges();
             }
         }
     }
