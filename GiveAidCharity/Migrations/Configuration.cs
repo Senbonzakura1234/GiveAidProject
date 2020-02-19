@@ -23,8 +23,9 @@ namespace GiveAidCharity.Migrations
 
     internal sealed class Configuration : DbMigrationsConfiguration<GiveAidCharity.Models.ApplicationDbContext>
     {
-        private const string Blog_Url = "https://api.myjson.com/bins/oocww";
+        private const string Blog_Url = "https://api.myjson.com/bins/j9cuo";
         private const string Image_Url = "https://api.myjson.com/bins/7l7uo";
+        private const string Id_arr = "https://api.myjson.com/bins/k6los";
         private string[] UserName = { "Mary", "Patricia", "Linda", "Barbara", "Elizabeth", 
             "Jennifer", "Maria", "Susan", "Margaret", "Dorothy", "Lisa", "Nancy", "Karen", 
             "Betty", "Helen", "Sandra", "Donna", "Carol", "Ruth", "Sharon", "Michelle", 
@@ -40,98 +41,24 @@ namespace GiveAidCharity.Migrations
 
         protected override void Seed(GiveAidCharity.Models.ApplicationDbContext context)
         {
-            //===========================================================================
-            //add User Roles
-            //if (!context.Roles.Any(r => r.Name == "Administrator"))
-            //{
-            //    var store = new RoleStore<IdentityRole>(context);
-            //    var manager = new RoleManager<IdentityRole>(store);
-            //    var role = new IdentityRole { Name = "Administrator" };
+            IDictionary<string, string> DicId = new Dictionary<string, string>();
+            var lsId = GetJsonData<Id>(Id_arr);
+            var lId = lsId.Select(f => new Id
+            {
+                num = f.num,
+                gu = f.gu
+            }).ToList();
+            foreach (var v in lId)
+            {
+                DicId.Add($"{v.num}", $"{v.gu}");
+            }
 
-            //    manager.Create(role);
-            //}
-
-            //if (!context.Roles.Any(r => r.Name == "Moderator"))
-            //{
-            //    var store = new RoleStore<IdentityRole>(context);
-            //    var manager = new RoleManager<IdentityRole>(store);
-            //    var role = new IdentityRole { Name = "Moderator" };
-
-            //    manager.Create(role);
-            //}
-
-            //if (!context.Roles.Any(r => r.Name == "FundRaiser"))
-            //{
-            //    var store = new RoleStore<IdentityRole>(context);
-            //    var manager = new RoleManager<IdentityRole>(store);
-            //    var role = new IdentityRole { Name = "FundRaiser" };
-
-            //    manager.Create(role);
-            //}
-
-            //if (!context.Roles.Any(r => r.Name == "Volunteer"))
-            //{
-            //    var store = new RoleStore<IdentityRole>(context);
-            //    var manager = new RoleManager<IdentityRole>(store);
-            //    var role = new IdentityRole { Name = "Volunteer" };
-
-            //    manager.Create(role);
-            //}
-
-            //if (!context.Roles.Any(r => r.Name == "Member"))
-            //{
-            //    var store = new RoleStore<IdentityRole>(context);
-            //    var manager = new RoleManager<IdentityRole>(store);
-            //    var role = new IdentityRole { Name = "Member" };
-
-            //    manager.Create(role);
-            //}
 
             //===========================================================================
-            //ADD USER  
-            //for (var i = 0; i < 30; i++)
-            //{
-            //    var store = new UserStore<ApplicationUser>(context);
-            //    var manager = new UserManager<ApplicationUser>(store);
-            //    var user = new ApplicationUser
-            //    {
-            //        UserName = UserName[i],
-            //        Email = UserName[i] + "@gmail.com",
-            //        Id = Guid.NewGuid().ToString()
-            //    };
-            //    manager.Create(user, "123456");
-            //    manager.AddToRole(user.Id, "Member");
-            //}
-            //for (var j = 31; j < 40; j++)
-            //{
-            //    var store = new UserStore<ApplicationUser>(context);
-            //    var manager = new UserManager<ApplicationUser>(store);
-            //    var user = new ApplicationUser
-            //    {
-            //        UserName = UserName[j],
-            //        Email = UserName[j] + "@gmail.com",
-            //        Id = Guid.NewGuid().ToString()
-            //    };
-
-            //    manager.Create(user, "123456");
-            //    manager.AddToRole(user.Id, "FundRaiser");
-            //}
-            //for (var k = 41; k < 50; k++)
-            //{
-            //    var store = new UserStore<ApplicationUser>(context);
-            //    var manager = new UserManager<ApplicationUser>(store);
-            //    var user = new ApplicationUser
-            //    {
-            //        UserName = UserName[k],
-            //        Email = UserName[k] + "@gmail.com",
-            //        Id = Guid.NewGuid().ToString()
-            //    };
-
-            //    manager.Create(user, "123456");
-            //    manager.AddToRole(user.Id, "Volunteer");
-            //}
-
-            //===========================================================================
+            //SetRole(context);
+            ////===========================================================================
+            //SetUser(context);
+            ////===========================================================================
             //ADD PROJECT
             //try
             //{
@@ -147,12 +74,12 @@ namespace GiveAidCharity.Migrations
             //    var rdn = new Random();
             //    var listProjects = lsProjects.Select(f => new Project
             //    {
-            //        Id = f.projectid,
-            //        ApplicationUserId = lsMemberFund[rdn.Next(1, lsMemberFund.Count)],
+            //        Id = DicId[f.projectid],
+            //        ApplicationUserId = lsMemberFund[rdn.Next(1, lsMemberFund.Count - 1)],
             //        Name = f.projectname,
             //        Description = f.projectname,
+            //        CoverImg = f.CoverImg,
             //        Goal = rdn.Next(100, 1000),
-            //        CoverImg = "https://res.cloudinary.com/dyv8obbgs/image/upload/v1581592040/Image/nCoV/Corona-Virus-_nanum9.jpg",
             //        ContentPart1 = f.contentpart1,
             //        ContentPart2 = f.contentpart2,
             //        StartDate = new DateTime(2019, 02, 14).AddDays(rdn.Next(1, 340)),
@@ -162,11 +89,12 @@ namespace GiveAidCharity.Migrations
             //    })
             //        .ToList();
 
-            //    foreach (var k in listProjects)
+            //    foreach (var v in listProjects)
             //    {
-            //        k.CreatedAt = k.StartDate.AddDays(2);
-            //        k.UpdatedAt = k.StartDate.AddDays(-2);
-            //        k.ExpireDate = k.StartDate.AddDays(10);
+            //        v.CreatedAt = v.StartDate.AddDays(2);
+            //        v.UpdatedAt = v.StartDate.AddDays(-2);
+            //        v.ExpireDate = v.StartDate.AddDays(10);
+            //        v.ReceiverEmail = context.Users.Find(v.ApplicationUserId).Email.ToString();
             //    }
             //    context.Projects.AddRange(listProjects);
             //    context.SaveChanges();
@@ -193,27 +121,30 @@ namespace GiveAidCharity.Migrations
             //var listBlog = lsProjects.Select(f => new Blog()
             //{
             //    Id = Guid.NewGuid().ToString(),
-            //    ApplicationUserId = context.Projects
-            //            .Where(p => p.Id == f.projectid)
+            //    ApplicationUserId = context.Projects.AsEnumerable()
+            //            .Where(p => p.Id.Contains($"{DicId[f.projectid]}"))
             //            .Select(p => p.ApplicationUserId)
             //            .SingleOrDefault(),
-            //    ProjectId = f.projectid,
+            //    ProjectId = DicId[f.projectid],
             //    Title = f.projectname,
             //    ContentPart1 = f.contentpart1,
             //    ContentPart2 = f.contentpart2,
             //    Status = Blog.BlogStatusEnum.Published,
-            //    CreatedAt = context.Projects
-            //            .Where(p => p.Id == f.projectid)
+            //    CreatedAt = context.Projects.AsEnumerable()
+            //            .Where(p => p.Id.Contains($"{DicId[f.projectid]}"))
             //            .Select(p => p.CreatedAt)
             //            .SingleOrDefault(),
-            //    UpdatedAt = context.Projects
-            //            .Where(p => p.Id == f.projectid)
+            //    UpdatedAt = context.Projects.AsEnumerable()
+            //            .Where(p => p.Id.Contains($"{DicId[f.projectid]}"))
             //            .Select(p => p.CreatedAt)
             //            .SingleOrDefault(),
             //    DeletedAt = null
             //})
             //    .ToList();
+            //foreach (var v in listBlog)
+            //{
 
+            //}
             //context.Blogs.AddRange(listBlog);
             //context.SaveChanges();
 
@@ -224,16 +155,16 @@ namespace GiveAidCharity.Migrations
             //{
 
             //    Id = Guid.NewGuid().ToString(),
-            //    ProjectId = f.projectid,
+            //    ProjectId = DicId[f.projectid],
             //    Url = f.imgUrl,
             //    Description = f.content,
             //    Status = ProjectImage.ProjectImageStatusEnum.Show,
-            //    CreatedAt = context.Projects
-            //        .Where(p => p.Id == f.projectid)
+            //    CreatedAt = context.Projects.AsEnumerable()
+            //        .Where(p => p.Id == DicId[f.projectid])
             //        .Select(p => p.CreatedAt)
             //        .SingleOrDefault(),
-            //    UpdatedAt = context.Projects
-            //        .Where(p => p.Id == f.projectid)
+            //    UpdatedAt = context.Projects.AsEnumerable()
+            //        .Where(p => p.Id == DicId[f.projectid])
             //        .Select(p => p.CreatedAt)
             //        .SingleOrDefault(),
             //    DeletedAt = null
@@ -244,7 +175,7 @@ namespace GiveAidCharity.Migrations
             //context.SaveChanges();
 
             //===========================================================================
-            //ADD DONATION
+            ////ADD DONATION
             ////Tạo list donation để save vào db
             //var listDonation = new List<Donation>();
             ////Đếm số pj trong db
@@ -275,8 +206,8 @@ namespace GiveAidCharity.Migrations
             //            ApplicationUserId = lsMemberId[j],
             //            ProjectId = lsProject[i],
             //            Amount = rdn.Next(1, 100), //cost mỗi donation 1$-100$
-            //            PaymentMethod = (Donation.PaymentMethodEnum)rdn.Next(1, 3),
-            //            Status = (Donation.DonationStatusEnum)rdn.Next(-1, 2),
+            //            PaymentMethod = Donation.PaymentMethodEnum.DirectBankTransfer,
+            //            Status = (Donation.DonationStatusEnum)rdn.Next(1, 3),
             //            CreatedAt = context.Projects.Where(o => o.Id == projectId).Select(p => p.StartDate).SingleOrDefault().AddDays(rdn.Next(0, 8)),
             //            DeletedAt = null
             //        });
@@ -299,7 +230,7 @@ namespace GiveAidCharity.Migrations
 
             for (int i = 1; i <= 30; i++)
             {
-                string projectId = i.ToString();
+                string projectId = DicId[$"{i}"];
                 for (int j = 0; j < 3; j++)
                 {
                     var spanTime = new Random().Next(1, 3);
@@ -310,7 +241,7 @@ namespace GiveAidCharity.Migrations
                         ProjectId = projectId,
                         ParentId = null,
                         Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
-                                  " Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ",
+                                  " I am parent comment ",
                         Status = ProjectComment.ProjectCommentStatusEnum.Published,
                         CreatedAt = context.Projects.Where(p => p.Id == projectId).Select(p => p.StartDate).SingleOrDefault().AddDays(spanTime),
                         DeletedAt = null
@@ -337,7 +268,7 @@ namespace GiveAidCharity.Migrations
                     ProjectId = projectId,
                     ParentId = parentId,
                     Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
-                              " Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ",
+                              " ---I am child comment -- hello ",
                     Status = ProjectComment.ProjectCommentStatusEnum.Published,
                     CreatedAt = context.ProjectComments.Where(p => p.Id == parentId).Select(p => p.CreatedAt).SingleOrDefault(),
                     DeletedAt = null
@@ -350,6 +281,100 @@ namespace GiveAidCharity.Migrations
             context.ProjectComments.AddRange(listChildComment);
             context.SaveChanges();
 
+        }
+
+        public void SetUser(GiveAidCharity.Models.ApplicationDbContext context)
+        {
+            for (var i = 0; i < 30; i++)
+            {
+                var store = new UserStore<ApplicationUser>(context);
+                var manager = new UserManager<ApplicationUser>(store);
+                var user = new ApplicationUser
+                {
+                    UserName = UserName[i],
+                    Email = UserName[i] + "@gmail.com",
+                    Id = Guid.NewGuid().ToString()
+                };
+                manager.Create(user, "123456");
+                manager.AddToRole(user.Id, "Member");
+            }
+            for (var j = 31; j < 40; j++)
+            {
+                var store = new UserStore<ApplicationUser>(context);
+                var manager = new UserManager<ApplicationUser>(store);
+                var user = new ApplicationUser
+                {
+                    UserName = UserName[j],
+                    Email = UserName[j] + "@gmail.com",
+                    Id = Guid.NewGuid().ToString()
+                };
+
+                manager.Create(user, "123456");
+                manager.AddToRole(user.Id, "FundRaiser");
+            }
+            for (var k = 41; k < 50; k++)
+            {
+                var store = new UserStore<ApplicationUser>(context);
+                var manager = new UserManager<ApplicationUser>(store);
+                var user = new ApplicationUser
+                {
+                    UserName = UserName[k],
+                    Email = UserName[k] + "@gmail.com",
+                    Id = Guid.NewGuid().ToString()
+                };
+
+                manager.Create(user, "123456");
+                manager.AddToRole(user.Id, "Volunteer");
+            }
+        }
+
+        public void SetRole(GiveAidCharity.Models.ApplicationDbContext context)
+        {
+            //add User Roles
+            if (!context.Roles.Any(r => r.Name == "Administrator"))
+            {
+                var store = new RoleStore<IdentityRole>(context);
+                var manager = new RoleManager<IdentityRole>(store);
+                var role = new IdentityRole { Name = "Administrator" };
+
+                manager.Create(role);
+            }
+
+            if (!context.Roles.Any(r => r.Name == "Moderator"))
+            {
+                var store = new RoleStore<IdentityRole>(context);
+                var manager = new RoleManager<IdentityRole>(store);
+                var role = new IdentityRole { Name = "Moderator" };
+
+                manager.Create(role);
+            }
+
+            if (!context.Roles.Any(r => r.Name == "FundRaiser"))
+            {
+                var store = new RoleStore<IdentityRole>(context);
+                var manager = new RoleManager<IdentityRole>(store);
+                var role = new IdentityRole { Name = "FundRaiser" };
+
+                manager.Create(role);
+            }
+
+            if (!context.Roles.Any(r => r.Name == "Volunteer"))
+            {
+                var store = new RoleStore<IdentityRole>(context);
+                var manager = new RoleManager<IdentityRole>(store);
+                var role = new IdentityRole { Name = "Volunteer" };
+
+                manager.Create(role);
+            }
+
+            if (!context.Roles.Any(r => r.Name == "Member"))
+            {
+                var store = new RoleStore<IdentityRole>(context);
+                var manager = new RoleManager<IdentityRole>(store);
+                var role = new IdentityRole { Name = "Member" };
+
+                manager.Create(role);
+            }
         }
 
         //Get Json Data
@@ -369,6 +394,7 @@ namespace GiveAidCharity.Migrations
     public class Article
     { 
         public string projectid { get; set; }
+        public string CoverImg { get; set; }
         public string projectname { get; set; }
         public string contentpart1 { get; set; }
         public string contentpart2 { get; set; }
@@ -382,6 +408,10 @@ namespace GiveAidCharity.Migrations
         public string content { get; set; }
     }
 
-    
+    public class Id
+    {
+        public string num { get; set; }
+        public string gu { get; set; }
+    }
 
 }

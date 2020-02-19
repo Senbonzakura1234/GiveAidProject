@@ -32,8 +32,8 @@ namespace GiveAidCharity.Models.Main
         {
             Pending = 0,
             Success = 1,
-            Fail = -1,
-            Cancel = -2
+            Fail = 2,
+            Cancel = 3
         }
 
         [DataType(DataType.DateTime)]
@@ -50,18 +50,18 @@ namespace GiveAidCharity.Models.Main
 
         // ReSharper disable InconsistentNaming
         // New paypal field
-        //public string txn_id { get; set; }
-        //public string business { get; set; }
-        //public string receiver_id { get; set; }
-        //public string payer_id { get; set; }
-        //public string payer_email { get; set; }
-        //public string payment_gross { get; set; }
-        //public string mc_gross { get; set; }
-        //public string extra_info { get; set; }
-
-
-
-
+        public string txn_id { get; set; }
+        public string business { get; set; }
+        public string receiver_id { get; set; }
+        public string payer_id { get; set; }
+        public string payer_email { get; set; }
+        public string payment_gross { get; set; }
+        public string mc_gross { get; set; }
+        public string extra_info { get; set; }
+        //New Vnpay field -> string
+        public string vnp_ResponseCode { get; set; }
+        public string vnp_TransactionNo { get; set; }
+        
         public Donation()
         {
             Id = Guid.NewGuid().ToString();
