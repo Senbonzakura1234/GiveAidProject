@@ -46,9 +46,23 @@ namespace GiveAidCharity.Controllers
             private set => _roleManager = value;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View();
+            var projectsList = await _db.Projects.ToListAsync();
+            var causesList = projectsList.Select(t => new CausesListViewModel
+            {
+                Id = t.Id,
+                Name = t.Name,
+                CurrentFund = t.CurrentFund,
+                Goal = t.Goal,
+                Description = t.Description,
+                StartDate = t.StartDate,
+                ExpireDate = t.ExpireDate,
+                FollowCount = t.Follows.Count,
+                CoverImg = t.CoverImg
+            })
+                .ToList();
+            return View(causesList);
         }
 
         public ActionResult About()
