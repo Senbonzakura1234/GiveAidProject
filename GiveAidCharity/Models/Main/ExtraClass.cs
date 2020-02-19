@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+// ReSharper disable  UnusedMember.Global
 namespace GiveAidCharity.Models.Main
 {
     public class Donation
@@ -45,6 +45,22 @@ namespace GiveAidCharity.Models.Main
         [DataType(DataType.DateTime)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime? DeletedAt { get; set; }
+
+
+
+        // ReSharper disable InconsistentNaming
+        // New paypal field
+        //public string txn_id { get; set; }
+        //public string business { get; set; }
+        //public string receiver_id { get; set; }
+        //public string payer_id { get; set; }
+        //public string payer_email { get; set; }
+        //public string payment_gross { get; set; }
+        //public string mc_gross { get; set; }
+        //public string extra_info { get; set; }
+
+
+
 
         public Donation()
         {

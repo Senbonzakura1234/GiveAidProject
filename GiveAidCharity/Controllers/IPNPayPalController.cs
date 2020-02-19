@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using GiveAidCharity.Models;
+using GiveAidCharity.Models.Main;
 
 namespace GiveAidCharity.Controllers
 {
@@ -13,6 +18,8 @@ namespace GiveAidCharity.Controllers
     public class IPNPayPalController : Controller
     {
         private static int _ipnRequestCount;
+        private static readonly ApplicationDbContext Db = new ApplicationDbContext();
+
         public ActionResult Index()
         {
             return View();
@@ -30,22 +37,33 @@ namespace GiveAidCharity.Controllers
             return View("Index");
         }
         [HttpPost]
-        public HttpStatusCodeResult Receive()
+        public async Task<HttpStatusCodeResult> Receive()
         {
             //Store the IPN received from PayPal
-            LogRequest(Request);
+            var listString = LogRequest(Request);
+            var input = listString.Aggregate("", (current, item) => current + (item + " = " + Request[item] + "; "));
 
+            var donation = new Donation
+            {
+
+            };
+            Db.Donations.Add(donation);
+            await Db.SaveChangesAsync();
             //Fire and forget verification task
-            Task.Run(() => VerifyTask(Request));
+            await Task.Run(() => VerifyTask(Request));
+            
 
             //Reply back a 200 code
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
-        private void VerifyTask(HttpRequestBase ipnRequest)
+        private async Task VerifyTask(HttpRequestBase ipnRequest)
         {
+            Debug.WriteLine(ipnRequest);
             var verificationResponse = string.Empty;
-
+            var txnId = Request["txn_id"];
+            var projectId = Request["item_number"];
+            if (txnId == null) return;
             try
             {
                 var verificationRequest = (HttpWebRequest)WebRequest.Create("https://www.sandbox.paypal.com/cgi-bin/webscr");
@@ -62,53 +80,66 @@ namespace GiveAidCharity.Controllers
 
                 //Attach payload to the verification request
                 var streamOut = new StreamWriter(verificationRequest.GetRequestStream(), Encoding.ASCII);
-                streamOut.Write(strRequest);
+                await streamOut.WriteAsync(strRequest);
                 streamOut.Close();
 
                 //Send the request to PayPal and get the response
                 var streamIn = new StreamReader(verificationRequest.GetResponse().GetResponseStream() ?? throw new InvalidOperationException());
-                verificationResponse = streamIn.ReadToEnd();
+                verificationResponse = await streamIn.ReadToEndAsync();
                 streamIn.Close();
-
             }
-#pragma warning disable 168
+            #pragma warning disable 168
             catch (Exception exception)
-#pragma warning restore 168
+            #pragma warning restore 168
+
             {
                 //Capture exception for manual investigation
             }
-
-            ProcessVerificationResponse(verificationResponse);
+            await ProcessVerificationResponse(verificationResponse, txnId, projectId);
         }
 
 
         // ReSharper disable once UnusedParameter.Local
-        private static void LogRequest(HttpRequestBase request)
+        private static IEnumerable<string> LogRequest(HttpRequestBase request)
         {
-            // Persist the request values into a database or temporary data store
+            return (from object item in request.Params select item.ToString()).ToList();
         }
 
-        private static void ProcessVerificationResponse(string verificationResponse)
+        private static async Task ProcessVerificationResponse(string verificationResponse, string txnId, string projectId)
         {
+            var donations = await Db.Donations.Where(p => p.Id == txnId)
+                .OrderByDescending(p => p.CreatedAt).ToListAsync(); // replace p.Id with p.txn_id
+            var donation = donations.FirstOrDefault();
+            if (donation == null) return;
             if (verificationResponse.Equals("VERIFIED"))
             {
-                Debug.WriteLine("okay");
-                // check that Payment_status=Completed
-                // check that Txn_id has not been previously processed
-                // check that Receiver_email is your Primary PayPal email
-                // check that Payment_amount/Payment_currency are correct
-                // process payment
+                donation.Status = Donation.DonationStatusEnum.Success;
+                var project = await Db.Projects.FindAsync(projectId);
+                if (project == null) return;
+                project.CurrentFund += donation.Amount;
+                Db.Entry(donation).State = EntityState.Modified;
+                Db.Entry(project).State = EntityState.Modified;
+                await Db.SaveChangesAsync();
+                return;
             }
-            else if (verificationResponse.Equals("INVALID"))
+
+            if (verificationResponse.Equals("INVALID"))
             {
-                Debug.WriteLine("not okay");
-                //Log for manual investigation
+                donation.Status = Donation.DonationStatusEnum.Fail;
+                Db.Entry(donation).State = EntityState.Modified;
+                await Db.SaveChangesAsync();
+                return;
             }
-            else
-            {
-                Debug.WriteLine("error");
-                //Log error
-            }
+
+            donation.Status = Donation.DonationStatusEnum.Fail;
+            Db.Entry(donation).State = EntityState.Modified;
+            await Db.SaveChangesAsync();
+
+            // check that Payment_status=Completed
+            // check that Txn_id has not been previously processed
+            // check that Receiver_email is your Primary PayPal email
+            // check that Payment_amount/Payment_currency are correct
+            // process payment
         }
     }
 
