@@ -3,7 +3,7 @@ namespace GiveAidCharity.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Initial : DbMigration
+    public partial class updateTable : DbMigration
     {
         public override void Up()
         {
@@ -11,16 +11,16 @@ namespace GiveAidCharity.Migrations
                 "dbo.Blogs",
                 c => new
                     {
-                        Id = c.String(false, 128),
+                        Id = c.String(nullable: false, maxLength: 128),
                         ApplicationUserId = c.String(maxLength: 128),
                         ProjectId = c.String(maxLength: 128),
-                        Title = c.String(false),
-                        ContentPart1 = c.String(false),
-                        ContentPart2 = c.String(false),
+                        Title = c.String(nullable: false),
+                        ContentPart1 = c.String(nullable: false),
+                        ContentPart2 = c.String(nullable: false),
                         ContentPart3 = c.String(),
-                        Status = c.Int(false),
-                        CreatedAt = c.DateTime(false),
-                        UpdatedAt = c.DateTime(false),
+                        Status = c.Int(nullable: false),
+                        CreatedAt = c.DateTime(nullable: false),
+                        UpdatedAt = c.DateTime(nullable: false),
                         DeletedAt = c.DateTime(),
                     })
                 .PrimaryKey(t => t.Id)
@@ -33,7 +33,7 @@ namespace GiveAidCharity.Migrations
                 "dbo.AspNetUsers",
                 c => new
                     {
-                        Id = c.String(false, 128),
+                        Id = c.String(nullable: false, maxLength: 128),
                         FirstName = c.String(),
                         LastName = c.String(),
                         Avatar = c.String(),
@@ -41,23 +41,23 @@ namespace GiveAidCharity.Migrations
                         Address = c.String(),
                         Zipcode = c.String(),
                         CompanyName = c.String(),
-                        Gender = c.Int(false),
+                        Gender = c.Int(nullable: false),
                         Birthday = c.DateTime(),
-                        Status = c.Int(false),
-                        CreatedAt = c.DateTime(false),
-                        UpdatedAt = c.DateTime(false),
+                        Status = c.Int(nullable: false),
+                        CreatedAt = c.DateTime(nullable: false),
+                        UpdatedAt = c.DateTime(nullable: false),
                         DeletedAt = c.DateTime(),
                         Email = c.String(maxLength: 256),
-                        EmailConfirmed = c.Boolean(false),
+                        EmailConfirmed = c.Boolean(nullable: false),
                         PasswordHash = c.String(),
                         SecurityStamp = c.String(),
                         PhoneNumber = c.String(),
-                        PhoneNumberConfirmed = c.Boolean(false),
-                        TwoFactorEnabled = c.Boolean(false),
+                        PhoneNumberConfirmed = c.Boolean(nullable: false),
+                        TwoFactorEnabled = c.Boolean(nullable: false),
                         LockoutEndDateUtc = c.DateTime(),
-                        LockoutEnabled = c.Boolean(false),
-                        AccessFailedCount = c.Int(false),
-                        UserName = c.String(false, 256),
+                        LockoutEnabled = c.Boolean(nullable: false),
+                        AccessFailedCount = c.Int(nullable: false),
+                        UserName = c.String(nullable: false, maxLength: 256),
                     })
                 .PrimaryKey(t => t.Id)
                 .Index(t => t.UserName, unique: true, name: "UserNameIndex");
@@ -66,28 +66,38 @@ namespace GiveAidCharity.Migrations
                 "dbo.AspNetUserClaims",
                 c => new
                     {
-                        Id = c.Int(false, true),
-                        UserId = c.String(false, 128),
+                        Id = c.Int(nullable: false, identity: true),
+                        UserId = c.String(nullable: false, maxLength: 128),
                         ClaimType = c.String(),
                         ClaimValue = c.String(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId, true)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
                 .Index(t => t.UserId);
             
             CreateTable(
                 "dbo.Donations",
                 c => new
                     {
-                        Id = c.String(false, 128),
+                        Id = c.String(nullable: false, maxLength: 128),
                         ApplicationUserId = c.String(maxLength: 128),
                         ProjectId = c.String(maxLength: 128),
-                        Amount = c.Double(false),
-                        PaymentMethod = c.Int(false),
-                        Status = c.Int(false),
-                        CreatedAt = c.DateTime(false),
-                        UpdatedAt = c.DateTime(false),
+                        Amount = c.Double(nullable: false),
+                        PaymentMethod = c.Int(nullable: false),
+                        Status = c.Int(nullable: false),
+                        CreatedAt = c.DateTime(nullable: false),
+                        UpdatedAt = c.DateTime(nullable: false),
                         DeletedAt = c.DateTime(),
+                        txn_id = c.String(),
+                        business = c.String(),
+                        receiver_id = c.String(),
+                        payer_id = c.String(),
+                        payer_email = c.String(),
+                        payment_gross = c.String(),
+                        mc_gross = c.String(),
+                        extra_info = c.String(),
+                        vnp_ResponseCode = c.String(),
+                        vnp_TransactionNo = c.String(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserId)
@@ -99,21 +109,22 @@ namespace GiveAidCharity.Migrations
                 "dbo.Projects",
                 c => new
                     {
-                        Id = c.String(false, 128),
+                        Id = c.String(nullable: false, maxLength: 128),
                         ApplicationUserId = c.String(maxLength: 128),
-                        Name = c.String(false),
+                        Name = c.String(nullable: false),
                         Description = c.String(),
-                        CoverImg = c.String(false),
-                        ContentPart1 = c.String(false),
-                        ContentPart2 = c.String(false),
-                        Goal = c.Double(false),
-                        CurrentFund = c.Double(false),
-                        StartDate = c.DateTime(false),
-                        ExpireDate = c.DateTime(false),
-                        Status = c.Int(false),
-                        CreatedAt = c.DateTime(false),
-                        UpdatedAt = c.DateTime(false),
+                        CoverImg = c.String(nullable: false),
+                        ContentPart1 = c.String(nullable: false),
+                        ContentPart2 = c.String(nullable: false),
+                        Goal = c.Double(nullable: false),
+                        CurrentFund = c.Double(nullable: false),
+                        StartDate = c.DateTime(nullable: false),
+                        ExpireDate = c.DateTime(nullable: false),
+                        Status = c.Int(nullable: false),
+                        CreatedAt = c.DateTime(nullable: false),
+                        UpdatedAt = c.DateTime(nullable: false),
                         DeletedAt = c.DateTime(),
+                        ReceiverEmail = c.String(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserId)
@@ -123,12 +134,12 @@ namespace GiveAidCharity.Migrations
                 "dbo.Follows",
                 c => new
                     {
-                        Id = c.String(false, 128),
+                        Id = c.String(nullable: false, maxLength: 128),
                         ApplicationUserId = c.String(maxLength: 128),
                         ProjectId = c.String(maxLength: 128),
-                        Status = c.Int(false),
-                        CreatedAt = c.DateTime(false),
-                        UpdatedAt = c.DateTime(false),
+                        Status = c.Int(nullable: false),
+                        CreatedAt = c.DateTime(nullable: false),
+                        UpdatedAt = c.DateTime(nullable: false),
                         DeletedAt = c.DateTime(),
                     })
                 .PrimaryKey(t => t.Id)
@@ -141,14 +152,14 @@ namespace GiveAidCharity.Migrations
                 "dbo.ProjectComments",
                 c => new
                     {
-                        Id = c.String(false, 128),
+                        Id = c.String(nullable: false, maxLength: 128),
                         ApplicationUserId = c.String(maxLength: 128),
                         ProjectId = c.String(maxLength: 128),
                         ParentId = c.String(),
-                        Content = c.String(false),
-                        Status = c.Int(false),
-                        CreatedAt = c.DateTime(false),
-                        UpdatedAt = c.DateTime(false),
+                        Content = c.String(nullable: false),
+                        Status = c.Int(nullable: false),
+                        CreatedAt = c.DateTime(nullable: false),
+                        UpdatedAt = c.DateTime(nullable: false),
                         DeletedAt = c.DateTime(),
                     })
                 .PrimaryKey(t => t.Id)
@@ -161,13 +172,13 @@ namespace GiveAidCharity.Migrations
                 "dbo.ProjectImages",
                 c => new
                     {
-                        Id = c.String(false, 128),
+                        Id = c.String(nullable: false, maxLength: 128),
                         ProjectId = c.String(maxLength: 128),
-                        Url = c.String(false),
+                        Url = c.String(nullable: false),
                         Description = c.String(),
-                        Status = c.Int(false),
-                        CreatedAt = c.DateTime(false),
-                        UpdatedAt = c.DateTime(false),
+                        Status = c.Int(nullable: false),
+                        CreatedAt = c.DateTime(nullable: false),
+                        UpdatedAt = c.DateTime(nullable: false),
                         DeletedAt = c.DateTime(),
                     })
                 .PrimaryKey(t => t.Id)
@@ -178,24 +189,24 @@ namespace GiveAidCharity.Migrations
                 "dbo.AspNetUserLogins",
                 c => new
                     {
-                        LoginProvider = c.String(false, 128),
-                        ProviderKey = c.String(false, 128),
-                        UserId = c.String(false, 128),
+                        LoginProvider = c.String(nullable: false, maxLength: 128),
+                        ProviderKey = c.String(nullable: false, maxLength: 128),
+                        UserId = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => new { t.LoginProvider, t.ProviderKey, t.UserId })
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId, true)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
                 .Index(t => t.UserId);
             
             CreateTable(
                 "dbo.AspNetUserRoles",
                 c => new
                     {
-                        UserId = c.String(false, 128),
-                        RoleId = c.String(false, 128),
+                        UserId = c.String(nullable: false, maxLength: 128),
+                        RoleId = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => new { t.UserId, t.RoleId })
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId, true)
-                .ForeignKey("dbo.AspNetRoles", t => t.RoleId, true)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
                 .Index(t => t.UserId)
                 .Index(t => t.RoleId);
             
@@ -203,13 +214,13 @@ namespace GiveAidCharity.Migrations
                 "dbo.AspNetRoles",
                 c => new
                     {
-                        Id = c.String(false, 128),
-                        Name = c.String(false, 256),
+                        Id = c.String(nullable: false, maxLength: 128),
+                        Name = c.String(nullable: false, maxLength: 256),
                         Description = c.String(),
                         CreatedAt = c.DateTime(),
                         UpdatedAt = c.DateTime(),
                         DeletedAt = c.DateTime(),
-                        Discriminator = c.String(false, 128),
+                        Discriminator = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
                 .Index(t => t.Name, unique: true, name: "RoleNameIndex");

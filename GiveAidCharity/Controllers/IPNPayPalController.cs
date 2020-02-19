@@ -45,7 +45,15 @@ namespace GiveAidCharity.Controllers
 
             var donation = new Donation
             {
-
+                Id = Guid.NewGuid().ToString(),
+                txn_id = Request["txn_id"],
+                business = Request["business"],
+                receiver_id = Request["receiver_id"],
+                payer_id = Request["payer_id"],
+                payer_email = Request["payer_email"],
+                payment_gross = Request["payment_gross"],
+                mc_gross = Request["mc_gross"],
+                extra_info = input
             };
             Db.Donations.Add(donation);
             await Db.SaveChangesAsync();
