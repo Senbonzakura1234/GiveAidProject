@@ -180,6 +180,7 @@
     <Compile Include="Controllers\IPNPayPalController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PartialPartController.cs" />
+    <Compile Include="Controllers\PayPalController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\VNpayController.cs" />
     <Compile Include="Global.asax.cs">
@@ -771,6 +772,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Api\" />
+    <Folder Include="Views\PayPal\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -122,4 +122,15 @@ namespace GiveAidCharity.Models.HelperClass
         public double Amount { get; set; }
         public CausesListViewModel Cause { get; set; }
     }
+    public class DonationsTransactionResult
+    {
+        public string UserId { get; set; }
+        public string Username { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime DonateDate { get; set; }
+        public double Amount { get; set; }
+        public string ProjectId { get; set; }
+        public string ProjectName { get; set; }
+    }
 }

@@ -138,7 +138,7 @@
                                 new { id = Model.Id }, Request.Url?.Scheme))
                             @Html.Hidden("cancel_return", Url.Action("CauseDetail", "Home",
                                 new { id = Model.Id }, Request.Url?.Scheme))
-                            @Html.Hidden("notify_url", Url.Action("Receive", "IPNPayPal",
+                            @Html.Hidden("notify_url", Url.Action("Receive", "PayPal",
                                 null, Request.Url?.Scheme))
                             @Html.Hidden("item_number", Model.Id)
                             @Html.Hidden("item_name", "Donate to project" + Model.Name)
