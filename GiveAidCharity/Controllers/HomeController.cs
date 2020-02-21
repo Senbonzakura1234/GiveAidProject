@@ -49,7 +49,7 @@ namespace GiveAidCharity.Controllers
 
         public async Task<ActionResult> Index()
         {
-            ViewModel mymodel = new ViewModel();
+            var homepage = new HomeViewModel();
             var projectsList = await _db.Projects.ToListAsync();
             var causesList = projectsList.Select(t => new CausesListViewModel
             {
@@ -77,9 +77,9 @@ namespace GiveAidCharity.Controllers
                                  }).ToList();
             listDonations = listDonations.OrderByDescending(p => p.DonateDate).ToList();
             listDonations = listDonations.Take(3).ToList();
-            mymodel.causesList = causesList;
-            mymodel.donationList = listDonations;
-            return View(mymodel);
+            homepage.CausesList = causesList;
+            homepage.DonationList = listDonations;
+            return View(homepage);
         }
 
         public ActionResult About()

@@ -61,11 +61,12 @@ namespace GiveAidCharity.Models.HelperClass
         public int FollowCount { get; set; }
     }
 
-    public class ViewModel
+    public class HomeViewModel
     {
-        public IEnumerable<GiveAidCharity.Models.HelperClass.CausesListViewModel> causesList { get; set; }
-        public IEnumerable<GiveAidCharity.Models.HelperClass.DonationsListViewModel> donationList { get; set; }
+        public IEnumerable<CausesListViewModel> CausesList { get; set; }
+        public IEnumerable<DonationsListViewModel> DonationList { get; set; }
     }
+
     public class CausesDetailViewModel
     {
         public string Id { get; set; }

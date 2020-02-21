@@ -1,55 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
-using System.Net;
-using System.Web;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using GiveAidCharity.Models;
-using GiveAidCharity.Models.Main;
-using Microsoft.Ajax.Utilities;
 
 namespace GiveAidCharity.Controllers
 {
     public class DonationsController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
         // GET: Donations
-        public ActionResult Index(int? page, int? limit, string start, string end)
+        public async Task<ActionResult> Index(int? page, int? limit, string start, string end)
         {
-            var donations = db.Donations.ToList();
-            if (!start.IsNullOrWhiteSpace() && !end.IsNullOrWhiteSpace())
+            Debug.WriteLine(start + " " + end);
+            if (string.IsNullOrWhiteSpace(start) && !CheckValidDate(start))
             {
-                var startTime = DateTime.Now;
-                startTime = startTime.AddYears(-1);
-                try
-                {
-                    startTime = DateTime.Parse(start);
-                    donations = donations.Where(o => o.CreatedAt >= startTime).ToList();
-
-                    ViewBag.Start = startTime.ToString("yyyy-MM-dd");
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine(e);
-                }
-
-                var endTime = DateTime.Now;
-                try
-                {
-                    endTime = DateTime.Parse(end);
-                    donations = donations.Where(o => o.CreatedAt <= endTime).ToList();
-                    ViewBag.End = endTime.ToString("yyyy-MM-dd");
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine(e);
-                }
+                start = DateTime.Now.AddYears(-1).ToString("yyyy-MM-dd");
             }
+            var startDate = DateTime.ParseExact(start, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            if (string.IsNullOrWhiteSpace(end) && !CheckValidDate(end))
+            {
+                end = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            var endDate = DateTime.ParseExact(end, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            var donations = await _db.Donations.Where(d => d.CreatedAt >= startDate && d.CreatedAt <= endDate).ToListAsync();
 
+            Debug.WriteLine(startDate + " " + endDate);
+            ViewBag.Start = start;
+            ViewBag.End = end;
             ViewBag.CurrentPage = page ?? 1;
             ViewBag.Limit = limit ?? 10;
             ViewBag.TotalPage = Math.Ceiling((double) donations.Count / (limit ?? 10));
@@ -170,5 +152,9 @@ namespace GiveAidCharity.Controllers
         //    }
         //    base.Dispose(disposing);
         //}
+        private static bool CheckValidDate(string date)
+        {
+            return DateTime.TryParse(date, out _);
+        }
     }
 }

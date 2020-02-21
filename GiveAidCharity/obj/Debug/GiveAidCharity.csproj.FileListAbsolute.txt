@@ -102,6 +102,6 @@ E:\visual studio\Source\GiveAidCharity\GiveAidCharity\bin\Microsoft.CodeDom.Prov
 E:\visual studio\Source\GiveAidCharity\GiveAidCharity\obj\Debug\GiveAidCharity.csproj.CopyComplete
 E:\visual studio\Source\GiveAidCharity\GiveAidCharity\obj\Debug\GiveAidCharity.dll
 E:\visual studio\Source\GiveAidCharity\GiveAidCharity\obj\Debug\GiveAidCharity.pdb
-E:\visual studio\Source\GiveAidCharity\GiveAidCharity\obj\Debug\GiveAidCharity.Migrations.Initial.resources
 E:\visual studio\Source\GiveAidCharity\GiveAidCharity\obj\Debug\GiveAidCharity.csproj.GenerateResource.cache
 E:\visual studio\Source\GiveAidCharity\GiveAidCharity\obj\Debug\GiveAidCharity.csprojAssemblyReference.cache
+E:\visual studio\Source\GiveAidCharity\GiveAidCharity\obj\Debug\GiveAidCharity.Migrations.updateTable.resources

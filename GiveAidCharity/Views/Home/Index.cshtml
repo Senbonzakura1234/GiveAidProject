@@ -1,5 +1,5 @@
 ﻿@using System.Globalization
-@model GiveAidCharity.Models.HelperClass.ViewModel
+@model GiveAidCharity.Models.HelperClass.HomeViewModel
 @{
     ViewBag.Title = "Home Page";
 }
@@ -93,7 +93,7 @@
         <div class="row">
             <div class="col-md-12 ftco-animate">
                 <div class="carousel-cause owl-carousel">
-                    @foreach (var item in Model.causesList)
+                    @foreach (var item in Model.CausesList)
                     {
                         <div class="item">
                             <div class="cause-entry">
@@ -128,7 +128,7 @@
             </div>
         </div>
         <div class="row">
-            @foreach (var item in Model.donationList)
+            @foreach (var item in Model.DonationList)
             {
                 <div class="col-lg-4 d-flex mb-sm-4 ftco-animate">
                     <div class="staff">
