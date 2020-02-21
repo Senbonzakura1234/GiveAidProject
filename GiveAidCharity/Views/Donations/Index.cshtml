@@ -1,0 +1,205 @@
+﻿@using GiveAidCharity.Models.Main
+@model IEnumerable<GiveAidCharity.Models.Main.Donation>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+
+    ViewBag.Title = "List";
+
+    var totalPage = ((int?)ViewBag.TotalPage).Value;
+    var currentPage = ((int?)ViewBag.CurrentPage).Value;
+    var limit = ((int?)ViewBag.Limit).Value;
+    var currentPara = "&start=" + ViewBag.Start + "&end=" + ViewBag.End;
+
+    int indexSo = (currentPage - 1) * limit + 1;
+}
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body table-responsive">
+                <h3>Tìm kiếm theo ngày</h3>
+                <input type="hidden" id="startTime" value="@ViewBag.Start" />
+                <input type="hidden" id="endTime" value="@ViewBag.End" />
+                <input type="text" name="datefilter" value="" class="form-control" style="margin-bottom: 50px;" />
+
+                <h4 class="card-title" style="margin-top: 5%">List Donation</h4>
+
+                <table class="table" id="update-student">
+                    <thead class="text-primary">
+                        <tr>
+                            <th>
+                                #
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ApplicationUser.UserName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Project.Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Amount)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PaymentMethod)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Status)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CreatedAt)
+                            </th>
+                            <th class="text-center d-none d-lg-table-cell">
+                                Edit
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+
+                            <tr>
+                                <td>
+                                    <b class="text-small">@indexSo</b>
+                                </td>
+                                <td>
+                                    <a href="#" class="badge w-100 badge-gradient-primary w-100">
+                                        @item.ApplicationUser.UserName
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="#" class="badge w-100 badge-gradient-primary w-100">
+                                        @item.Project.Name
+                                    </a>
+                                </td>
+                                <td>
+                                    <b class="text-small">@Html.DisplayFor(modelItem => item.Amount)</b>
+                                </td>
+                                <td class="d-none d-xl-table-cell ">
+                                    <a class="badge w-100 @(item.PaymentMethod == Donation.PaymentMethodEnum.Paypal? "badge-gradient-primary"
+                                                              : item.PaymentMethod == Donation.PaymentMethodEnum.VnPay ? "badge-gradient-warning"
+                                                                  : "badge-gradient-secondary")">
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </a>
+                                </td>
+                                <td class="d-none d-xl-table-cell ">
+                                    <a class="badge w-100 @(item.Status == Donation.DonationStatusEnum.Success? "badge-gradient-primary"
+                                                              : item.Status == Donation.DonationStatusEnum.Pending ? "badge-gradient-warning"
+                                                                  : "badge-gradient-secondary")">
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </a>
+                                </td>
+                                <td>
+                                    <b class="text-small">@Html.DisplayFor(modelItem => item.CreatedAt)</b>
+                                </td>
+                                <td class="text-center d-none d-lg-table-cell">
+                                    <a class="badge badge-warning" href="#">
+                                        <span class="mdi mdi-pencil-box-outline"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                            {
+                                indexSo++;
+                            }
+                        }
+                    </tbody>
+                </table>
+                @if (totalPage > 1)
+                {
+                    <nav aria-label="Page navigation" style="margin-top: 20px;">
+                        <ul class="pagination">
+                            @if (currentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1&limit=@(limit)@(currentPara)" aria-label="First">
+                                        First
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=@(currentPage-1)&limit=@(limit)@(currentPara)" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (currentPage > 2)
+                            {
+                                <li class="page-item"><a class="page-link" href="?page=@(currentPage-2)&limit=@(limit)@(currentPara)">@(currentPage - 2)</a></li>
+                            }
+                            @if (currentPage > 1)
+                            {
+                                <li class="page-item"><a class="page-link" href="?page=@(currentPage-1)&limit=@(limit)@(currentPara)">@(currentPage - 1)</a></li>
+                            }
+                            <li class="active page-item"><a class="page-link" href="?page=@(currentPage)&limit=@(limit)@(currentPara)">@currentPage</a></li>
+                            @if (totalPage - currentPage > 0)
+                            {
+                                <li class="page-item"><a class="page-link" href="?page=@(currentPage+1)&limit=@(limit)@(currentPara)">@(currentPage + 1)</a></li>
+                            }
+                            @if (totalPage - currentPage > 1)
+                            {
+                                <li class="page-item"><a class="page-link" href="?page=@(currentPage+2)&limit=@(limit)@(currentPara)">@(currentPage + 2)</a></li>
+                            }
+                            @if (currentPage < totalPage)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=@(currentPage+1)&limit=@(limit)@(currentPara)" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=@totalPage&limit=@(limit)@(currentPara)" aria-label="Next">
+                                        End
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+    $(function () {
+        // init start time and end time;
+        var startDate = new Date();
+        startDate.setFullYear(startDate.getFullYear() - 1);
+        var endDate = new Date();
+
+        // check start and end parameter
+        var startPara = getParameterFromUrl('start');
+        if (startPara != null && startPara !== "") {
+            startDate = new Date(startPara);
+        }
+
+        var endPara = getParameterFromUrl('end');
+        if (endPara != null && endPara !== "") {
+            endDate = new Date(endPara);
+        }
+
+        $('input[name="datefilter"]').daterangepicker({
+            autoUpdateInput: true,
+            startDate: startDate,
+            endDate: endDate,
+            locale: {
+                cancelLabel: 'Clear'
+            }
+        });
+
+        $('input[name="datefilter"]').on('apply.daterangepicker', function (ev, picker) {
+            var start = picker.startDate.format('YYYY-MM-DD');
+            var end = picker.endDate.format('YYYY-MM-DD');
+
+            window.location.href = window.location.href.split('?')[0] + '?start=' + start + '&end=' + end;
+        });
+
+    });
+
+    function getParameterFromUrl(parameter) {
+        var url_string = window.location.href;
+        var url = new URL(url_string);
+        return url.searchParams.get(parameter);
+    }</script>
+}
+
