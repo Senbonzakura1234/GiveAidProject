@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -48,6 +49,7 @@ namespace GiveAidCharity.Controllers
 
         public async Task<ActionResult> Index()
         {
+            ViewModel mymodel = new ViewModel();
             var projectsList = await _db.Projects.ToListAsync();
             var causesList = projectsList.Select(t => new CausesListViewModel
             {
@@ -62,7 +64,22 @@ namespace GiveAidCharity.Controllers
                 CoverImg = t.CoverImg
             })
                 .ToList();
-            return View(causesList);
+            var donations = await _db.Donations.Where(d => d.Project.Status != Project.ProjectStatusEnum.Canceled
+                                               || d.Project.Status != Project.ProjectStatusEnum.Suspended).Take(9).ToListAsync();
+            var listDonations = (from item in donations let cause = new CausesListViewModel { Id = item.ProjectId, Name = item.Project.Name }
+                                 select new DonationsListViewModel
+                                 {
+                                     UserId = item.ApplicationUserId,
+                                     Avatar = item.ApplicationUser.Avatar,
+                                     Username = item.ApplicationUser.UserName,
+                                     Amount = item.Amount,
+                                     Cause = cause
+                                 }).ToList();
+            listDonations = listDonations.OrderByDescending(p => p.DonateDate).ToList();
+            listDonations = listDonations.Take(3).ToList();
+            mymodel.causesList = causesList;
+            mymodel.donationList = listDonations;
+            return View(mymodel);
         }
 
         public ActionResult About()
@@ -258,7 +275,6 @@ namespace GiveAidCharity.Controllers
             var listDonations = (from item in donations let cause = new CausesListViewModel {Id = item.ProjectId, Name = item.Project.Name} 
                 select new DonationsListViewModel {UserId = item.ApplicationUserId, Avatar = item.ApplicationUser.Avatar,
                     Username = item.ApplicationUser.UserName, Amount = item.Amount, Cause = cause}).ToList();
-
             return View(listDonations);
         }
 
