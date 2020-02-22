@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using GiveAidCharity.Models;
+using GiveAidCharity.Models.Main;
+using Microsoft.Ajax.Utilities;
 
 namespace GiveAidCharity.Controllers
 {
@@ -14,8 +16,20 @@ namespace GiveAidCharity.Controllers
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
         // GET: Donations
-        public async Task<ActionResult> Index(int? page, int? limit, string start, string end)
+        public async Task<ActionResult> Index(int? page, int? limit, string start, string end, string nameProject, double? minAmount, double? maxAmount, int? status, int? method)
         {
+            if (minAmount == null)
+            {
+                minAmount = 0;
+            }
+            if (maxAmount == null)
+            {
+                maxAmount = 100;
+            }
+            if (nameProject.IsNullOrWhiteSpace())
+            {
+                nameProject = "";
+            }
             Debug.WriteLine(start + " " + end);
             if (string.IsNullOrWhiteSpace(start) && !CheckValidDate(start))
             {
@@ -27,14 +41,40 @@ namespace GiveAidCharity.Controllers
                 end = DateTime.Now.ToString("yyyy-MM-dd");
             }
             var endDate = DateTime.ParseExact(end, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            var donations = await _db.Donations.Where(d => d.CreatedAt >= startDate && d.CreatedAt <= endDate).ToListAsync();
+            var donations = await _db.Donations.Where(d => d.CreatedAt >= startDate && d.CreatedAt <= endDate && 
+                                                           d.Project.Name.Contains(nameProject) ).ToListAsync();
 
+            donations = donations.Where(p => p.Amount <= maxAmount && p.Amount >= minAmount).ToList();
+
+            if (status != null && Enum.IsDefined(typeof(Donation.DonationStatusEnum), status))
+            {
+                donations = donations.Where(d => d.Status == (Donation.DonationStatusEnum) status).ToList();
+            }
+            else
+            {
+                status = 0;
+            }
+
+            if (method != null && Enum.IsDefined(typeof(Donation.PaymentMethodEnum), method))
+            {
+                donations = donations.Where(d => d.PaymentMethod == (Donation.PaymentMethodEnum) method).ToList();
+            }
+            else
+            {
+                method = 0;
+            }
             Debug.WriteLine(startDate + " " + endDate);
             ViewBag.Start = start;
             ViewBag.End = end;
             ViewBag.CurrentPage = page ?? 1;
+            ViewBag.TotalItem = donations.Count;
             ViewBag.Limit = limit ?? 10;
             ViewBag.TotalPage = Math.Ceiling((double) donations.Count / (limit ?? 10));
+            ViewBag.nameProject = nameProject;
+            ViewBag.minAmount = minAmount;
+            ViewBag.maxAmount = maxAmount;
+            ViewBag.status = status;
+            ViewBag.method = method;
 
             donations = donations.OrderByDescending(d => d.CreatedAt).Skip(((page ?? 1) - 1) * (limit ?? 10)).Take((limit ?? 10)).ToList();
 
