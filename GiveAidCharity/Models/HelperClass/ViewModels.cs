@@ -123,15 +123,39 @@ namespace GiveAidCharity.Models.HelperClass
         public double Amount { get; set; }
         public CausesListViewModel Cause { get; set; }
     }
-    public class DonationsTransactionResult
+    // ReSharper disable  InconsistentNaming
+    public class TransactionResult
     {
+        [Display(Name = "Transaction No")]
+        public string Id { get; set; }
+
+        [Display(Name = "Paypal Transaction No")]
+        public string vnp_TransactionNo { get; set; }
+
+        [Display(Name = "VnPay Transaction No")]
+        public string txn_id { get; set; }
+
+        [Display(Name = "Paypal Id")]
+        public string payer_id { get; set; }
+        [Display(Name = "Paypal Email")]
+        public string payer_email { get; set; }
         public string UserId { get; set; }
+        [Display(Name = "Username")]
         public string Username { get; set; }
+
+        [Display(Name = "Transaction Date")]
         [DataType(DataType.DateTime)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime DonateDate { get; set; }
+
+        [Display(Name = "Amount")]
         public double Amount { get; set; }
         public string ProjectId { get; set; }
+        [Display(Name = "Project")]
         public string ProjectName { get; set; }
+        [Display(Name = "Status")]
+        public Donation.DonationStatusEnum Status { get; set; }
+        [Display(Name = "Payment Method")]
+        public Donation.PaymentMethodEnum PaymentMethod { get; set; }
     }
 }
