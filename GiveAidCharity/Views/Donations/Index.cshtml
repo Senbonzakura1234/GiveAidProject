@@ -1,13 +1,15 @@
 ﻿@using System.Globalization
+@using GiveAidCharity.Models.HelperClass
 @using GiveAidCharity.Models.Main
 @model IEnumerable<GiveAidCharity.Models.Main.Donation>
-
+@* ReSharper disable  Html.IdNotResolved *@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 
     ViewBag.Title = "List";
 
+    var advance = ((int?)ViewBag.advance).Value;
     var status = ((int?)ViewBag.status).Value;
     var method = ((int?)ViewBag.method).Value;
     var totalPage = ((int?)ViewBag.TotalPage).Value;
@@ -16,10 +18,17 @@
     var start = ViewBag.Start.ToString();
     var end = ViewBag.End.ToString();
     var nameProject = ViewBag.nameProject.ToString();
-    var minAmount = ((double?) ViewBag.minAmount).Value;
-    var maxAmount = ((double?) ViewBag.maxAmount).Value;
-    var currentPara = "?start=" + ViewBag.Start + "&end=" + ViewBag.End + "&nameProject=" + nameProject + "&minAmount=" + ViewBag.minAmount +
-                      "&maxAmount=" + ViewBag.maxAmount;
+    var minAmount = ((double?)ViewBag.minAmount).Value;
+    var maxAmount = ((double?)ViewBag.maxAmount).Value;
+
+    var sortBy = ((int?)ViewBag.sortBy).Value;
+    var direct = ((int?)ViewBag.direct).Value;
+    var directSet = ((int?)ViewBag.directSet).Value;
+
+    var currentPara = "?start=" + ViewBag.Start + "&end=" + ViewBag.End + 
+                      "&nameProject=" + nameProject + "&minAmount=" + ViewBag.minAmount +
+                      "&maxAmount=" + ViewBag.maxAmount + "&status=" + status + 
+                      "&method=" + method + "&sortBy=" + sortBy + "&direct=" + direct+ "&advance=" + advance;
 }
 @section styles
 {
@@ -40,6 +49,9 @@
 
                     @Html.Hidden("status", status, new { id = "status" })
                     @Html.Hidden("method", method, new { id = "method" })
+                    @Html.Hidden("sortBy", sortBy, new { id = "sortBy" })
+                    @Html.Hidden("direct", direct, new { id = "direct" })
+                    @Html.Hidden("advance", advance, new { id = "advance" })
                     <div class="form-row">
                         <div class="col-md-12 form-group">
                             <label for="nameProject">Search by project name</label>
@@ -50,11 +62,11 @@
 
                     <div class="form-row mb-4">
                         <a class="btn btn-gradient-primary" data-toggle="collapse" href="#searchCollapseAdvance" role="button" aria-expanded="false"
-                           aria-controls="multiCollapseExample1">Advanced Search</a>
+                           aria-controls="multiCollapseExample1" id="searchCollapseTrigger">Advanced Search</a>
                         <a href="@Url.Action("Index", "Donations")" class="btn btn-light ml-auto">Clear Filter</a>
                         <button type="submit" class="btn btn-gradient-primary ml-2">Submit</button>
                     </div>
-                    <div class="form-row collapse" id="searchCollapseAdvance">
+                    <div class="form-row collapse show" id="searchCollapseAdvance">
                         <div class="col-md-6 form-group">
                             <label for="dateFilter">Date range picker</label>
                             <input type="text" id="dateFilter" value=""
@@ -109,22 +121,64 @@
                                 View
                             </th>
                             <th class="text-center">
-                                @Html.DisplayNameFor(model => model.ApplicationUser.UserName)
+                                <a href="#/" class="sortData text-primary" data-direct="@directSet"
+                                   data-sort="@((int)HelperEnum.DonationSortEnum.UserName)">
+                                    @Html.DisplayNameFor(model => model.ApplicationUser.UserName)
+                                    <span style="font-size: 15px" class="mdi
+                                          @(direct == (int) HelperEnum.DonationDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
+                                          @(sortBy == (int) HelperEnum.DonationSortEnum.UserName ? "" : "d-none")">
+                                    </span>
+                                </a>
                             </th>
                             <th class="text-center">
-                                Project
+                                <a href="#/" class="sortData text-primary" data-direct="@directSet"
+                                   data-sort="@((int)HelperEnum.DonationSortEnum.ProjectName)">
+                                    Project
+                                    <span style="font-size: 15px" class="mdi
+                                          @(direct == (int) HelperEnum.DonationDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
+                                          @(sortBy == (int) HelperEnum.DonationSortEnum.ProjectName ? "" : "d-none")">
+                                    </span>
+                                </a>
                             </th>
                             <th class="text-center">
-                                @Html.DisplayNameFor(model => model.Amount)
+                                <a href="#/" class="sortData text-primary" data-direct="@directSet"
+                                   data-sort="@((int)HelperEnum.DonationSortEnum.Amount)">
+                                    @Html.DisplayNameFor(model => model.Amount)
+                                    <span style="font-size: 15px" class="mdi
+                                          @(direct == (int) HelperEnum.DonationDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
+                                          @(sortBy == (int) HelperEnum.DonationSortEnum.Amount ? "" : "d-none")">
+                                    </span>
+                                </a>
                             </th>
                             <th class="text-center">
-                                @Html.DisplayNameFor(model => model.PaymentMethod)
+                                <a href="#/" class="sortData text-primary" data-direct="@directSet"
+                                   data-sort="@((int)HelperEnum.DonationSortEnum.PaymentMethod)">
+                                    @Html.DisplayNameFor(model => model.PaymentMethod)
+                                    <span style="font-size: 15px" class="mdi
+                                          @(direct == (int) HelperEnum.DonationDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
+                                          @(sortBy == (int) HelperEnum.DonationSortEnum.PaymentMethod ? "" : "d-none")">
+                                    </span>
+                                </a>
                             </th>
                             <th class="text-center">
-                                @Html.DisplayNameFor(model => model.Status)
+                                <a href="#/" class="sortData text-primary" data-direct="@directSet"
+                                   data-sort="@((int)HelperEnum.DonationSortEnum.Status)">
+                                    @Html.DisplayNameFor(model => model.Status)
+                                    <span style="font-size: 15px" class="mdi
+                                          @(direct == (int) HelperEnum.DonationDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
+                                          @(sortBy == (int) HelperEnum.DonationSortEnum.Status ? "" : "d-none")">
+                                    </span>
+                                </a>
                             </th>
                             <th class="text-center">
-                                @Html.DisplayNameFor(model => model.CreatedAt)
+                                <a href="#/" class="sortData text-primary" data-direct="@directSet"
+                                   data-sort="@((int)HelperEnum.DonationSortEnum.CreatedAt)">
+                                    @Html.DisplayNameFor(model => model.CreatedAt)
+                                    <span style="font-size: 15px" class="mdi
+                                          @(direct == (int) HelperEnum.DonationDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
+                                          @(sortBy == (int) HelperEnum.DonationSortEnum.CreatedAt ? "" : "d-none")">
+                                    </span>
+                                </a>
                             </th>
                             <th class="text-center d-none d-lg-table-cell">
                                 Modify
@@ -282,6 +336,20 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+            const advance = $("#advance").val();
+            if (advance == 1) {
+                $("#searchCollapseAdvance").addClass("show");
+            } else if (advance == 0) {
+                $("#searchCollapseAdvance").removeClass("show");
+            }
+            $("#searchCollapseTrigger").click(function () {
+                if ($("#advance").val() == 0) {
+                    $("#advance").val(1);
+                } else if ($("#advance").val() == 1) {
+                    $("#advance").val(0);
+                }
+            });
+
             const dataStatus = $("#status").val();
             const methodStatus = $("#method").val();
             $("#statusSelect").val(dataStatus);
@@ -298,6 +366,14 @@
                 console.log($("#method").val());
             });
 
+            $(".sortData").click(function () {
+                const sortByData = $(this).data("sort");
+                $('input[name="sortBy"]').val(sortByData);
+                const directData = $(this).data("direct");
+                $('input[name="direct"]').val(directData);
+                console.log(directData);
+                $("#productForm").submit();
+            });
 
             const minAmount = $("#minAmount").val();
             const maxAmount = $("#maxAmount").val();

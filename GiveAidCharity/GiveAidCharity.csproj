@@ -193,6 +193,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\HelperClass\ExtraAttributes.cs" />
+    <Compile Include="Models\HelperClass\HelperEnum.cs" />
     <Compile Include="Models\HelperClass\ViewModels.cs" />
     <Compile Include="Models\HelperClass\VnPayLibrary.cs" />
     <Compile Include="Models\IdentityModels.cs" />
