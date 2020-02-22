@@ -10,7 +10,9 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using GiveAidCharity.Models;
+using GiveAidCharity.Models.HelperClass;
 using GiveAidCharity.Models.Main;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 
 namespace GiveAidCharity.Controllers
@@ -21,9 +23,11 @@ namespace GiveAidCharity.Controllers
         private const string BusinessEmail = "sb-gboj43907912@business.example.com"; 
         private const string Currency = "USD"; 
         private ApplicationUserManager _userManager;
+        protected readonly string CurrentUserId;
 
         public PayPalController()
         {
+            CurrentUserId = System.Web.HttpContext.Current.User.Identity.GetUserId();
         }
 
         public PayPalController(ApplicationUserManager userManager)
@@ -37,10 +41,6 @@ namespace GiveAidCharity.Controllers
             private set => _userManager = value;
         }
 
-        public ActionResult Success()
-        {
-            return null;
-        }
         [HttpPost]
         public async Task<HttpStatusCodeResult> Receive()
         {
@@ -133,8 +133,8 @@ namespace GiveAidCharity.Controllers
         {
             var project = await Db.Projects.FindAsync(donation.ProjectId);
             if (project == null) return false;
-            var checkDonation = await Db.Donations.Where(d => d.txn_id == donation.txn_id).ToListAsync();
-            if (checkDonation.Count != 0) return false;
+            var checkDonation = await Db.Donations.Where(d => d.txn_id == donation.txn_id).FirstOrDefaultAsync();
+            if (checkDonation != null) return false;
             if (verificationResponse.Equals("VERIFIED"))
             {
                 donation.Status = Donation.DonationStatusEnum.Success;

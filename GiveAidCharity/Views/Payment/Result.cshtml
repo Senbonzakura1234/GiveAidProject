@@ -1,0 +1,119 @@
+﻿@using GiveAidCharity.Models.Main
+@model GiveAidCharity.Models.HelperClass.TransactionResult
+
+@{
+    ViewBag.Title = "PaymentResult";
+}
+
+
+@section hero_wrap
+{
+    <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
+        <span class="mr-2">
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </span> <span>@ViewBag.Title</span>
+    </p>
+    <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Payment Result</h1>
+}
+<section class="ftco-section contact-section ftco-degree-bg">
+    <div class="container">
+        <div class="row d-flex mb-5 contact-info">
+            <div class="alert @(Model.Status == Donation.DonationStatusEnum.Success ? "alert-success" :
+                    Model.Status == Donation.DonationStatusEnum.Fail ? "alert-secondary" :
+                    Model.Status == Donation.DonationStatusEnum.Cancel ? "alert-danger" :
+                    "alert-warning") col-md-12 alert-dismissible fade show" role="alert">
+                Your donation is <strong>@Html.DisplayFor(model => model.Status)</strong>
+                <button type="button" class="close mt-1" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="w-100 p-4 @(Model.Status == Donation.DonationStatusEnum.Success ? "border-success" :
+                                           Model.Status == Donation.DonationStatusEnum.Fail ? "border-secondary" :
+                                               Model.Status == Donation.DonationStatusEnum.Cancel ? "border-danger" :
+                                                   "border-warning")" style="border: 1px dashed">
+                <dl class="row">
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Username)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Username)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.PaymentMethod)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.PaymentMethod)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Status)</dt>
+                    <dd class="col-sm-9">
+                        <div class="badge text-white
+                             @(Model.Status == Donation.DonationStatusEnum.Success ? "badge-success"
+                                 : Model.Status == Donation.DonationStatusEnum.Pending ? "badge-warning"
+                                 : Model.Status == Donation.DonationStatusEnum.Cancel ? "badge-danger"
+                                     : "badge-secondary")">
+                            @Html.DisplayFor(model => model.Status)
+                        </div>
+                    </dd>
+
+                    @if (Model.PaymentMethod != Donation.PaymentMethodEnum.Paypal)
+                    {
+                        if (Model.PaymentMethod == Donation.PaymentMethodEnum.VnPay)
+                        {
+                            <dt class="col-sm-3">Vnpay Info</dt>
+                            <dd class="col-sm-9">
+                                <dl class="row">
+                                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.vnp_TransactionNo)</dt>
+                                    <dd class="col-sm-8">@Html.DisplayFor(model => model.vnp_TransactionNo)</dd>
+
+                                    <dt class="col-sm-4">$@Html.DisplayNameFor(model => model.Amount)</dt>
+                                    <dd class="col-sm-8">@Html.DisplayFor(model => model.Amount)</dd>
+                                </dl>
+                            </dd>
+                        }
+                        else
+                        {
+                            <dt class="col-sm-3">Payment Info</dt>
+                            <dd class="col-sm-9">
+                                <dl class="row">
+                                    <dt class="col-sm-4">$@Html.DisplayNameFor(model => model.Amount)</dt>
+                                    <dd class="col-sm-8">@Html.DisplayFor(model => model.Amount)</dd>
+                                </dl>
+                            </dd>
+                        }
+                    }
+                    else
+                    {
+                        <dt class="col-sm-3">Paypal Info</dt>
+                        <dd class="col-sm-9">
+                            <dl class="row">
+                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.txn_id)</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.txn_id)</dd>
+
+                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.payer_id)</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.payer_id)</dd>
+
+                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.payer_email)</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.payer_email)</dd>
+
+                                <dt class="col-sm-4">$@Html.DisplayNameFor(model => model.Amount)</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.Amount)</dd>
+                            </dl>
+                        </dd>
+                    }
+                    <dt class="col-sm-3">Payment Info</dt>
+                    <dd class="col-sm-9">
+                        <dl class="row">
+                            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.ProjectName)</dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => model.ProjectName)
+                                <span>
+                                    <a href="@Url.Action("CauseDetail", "Home", new {id = Model.ProjectId})">
+                                        Back to project
+                                    </a>
+                                </span>
+                            </dd>
+                            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.DonateDate)</dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => model.DonateDate)
+                            </dd>
+                        </dl>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</section>

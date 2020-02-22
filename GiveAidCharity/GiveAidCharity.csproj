@@ -90,6 +90,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -177,9 +178,9 @@
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\DonationsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\IPNPayPalController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PartialPartController.cs" />
+    <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\PayPalController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\VNpayController.cs" />
@@ -757,7 +758,6 @@
     <Content Include="Views\Home\CauseDetail.cshtml" />
     <Content Include="Views\Shared\_CauseDetailSideBar.cshtml" />
     <Content Include="Views\Home\Donations.cshtml" />
-    <Content Include="Views\IPNPayPal\Index.cshtml" />
     <Content Include="Views\Account\CompleteUserProfile.cshtml" />
     <Content Include="Views\Home\SingleTopDonate.cshtml" />
     <Content Include="Views\Home\CausesDonate.cshtml" />
@@ -768,11 +768,11 @@
     <Content Include="Views\Donations\Details.cshtml" />
     <Content Include="Views\Donations\Edit.cshtml" />
     <Content Include="Views\Donations\Index.cshtml" />
+    <Content Include="Views\Payment\Result.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Api\" />
-    <Folder Include="Views\PayPal\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
