@@ -13,6 +13,10 @@ namespace GiveAidCharity.Models.HelperClass
         private readonly SortedList<string, string> _requestData = new SortedList<string, string>(new VnPayCompare());
         private readonly SortedList<string, string> _responseData = new SortedList<string, string>(new VnPayCompare());
 
+        public string GetExtraData()
+        {
+            return _responseData.Aggregate("", (current, item) => current + (item.Key + " = " + item.Value));
+        }
         public void AddRequestData(string key, string value)
         {
             if (!string.IsNullOrEmpty(value))

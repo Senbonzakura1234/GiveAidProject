@@ -1,15 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+using System.Collections.ObjectModel;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using GiveAidCharity.Models;
 using GiveAidCharity.Models.HelperClass;
 using GiveAidCharity.Models.Main;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using Newtonsoft.Json;
 
 namespace GiveAidCharity.Controllers
 {
@@ -20,11 +23,11 @@ namespace GiveAidCharity.Controllers
 
         private ApplicationUserManager _userManager;
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
-        protected readonly string CurrentUserId;
+
+        private const string ExchangeRateUsdApi = "https://free.currconv.com/api/v7/convert?q=USD_VND&compact=ultra&apiKey=549fdf0ffb9b928a00a6";
 
         public VNpayController()
         {
-            CurrentUserId = System.Web.HttpContext.Current.User.Identity.GetUserId();
         }
 
         public VNpayController(
@@ -45,21 +48,29 @@ namespace GiveAidCharity.Controllers
         }
 
         [HttpPost]
-        public ActionResult Checkout()
+        public async Task<ActionResult> Donate(string userId, string projectId)
         {
-            Debug.WriteLine(CurrentUserId);
+            if (userId == null || projectId == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var user = await UserManager.FindByIdAsync(userId);
+            var project = await _db.Projects.FindAsync(projectId);
+            if (user == null || project == null) return new HttpNotFoundResult();
+
+
             var donation = new Donation
             {
-                ApplicationUserId = CurrentUserId,
-                Amount = 1000000,
+                ProjectId = projectId,
+                ApplicationUserId = userId,
+                Amount = 100,
+                PaymentMethod = Donation.PaymentMethodEnum.VnPay,
             };
             _db.Donations.Add(donation);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
+
             var vnPay = new VnPayLibrary();
             vnPay.AddRequestData("vnp_Version", "2.0.0");
-            vnPay.AddRequestData("vnp_Command", "pay");
+            vnPay.AddRequestData("vnp_Command", "donate");
             vnPay.AddRequestData("vnp_TmnCode", "F0NO7BAG");
-            vnPay.AddRequestData("vnp_Amount", (donation.Amount * 100).ToString(CultureInfo.InvariantCulture));
+            vnPay.AddRequestData("vnp_Amount", (donation.Amount * 100 * GetExchangeRate()).ToString(CultureInfo.InvariantCulture));
             vnPay.AddRequestData("vnp_BankCode", "NCB");
             vnPay.AddRequestData("vnp_BankTranNo", "9704198526191432198");
             vnPay.AddRequestData("vnp_CardType", "ATM");
@@ -73,10 +84,12 @@ namespace GiveAidCharity.Controllers
                 vnPay.AddRequestData("vnp_ReturnUrl", Url.Action("Ipn", "VNpay", null, Request.Url.Scheme));
             vnPay.AddRequestData("vnp_TxnRef", donation.Id);
             var paymentUrl = vnPay.CreateRequestUrl("http://sandbox.vnpayment.vn/paymentv2/vpcpay.html", "OWESKVDWDQHLTYAIZCVYVSNSAOBITQDX");
+
+        
+
             return Redirect(paymentUrl);
 
         }
-
         public ActionResult PaymentResult(PaymentResultViewModel paymentResult)
         {
             if (paymentResult == null)
@@ -85,82 +98,90 @@ namespace GiveAidCharity.Controllers
             }
             return View(paymentResult);
         }
-        public ActionResult Ipn()
+        public async Task<ActionResult> Ipn()
         {
-            string returnContent;
-            var paymentResult = new PaymentResultViewModel();
-            if (Request.QueryString.Count > 0)
+            const string vnpHashSecret = "OWESKVDWDQHLTYAIZCVYVSNSAOBITQDX"; //Secret key
+            var vnPayData = Request.QueryString;
+            var vnPay = new VnPayLibrary();
+
+
+            foreach (string s in vnPayData)
             {
-                const string vnpHashSecret = "OWESKVDWDQHLTYAIZCVYVSNSAOBITQDX"; //Secret key
-                var vnPayData = Request.QueryString;
-                var vnPay = new VnPayLibrary();
-
-
-                foreach (string s in vnPayData)
+                //get all querystring data
+                if (!string.IsNullOrEmpty(s) && s.StartsWith("vnp_"))
                 {
-                    //get all querystring data
-                    if (!string.IsNullOrEmpty(s) && s.StartsWith("vnp_"))
-                    {
-                        vnPay.AddResponseData(s, vnPayData[s]);
-                    }
+                    vnPay.AddResponseData(s, vnPayData[s]);
                 }
+            }
 
 
-                var orderId = vnPay.GetResponseData("vnp_TxnRef");
-                // ReSharper disable once UnusedVariable
-                var vnPayTranId = vnPay.GetResponseData("vnp_TransactionNo");
-                var vnpResponseCode = vnPay.GetResponseData("vnp_ResponseCode");
-                var vnpSecureHash = Request.QueryString["vnp_SecureHash"];
-                var checkSignature = vnPay.ValidateSignature(vnpSecureHash, vnpHashSecret);
+            var orderId = vnPay.GetResponseData("vnp_TxnRef");
+            // ReSharper disable once UnusedVariable
+            var vnPayTranId = vnPay.GetResponseData("vnp_TransactionNo");
+            var vnpResponseCode = vnPay.GetResponseData("vnp_ResponseCode");
+            var vnpSecureHash = Request.QueryString["vnp_SecureHash"];
+            var checkSignature = vnPay.ValidateSignature(vnpSecureHash, vnpHashSecret);
+            if (!checkSignature) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-                if (checkSignature)
+
+            var checkDonation = (await _db.Donations.Where(d => d.vnp_TransactionNo == vnPayTranId)
+                    .OrderByDescending(d => d.CreatedAt).ToListAsync()).Count == 0;
+            
+            var donation = await _db.Donations.FindAsync(orderId);
+            if (donation == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            var project = await _db.Projects.FindAsync(donation.ProjectId);
+            if (project == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+
+            donation.extra_info = vnPay.GetExtraData();
+            donation.vnp_TransactionNo = vnPayTranId;
+            donation.vnp_ResponseCode = vnpResponseCode;
+
+            if (checkDonation)
+            {
+                if (donation.Status == Donation.DonationStatusEnum.Pending)
                 {
-
-                    var donation = _db.Donations.Find(orderId);
-                    if (donation != null)
+                    if (vnpResponseCode == "00")
                     {
-                        if (donation.Status == Donation.DonationStatusEnum.Pending)
-                        {
-                            if (vnpResponseCode == "00")
-                            {
-                                donation.Status = Donation.DonationStatusEnum.Success;
-                                paymentResult.PaymentStatus = PaymentResultViewModel.PaymentStatusEnum.Success;
-                                paymentResult.Amount = donation.Amount;
-                            }
-                            else
-                            {
-                                donation.Status = Donation.DonationStatusEnum.Cancel;
-                                paymentResult.PaymentStatus = PaymentResultViewModel.PaymentStatusEnum.Fail;
-                                paymentResult.Amount = donation.Amount;
-                            }
-
-
-                            _db.SaveChanges();
-                            returnContent = "{\"RspCode\":\"00\",\"Message\":\"Confirm Success\"}";
-                        }
-                        else
-                        {
-                            returnContent = "{\"RspCode\":\"02\",\"Message\":\"Order already confirmed\"}";
-                        }
+                        donation.Status = Donation.DonationStatusEnum.Success;
+                        project.CurrentFund += donation.Amount;
+                        _db.Entry(project).State = EntityState.Modified;
                     }
                     else
                     {
-                        returnContent = "{\"RspCode\":\"01\",\"Message\":\"Order not found\"}";
+                        donation.Status = Donation.DonationStatusEnum.Cancel;
                     }
-                }
-                else
-                {
-                    returnContent = "{\"RspCode\":\"97\",\"Message\":\"Invalid signature\"}";
                 }
             }
             else
             {
-                returnContent = "{\"RspCode\":\"99\",\"Message\":\"Input data required\"}";
+                donation.Status = Donation.DonationStatusEnum.Cancel;
             }
+            donation.UpdatedAt = DateTime.Now;
 
-            ViewBag.Response = returnContent;
-            Response.ClearContent();
-            return RedirectToAction("PaymentResult", paymentResult);
+
+            _db.Entry(donation).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+            return RedirectToAction("VnPayResult", "Payment", new { id = orderId });
         }
+
+
+        private double GetExchangeRate()
+        {
+            var getPriceVnd = new HttpClient();
+            double usdVnd;
+            try
+            {
+                var responseContent = getPriceVnd.GetAsync(ExchangeRateUsdApi).Result.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                var exchangeRate = JsonConvert.DeserializeObject<ObservableCollection<CurrencyConvertModel>>(responseContent);
+                usdVnd = exchangeRate?.FirstOrDefault()?.USD_VND ?? 23238.5;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                usdVnd = 23238.5;
+            }
+            return usdVnd;
+        }
+        
     }
 }

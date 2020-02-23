@@ -129,7 +129,7 @@ namespace GiveAidCharity.Models.HelperClass
         [Display(Name = "Transaction No")]
         public string Id { get; set; }
 
-        [Display(Name = "Paypal Transaction No")]
+        [Display(Name = "VNpay Transaction No")]
         public string vnp_TransactionNo { get; set; }
 
         [Display(Name = "VnPay Transaction No")]

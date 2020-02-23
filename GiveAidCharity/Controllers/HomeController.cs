@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
-using System.Dynamic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -186,24 +185,22 @@ namespace GiveAidCharity.Controllers
             var listDonateViewModel = new List<SingleDonationViewModel>();
             if (listDonate.Count > 0)
             {
-                for (int i = 0; i < listDonate.Count; i++)
+                listDonateViewModel.AddRange(listDonate.Select(t => new SingleDonationViewModel
                 {
-                    listDonateViewModel.Add(new SingleDonationViewModel
-                    {
-                        Amount = listDonate[i].Amount,
-                        CauseId = listDonate[i].ProjectId,
-                        DonateDate = listDonate[i].CreatedAt,
-                        UserId = listDonate[i].ApplicationUserId,
-                        Username = listDonate[i].ApplicationUser.UserName,
-                        Avatar = listDonate[i].ApplicationUser.Avatar
-                    });
-                }
+                    Amount = t.Amount,
+                    CauseId = t.ProjectId,
+                    DonateDate = t.CreatedAt,
+                    UserId = t.ApplicationUserId,
+                    Username = t.ApplicationUser.UserName,
+                    Avatar = t.ApplicationUser.Avatar
+                }));
             }
 
             var listDonateViewModelGroupBy = listDonateViewModel.GroupBy(ld => ld.UserId).Select(ld => new SingleDonationViewModel
             {
                 Amount = ld.Sum(b => b.Amount),
                 CauseId = ld.FirstOrDefault()?.CauseId,
+                // ReSharper disable  PossibleNullReferenceException
                 DonateDate = ld.FirstOrDefault().DonateDate,
                 UserId = ld.FirstOrDefault()?.UserId,
                 Username = ld.FirstOrDefault()?.Username,
@@ -220,18 +217,15 @@ namespace GiveAidCharity.Controllers
             var listDonateViewModel = new List<SingleDonationViewModel>();
             if (listDonate.Count > 0)
             {
-                for (int i = 0; i < listDonate.Count; i++)
+                listDonateViewModel.AddRange(listDonate.Select(t => new SingleDonationViewModel
                 {
-                    listDonateViewModel.Add(new SingleDonationViewModel
-                    {
-                        Amount = listDonate[i].Amount,
-                        CauseId = listDonate[i].ProjectId,
-                        DonateDate = listDonate[i].CreatedAt,
-                        UserId = listDonate[i].ApplicationUserId,
-                        Username = listDonate[i].ApplicationUser.UserName,
-                        Avatar = listDonate[i].ApplicationUser.Avatar
-                    });
-                }
+                    Amount = t.Amount,
+                    CauseId = t.ProjectId,
+                    DonateDate = t.CreatedAt,
+                    UserId = t.ApplicationUserId,
+                    Username = t.ApplicationUser.UserName,
+                    Avatar = t.ApplicationUser.Avatar
+                }));
             }
 
             var listDonateViewModelGroupBy = listDonateViewModel.GroupBy(ld => ld.UserId).Select(ld => new SingleDonationViewModel
