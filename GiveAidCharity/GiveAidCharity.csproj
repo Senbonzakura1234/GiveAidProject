@@ -91,6 +91,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel.Activities" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -195,6 +196,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\HelperClass\ExtraAttributes.cs" />
     <Compile Include="Models\HelperClass\HelperEnum.cs" />
+    <Compile Include="Models\HelperClass\Miscellaneous.cs" />
     <Compile Include="Models\HelperClass\ViewModels.cs" />
     <Compile Include="Models\HelperClass\VnPayLibrary.cs" />
     <Compile Include="Models\IdentityModels.cs" />

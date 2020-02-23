@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity.Owin;
 
 namespace GiveAidCharity.Controllers
 {
+    [Authorize]
     public class PaymentController : Controller
     {
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
@@ -34,17 +35,17 @@ namespace GiveAidCharity.Controllers
             private set => _userManager = value;
         }
         // ReSharper disable once InconsistentNaming
-        public async Task<ActionResult> Result(string tx)
+        public async Task<ActionResult> PayPalResult(string tx)
         {
             if (tx == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var donation = await _db.Donations.Where(d => d.txn_id == tx)
                 .OrderByDescending(d => d.CreatedAt).FirstOrDefaultAsync();
             if (donation?.ApplicationUserId == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-            var projectName = (await _db.Projects.FindAsync(donation.ProjectId))?.Name;
 
             var user = await UserManager.FindByIdAsync(donation.ApplicationUserId);
             if (user == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             if (user.Id != CurrentUserId) return RedirectToAction("Index", "Home");
+
             var transactionResult = new TransactionResult
             {
                 Username = user.UserName,
@@ -54,14 +55,70 @@ namespace GiveAidCharity.Controllers
                 txn_id = donation.txn_id,
                 DonateDate = donation.CreatedAt,
                 UserId = user.Id,
-                ProjectName = projectName,
+                ProjectName = donation.Project.Name,
                 payer_email = donation.payer_email,
                 payer_id = donation.payer_id,
                 vnp_TransactionNo = donation.vnp_TransactionNo,
                 Status = donation.Status,
                 PaymentMethod = donation.PaymentMethod
             };
-            return View(transactionResult);
+            return View("Result",transactionResult);
+        }
+        public async Task<ActionResult> VnPayResult(string id)
+        {
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var donation = await _db.Donations.FindAsync(id);
+            if (donation?.ApplicationUserId == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+
+            var user = await UserManager.FindByIdAsync(donation.ApplicationUserId);
+            if (user == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            if (user.Id != CurrentUserId) return RedirectToAction("Index", "Home");
+
+            var transactionResult = new TransactionResult
+            {
+                Username = user.UserName,
+                Amount = donation.Amount,
+                Id = donation.Id,
+                ProjectId = donation.ProjectId,
+                txn_id = donation.txn_id,
+                DonateDate = donation.CreatedAt,
+                UserId = user.Id,
+                ProjectName = donation.Project.Name,
+                payer_email = donation.payer_email,
+                payer_id = donation.payer_id,
+                vnp_TransactionNo = donation.vnp_TransactionNo,
+                Status = donation.Status,
+                PaymentMethod = donation.PaymentMethod
+            };
+            return View("Result",transactionResult);
+        }
+        public async Task<ActionResult> Result(string id)
+        {
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var donation = await _db.Donations.FindAsync(id);
+            if (donation?.ApplicationUserId == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+
+            var user = await UserManager.FindByIdAsync(donation.ApplicationUserId);
+            if (user == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            if (user.Id != CurrentUserId) return RedirectToAction("Index", "Home");
+
+            var transactionResult = new TransactionResult
+            {
+                Username = user.UserName,
+                Amount = donation.Amount,
+                Id = donation.Id,
+                ProjectId = donation.ProjectId,
+                txn_id = donation.txn_id,
+                DonateDate = donation.CreatedAt,
+                UserId = user.Id,
+                ProjectName = donation.Project.Name,
+                payer_email = donation.payer_email,
+                payer_id = donation.payer_id,
+                vnp_TransactionNo = donation.vnp_TransactionNo,
+                Status = donation.Status,
+                PaymentMethod = donation.PaymentMethod
+            };
+            return View("Result",transactionResult);
         }
     }
 }
