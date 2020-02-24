@@ -192,6 +192,10 @@
     <Compile Include="Migrations\202002191713136_updateTable.Designer.cs">
       <DependentUpon>202002191713136_updateTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202002241328408_updateDonationModel.cs" />
+    <Compile Include="Migrations\202002241328408_updateDonationModel.Designer.cs">
+      <DependentUpon>202002241328408_updateDonationModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\HelperClass\ExtraAttributes.cs" />
@@ -791,6 +795,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202002191713136_updateTable.resx">
       <DependentUpon>202002191713136_updateTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002241328408_updateDonationModel.resx">
+      <DependentUpon>202002241328408_updateDonationModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
