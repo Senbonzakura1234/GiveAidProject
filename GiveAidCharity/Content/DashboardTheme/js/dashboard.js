@@ -454,8 +454,8 @@
     }
 
     var datetimeChart = [];
-    var soLuong = [];
-    var sotien = [];
+    var count = [];
+    var amount = [];
     var namePaymentMethod = [];
     var valuePaymentMethod = [];
     var totalPaymentMethod = 0;
@@ -469,14 +469,14 @@
             console.log(res);
 
             for (var j = 0; j < res.countPerMonth.length; j++) {
-                soLuong.push(res.countPerMonth[j].Quantity);
+                count.push(res.countPerMonth[j].Quantity);
                 var dateChart = res.countPerMonth[j].Month + "/" + res.countPerMonth[j].Year;
 
                 datetimeChart.push(dateChart);
             }
 
             for (var k = 0; k < res.amountPerMonth.length; k++) {
-                sotien.push(res.amountPerMonth[k].Amount);
+                amount.push(res.amountPerMonth[k].Amount);
             }
 
             for (var i = 0; i < res.PaymentMethod.length; i++) {
@@ -624,10 +624,10 @@
             series: [
                 {
                     name: 'Count Per Month',
-                    data: soLuong
+                    data: count
                 }, {
                     name: 'Amount Per Month',
-                    data: sotien
+                    data: amount
                 }],
 
             responsive: {
