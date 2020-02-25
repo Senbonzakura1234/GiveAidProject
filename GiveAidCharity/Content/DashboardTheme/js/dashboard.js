@@ -461,6 +461,10 @@
     var totalPaymentMethod = 0;
     $.ajax({
         url: "/Api/GetDonations",
+        data: {
+            fromDate: $('#startTime').val(),
+            toDate: $('#endTime').val()
+        },
         success: function (res) {
             console.log(res);
 
@@ -599,7 +603,7 @@
                         formatter: function () {
                             return '<span style="color:blue;">' + this.value + '</span>';
                         },
-                        step: 3
+                        step: 2
                     }
                 }],
 

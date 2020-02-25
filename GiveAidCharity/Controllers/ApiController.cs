@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -66,9 +67,9 @@ namespace GiveAidCharity.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult GetDonations()
+        public ActionResult GetDonations(DateTime fromDate, DateTime toDate)
         {
-            var list = _db.Donations.ToList();
+            var list = _db.Donations.Where(d => d.CreatedAt >= fromDate && d.CreatedAt <= toDate).ToList();
 
             var countPerMonth = list.OrderBy(d => d.CreatedAt).GroupBy(d => new
             {
