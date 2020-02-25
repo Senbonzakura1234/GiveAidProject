@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -63,6 +64,49 @@ namespace GiveAidCharity.Controllers
             var list = _db.Projects.Where(p => p.Name.Contains(nameProject)).Select(p => p.Name);
 
             return Json(list);
+        }
+
+        [AllowAnonymous]
+        public ActionResult GetDonations(DateTime fromDate, DateTime toDate)
+        {
+            var list = _db.Donations.Where(d => d.CreatedAt >= fromDate && d.CreatedAt <= toDate).ToList();
+
+            var countPerMonth = list.OrderBy(d => d.CreatedAt).GroupBy(d => new
+            {
+                d.CreatedAt.Month,
+                d.CreatedAt.Year
+            }).Select(d => new
+            {
+                Quantity = d.Count(),
+                d.FirstOrDefault().CreatedAt.Month,
+                d.FirstOrDefault().CreatedAt.Year,
+            }).ToList();
+
+            var amountPerMonth = list.OrderBy(d => d.CreatedAt).GroupBy(d => new
+            {
+                d.CreatedAt.Month,
+                d.CreatedAt.Year
+            }).Select(d => new
+            {
+                Amount = d.Sum(donation => donation.Amount),
+                d.FirstOrDefault().CreatedAt.Month,
+                d.FirstOrDefault().CreatedAt.Year
+            }).ToList();
+
+            var PaymentMethod = list.GroupBy(d => new
+            {
+                d.PaymentMethod
+            }).Select(d => new
+            {
+                d.FirstOrDefault().PaymentMethod,
+                Quantity = d.Count()
+            }).ToList();
+            return Json(new
+            {
+                countPerMonth,
+                amountPerMonth,
+                PaymentMethod
+            }, JsonRequestBehavior.AllowGet);
         }
     }
 }
