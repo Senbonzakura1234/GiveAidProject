@@ -193,6 +193,48 @@ namespace GiveAidCharity.Controllers
             return View(listDonation.ToList());
         }
 
+        public ActionResult GetDonations()
+        {
+            var list = _db.Donations.ToList();
+           
+            var soluongTrong1Thang = list.OrderBy(d => d.CreatedAt).GroupBy(d => new
+            {
+                d.CreatedAt.Month,
+                d.CreatedAt.Year
+            }).Select(d => new
+            {
+                Quantity = d.Count(),
+                d.FirstOrDefault().CreatedAt.Month,
+                d.FirstOrDefault().CreatedAt.Year,
+            }).ToList();
+
+            var sotienTrong1Thang = list.OrderBy(d => d.CreatedAt).GroupBy(d => new
+            {
+                d.CreatedAt.Month,
+                d.CreatedAt.Year
+            }).Select(d => new
+            {
+                Amount = d.Sum(donation => donation.Amount),
+                d.FirstOrDefault().CreatedAt.Month,
+                d.FirstOrDefault().CreatedAt.Year
+            }).ToList();
+
+            var PaymentMethod = list.GroupBy(d => new
+            {
+                d.PaymentMethod
+            }).Select(d => new
+            {
+                d.FirstOrDefault().PaymentMethod,
+                Quantity = d.Count()
+            }).ToList();
+            return Json(new
+            {
+                soluongTrong1Thang,
+                sotienTrong1Thang,
+                PaymentMethod
+            },JsonRequestBehavior.AllowGet);
+        }
+
         //// GET: Donations/Details/5
         //public ActionResult Details(string id)
         //{

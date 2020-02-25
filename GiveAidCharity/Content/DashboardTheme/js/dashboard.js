@@ -1,4 +1,4 @@
-$(function () {
+﻿$(function () {
 
     // Remove pro banner on close
     document.querySelector("#bannerClose").addEventListener("click", function () {
@@ -445,91 +445,202 @@ $(function () {
             });
         $("#visit-sale-chart-legend-dark").html(myChartvisitsalechartdark.generateLegend());
     }
-    //Color chart
-    if ($("#traffic-chart").length) {
-        const ctxColor = document.getElementById("traffic-chart").getContext("2d");
-        const colorGradientStrokeBlue = ctxColor.createLinearGradient(0, 0, 0, 181);
-        colorGradientStrokeBlue.addColorStop(0, "rgba(54, 215, 232, 1)");
-        colorGradientStrokeBlue.addColorStop(1, "rgba(177, 148, 250, 1)");
-        const colorGradientLegendBlue = "linear-gradient(to right, rgba(54, 215, 232, 1), rgba(177, 148, 250, 1))";
-
-        const colorGradientStrokeRed = ctxColor.createLinearGradient(0, 0, 0, 50);
-        colorGradientStrokeRed.addColorStop(0, "rgba(255, 191, 150, 1)");
-        colorGradientStrokeRed.addColorStop(1, "rgba(254, 112, 150, 1)");
-        const colorGradientLegendRed = "linear-gradient(to right, rgba(255, 191, 150, 1), rgba(254, 112, 150, 1))";
-
-        const colorGradientStrokeGreen = ctxColor.createLinearGradient(0, 0, 0, 300);
-        colorGradientStrokeGreen.addColorStop(0, "rgba(6, 185, 157, 1)");
-        colorGradientStrokeGreen.addColorStop(1, "rgba(132, 217, 210, 1)");
-        const colorGradientLegendGreen = "linear-gradient(to right, rgba(6, 185, 157, 1), rgba(132, 217, 210, 1))";
-
-        var trafficChartData = {
-            datasets: [{
-                data: [30, 30, 40],
-                backgroundColor: [
-                    colorGradientStrokeBlue,
-                    colorGradientStrokeGreen,
-                    colorGradientStrokeRed
-                ],
-                hoverBackgroundColor: [
-                    colorGradientStrokeBlue,
-                    colorGradientStrokeGreen,
-                    colorGradientStrokeRed
-                ],
-                borderColor: [
-                    colorGradientStrokeBlue,
-                    colorGradientStrokeGreen,
-                    colorGradientStrokeRed
-                ],
-                legendColor: [
-                    colorGradientLegendBlue,
-                    colorGradientLegendGreen,
-                    colorGradientLegendRed
-                ]
-            }],
-
-            // These labels appear in the legend and in the tooltips when hovering different arcs
-            labels: [
-                "Search Engines",
-                "Direct Click",
-                "Bookmarks Click"
-            ]
-        };
-        const trafficChartOptions = {
-            responsive: true,
-            animation: {
-                animateScale: true,
-                animateRotate: true
-            },
-            legend: false,
-            // ReSharper disable once UnusedParameter
-            legendCallback: function (chart) {
-                const text = [];
-                text.push("<ul>");
-                for (let i = 0; i < trafficChartData.datasets[0].data.length; i++) {
-                    text.push(`<li><span class="legend-dots" style="background:${trafficChartData.datasets[0].legendColor[i]}"></span>`);
-                    if (trafficChartData.labels[i]) {
-                        text.push(trafficChartData.labels[i]);
-                    }
-                    text.push(`<span class="float-right">${trafficChartData.datasets[0].data[i]}%</span>`);
-                    text.push("</li>");
-                }
-                text.push("</ul>");
-                return text.join("");
-            }
-        };
-        const trafficChartCanvas = $("#traffic-chart").get(0).getContext("2d");
-        const trafficChart = new window.Chart(trafficChartCanvas, {
-            type: "doughnut",
-            data: trafficChartData,
-            options: trafficChartOptions
-        });
-        $("#traffic-chart-legend").html(trafficChart.generateLegend());
-    }
+   
     if ($("#inline-datepicker").length) {
         $("#inline-datepicker").datepicker({
             enableOnReadonly: true,
             todayHighlight: true
+        });
+    }
+
+    var datetimeChart = [];
+    var soLuong = [];
+    var sotien = [];
+    var namePaymentMethod = [];
+    var valuePaymentMethod = [];
+    var totalPaymentMethod = 0;
+    $.ajax({
+        url: "/Donations/GetDonations",
+        success: function (res) {
+            console.log(res);
+
+            for (var j = 0; j < res.soluongTrong1Thang.length; j++) {
+                soLuong.push(res.soluongTrong1Thang[j].Quantity);
+                var dateChart = res.soluongTrong1Thang[j].Month + "/" + res.soluongTrong1Thang[j].Year;
+
+                datetimeChart.push(dateChart);
+            }
+
+            for (var k = 0; k < res.sotienTrong1Thang.length; k++) {
+                sotien.push(res.sotienTrong1Thang[k].Amount);
+            }
+
+            for (var i = 0; i < res.PaymentMethod.length; i++) {
+                
+                if (res.PaymentMethod[i].PaymentMethod === 0) {
+                    namePaymentMethod.push("Paypal");
+                } else if (res.PaymentMethod[i].PaymentMethod === 1) {
+                    namePaymentMethod.push("VnPay");
+                } else if (res.PaymentMethod[i].PaymentMethod === 2) {
+                    namePaymentMethod.push("DirectBankTransfer");
+                } else {
+                    namePaymentMethod.push(res.PaymentMethod[i].PaymentMethod);
+                }
+
+                valuePaymentMethod.push(res.PaymentMethod[i].Quantity);
+                totalPaymentMethod += res.PaymentMethod[i].Quantity;
+            }
+       
+            DrawChartPaymentMethod();
+            DrawChart();
+        }
+    });
+
+    function DrawChartPaymentMethod() {
+        //Color chart
+        if ($("#traffic-chart").length) {
+            const ctxColor = document.getElementById("traffic-chart").getContext("2d");
+            const colorGradientStrokeBlue = ctxColor.createLinearGradient(0, 0, 0, 181);
+            colorGradientStrokeBlue.addColorStop(0, "rgba(54, 215, 232, 1)");
+            colorGradientStrokeBlue.addColorStop(1, "rgba(177, 148, 250, 1)");
+            const colorGradientLegendBlue = "linear-gradient(to right, rgba(54, 215, 232, 1), rgba(177, 148, 250, 1))";
+
+            const colorGradientStrokeRed = ctxColor.createLinearGradient(0, 0, 0, 50);
+            colorGradientStrokeRed.addColorStop(0, "rgba(255, 191, 150, 1)");
+            colorGradientStrokeRed.addColorStop(1, "rgba(254, 112, 150, 1)");
+            const colorGradientLegendRed = "linear-gradient(to right, rgba(255, 191, 150, 1), rgba(254, 112, 150, 1))";
+
+            const colorGradientStrokeGreen = ctxColor.createLinearGradient(0, 0, 0, 300);
+            colorGradientStrokeGreen.addColorStop(0, "rgba(6, 185, 157, 1)");
+            colorGradientStrokeGreen.addColorStop(1, "rgba(132, 217, 210, 1)");
+            const colorGradientLegendGreen = "linear-gradient(to right, rgba(6, 185, 157, 1), rgba(132, 217, 210, 1))";
+
+            var trafficChartData = {
+                datasets: [{
+                    data: valuePaymentMethod,
+                    backgroundColor: [
+                        colorGradientStrokeBlue,
+                        colorGradientStrokeGreen,
+                        colorGradientStrokeRed
+                    ],
+                    hoverBackgroundColor: [
+                        colorGradientStrokeBlue,
+                        colorGradientStrokeGreen,
+                        colorGradientStrokeRed
+                    ],
+                    borderColor: [
+                        colorGradientStrokeBlue,
+                        colorGradientStrokeGreen,
+                        colorGradientStrokeRed
+                    ],
+                    legendColor: [
+                        colorGradientLegendBlue,
+                        colorGradientLegendGreen,
+                        colorGradientLegendRed
+                    ]
+                }],
+
+                // These labels appear in the legend and in the tooltips when hovering different arcs
+                labels: namePaymentMethod
+            };
+            const trafficChartOptions = {
+                responsive: true,
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                },
+                legend: false,
+                // ReSharper disable once UnusedParameter
+                legendCallback: function (chart) {
+                    const text = [];
+                    text.push("<ul>");
+                    for (let i = 0; i < trafficChartData.datasets[0].data.length; i++) {
+                        console.log();
+                        text.push(`<li><span class="legend-dots" style="background:${trafficChartData.datasets[0].legendColor[i]}"></span>`);
+                        if (trafficChartData.labels[i]) {
+                            text.push(trafficChartData.labels[i]);
+                        }
+                        text.push(`<span class="float-right">
+                            ${new Number(trafficChartData.datasets[0].data[i] / totalPaymentMethod * 100).toPrecision(3)}
+                        %</span>`);
+                        text.push("</li>");
+                    }
+                    text.push("</ul>");
+                    return text.join("");
+                }
+            };
+            const trafficChartCanvas = $("#traffic-chart").get(0).getContext("2d");
+            const trafficChart = new window.Chart(trafficChartCanvas, {
+                type: "doughnut",
+                data: trafficChartData,
+                options: trafficChartOptions
+            });
+            $("#traffic-chart-legend").html(trafficChart.generateLegend());
+        }
+    }
+
+    function DrawChart() {
+        Highcharts.chart('curve_chart', {
+
+            title: {
+                text: 'List Donation'
+            },
+
+            yAxis: {
+                title: {
+                    text: ''
+                }
+            },
+
+            xAxis: [
+                {
+                    categories: datetimeChart,
+                    labels: {
+                        formatter: function () {
+                            return '<span style="color:blue;">' + this.value + '</span>';
+                        },
+                        step: 3
+                    }
+                }],
+
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle'
+            },
+
+            plotOptions: {
+                series: {
+                    label: {
+                        connectorAllowed: false
+                    },
+                }
+            },
+
+            series: [
+                {
+                    name: 'So luong',
+                    data: soLuong
+                }, {
+                    name: 'So tien',
+                    data: sotien
+                }],
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        legend: {
+                            layout: 'horizontal',
+                            align: 'center',
+                            verticalAlign: 'bottom'
+                        }
+                    }
+                }]
+            }
+
         });
     }
 });

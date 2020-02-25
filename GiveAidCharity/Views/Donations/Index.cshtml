@@ -25,10 +25,10 @@
     var direct = ((int?)ViewBag.direct).Value;
     var directSet = ((int?)ViewBag.directSet).Value;
 
-    var currentPara = "?start=" + ViewBag.Start + "&end=" + ViewBag.End + 
+    var currentPara = "?start=" + ViewBag.Start + "&end=" + ViewBag.End +
                       "&nameProject=" + nameProject + "&minAmount=" + ViewBag.minAmount +
-                      "&maxAmount=" + ViewBag.maxAmount + "&status=" + status + 
-                      "&method=" + method + "&sortBy=" + sortBy + "&direct=" + direct+ "&advance=" + advance;
+                      "&maxAmount=" + ViewBag.maxAmount + "&status=" + status +
+                      "&method=" + method + "&sortBy=" + sortBy + "&direct=" + direct + "&advance=" + advance;
 }
 @section styles
 {
@@ -37,6 +37,22 @@
     @Styles.Render("~/Content/DashboardTheme/css/slider-range.css")
 }
 <div class="row">
+
+    <div class="col-8 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body table-responsive">
+                <div id="curve_chart"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body table-responsive">
+                <canvas id="traffic-chart"></canvas>
+                <div id="traffic-chart-legend" class="rounded-legend legend-vertical legend-bottom-left pt-4"></div>
+            </div>
+        </div>
+    </div>
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body table-responsive">
@@ -122,7 +138,7 @@
                             </th>
                             <th class="text-center">
                                 <a href="#/" class="sortData text-primary" data-direct="@directSet"
-                                   data-sort="@((int)HelperEnum.DonationSortEnum.UserName)">
+                                   data-sort="@((int) HelperEnum.DonationSortEnum.UserName)">
                                     @Html.DisplayNameFor(model => model.ApplicationUser.UserName)
                                     <span style="font-size: 15px" class="mdi
                                           @(direct == (int) HelperEnum.DonationDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
@@ -132,7 +148,7 @@
                             </th>
                             <th class="text-center">
                                 <a href="#/" class="sortData text-primary" data-direct="@directSet"
-                                   data-sort="@((int)HelperEnum.DonationSortEnum.ProjectName)">
+                                   data-sort="@((int) HelperEnum.DonationSortEnum.ProjectName)">
                                     Project
                                     <span style="font-size: 15px" class="mdi
                                           @(direct == (int) HelperEnum.DonationDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
@@ -142,7 +158,7 @@
                             </th>
                             <th class="text-center">
                                 <a href="#/" class="sortData text-primary" data-direct="@directSet"
-                                   data-sort="@((int)HelperEnum.DonationSortEnum.Amount)">
+                                   data-sort="@((int) HelperEnum.DonationSortEnum.Amount)">
                                     @Html.DisplayNameFor(model => model.Amount)
                                     <span style="font-size: 15px" class="mdi
                                           @(direct == (int) HelperEnum.DonationDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
@@ -152,7 +168,7 @@
                             </th>
                             <th class="text-center">
                                 <a href="#/" class="sortData text-primary" data-direct="@directSet"
-                                   data-sort="@((int)HelperEnum.DonationSortEnum.PaymentMethod)">
+                                   data-sort="@((int) HelperEnum.DonationSortEnum.PaymentMethod)">
                                     @Html.DisplayNameFor(model => model.PaymentMethod)
                                     <span style="font-size: 15px" class="mdi
                                           @(direct == (int) HelperEnum.DonationDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
@@ -162,7 +178,7 @@
                             </th>
                             <th class="text-center">
                                 <a href="#/" class="sortData text-primary" data-direct="@directSet"
-                                   data-sort="@((int)HelperEnum.DonationSortEnum.Status)">
+                                   data-sort="@((int) HelperEnum.DonationSortEnum.Status)">
                                     @Html.DisplayNameFor(model => model.Status)
                                     <span style="font-size: 15px" class="mdi
                                           @(direct == (int) HelperEnum.DonationDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
@@ -172,7 +188,7 @@
                             </th>
                             <th class="text-center">
                                 <a href="#/" class="sortData text-primary" data-direct="@directSet"
-                                   data-sort="@((int)HelperEnum.DonationSortEnum.CreatedAt)">
+                                   data-sort="@((int) HelperEnum.DonationSortEnum.CreatedAt)">
                                     @Html.DisplayNameFor(model => model.CreatedAt)
                                     <span style="font-size: 15px" class="mdi
                                           @(direct == (int) HelperEnum.DonationDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
@@ -327,12 +343,17 @@
                         </ul>
                     </div>
                 }
-            </div>
-        </div>
-    </div>
+</div>
+</div>
+</div>
 </div>
 @section scripts
 {
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -447,6 +468,8 @@
             });
 
         });
+
+
     </script>
 }
 
