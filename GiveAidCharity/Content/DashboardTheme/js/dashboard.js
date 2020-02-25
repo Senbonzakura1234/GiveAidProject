@@ -460,19 +460,19 @@
     var valuePaymentMethod = [];
     var totalPaymentMethod = 0;
     $.ajax({
-        url: "/Donations/GetDonations",
+        url: "/Api/GetDonations",
         success: function (res) {
             console.log(res);
 
-            for (var j = 0; j < res.soluongTrong1Thang.length; j++) {
-                soLuong.push(res.soluongTrong1Thang[j].Quantity);
-                var dateChart = res.soluongTrong1Thang[j].Month + "/" + res.soluongTrong1Thang[j].Year;
+            for (var j = 0; j < res.countPerMonth.length; j++) {
+                soLuong.push(res.countPerMonth[j].Quantity);
+                var dateChart = res.countPerMonth[j].Month + "/" + res.countPerMonth[j].Year;
 
                 datetimeChart.push(dateChart);
             }
 
-            for (var k = 0; k < res.sotienTrong1Thang.length; k++) {
-                sotien.push(res.sotienTrong1Thang[k].Amount);
+            for (var k = 0; k < res.amountPerMonth.length; k++) {
+                sotien.push(res.amountPerMonth[k].Amount);
             }
 
             for (var i = 0; i < res.PaymentMethod.length; i++) {
@@ -619,10 +619,10 @@
 
             series: [
                 {
-                    name: 'So luong',
+                    name: 'Count Per Month',
                     data: soLuong
                 }, {
-                    name: 'So tien',
+                    name: 'Amount Per Month',
                     data: sotien
                 }],
 
