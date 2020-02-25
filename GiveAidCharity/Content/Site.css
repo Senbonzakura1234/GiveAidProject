@@ -1,7 +1,9 @@
-﻿a {
+﻿a{
     text-decoration: none !important;
 }
-
 .owl-carousel {
     touch-action: manipulation !important;
+}
+body:not(.modal-open) {
+    padding-right: 0 !important;
 }

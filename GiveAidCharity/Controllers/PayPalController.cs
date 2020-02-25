@@ -137,12 +137,16 @@ namespace GiveAidCharity.Controllers
             if (verificationResponse.Equals("VERIFIED"))
             {
                 donation.Status = Donation.DonationStatusEnum.Success;
+                donation.CreatedAt = DateTime.Now;
+                donation.UpdatedAt = DateTime.Now;
                 project.CurrentFund += donation.Amount;
                 Db.Entry(project).State = EntityState.Modified;
             }
             else
             {
                 donation.Status = Donation.DonationStatusEnum.Fail;
+                donation.CreatedAt = DateTime.Now;
+                donation.UpdatedAt = DateTime.Now;
             }
             var result = donation.Status == Donation.DonationStatusEnum.Success;
             Db.Donations.Add(donation);

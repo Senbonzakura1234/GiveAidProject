@@ -4,26 +4,114 @@
 
 @{
     ViewBag.Title = "Cause Detail";
+    //progress bar variable
+    var ariaValuenow = Math.Round((Model.CurrentFund < Model.Goal ? 100 * Model.CurrentFund / Model.Goal : 100), 0);
+    //var width = ariaValuenow.ToString(CultureInfo.InvariantCulture) + "%";
+    var background = ariaValuenow < 20 ? "bg-danger" :
+        ariaValuenow < 50 && ariaValuenow >= 20 ? "bg-warning" :
+        ariaValuenow < 75 && ariaValuenow >= 50 ? "bg-info" : "bg-success";
+    var animated = ariaValuenow >= 100 ? "" : "progress-bar-striped progress-bar-animated";
+
 }
 @* ReSharper disable  MarkupTextTypo *@
+@Html.Hidden("ariaValuenowInput", ariaValuenow, new { id = "ariaValuenowInput" })
 @section hero_wrap
 {
-    <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }"><span class="mr-2"><a href="@Url.Action("Index")">Home</a></span> <span class="mr-2"><a href="@Url.Action("Causes")">Causes</a></span> <span>Cause Details</span></p>
+    <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
+        <span class="mr-2">
+            <a href="@Url.Action("Index")">Home</a>
+        </span>
+        <span class="mr-2">
+            <a href="@Url.Action("Causes")">Causes</a>
+        </span> <span>Cause Details</span>
+    </p>
     <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Cause Details</h1>
 }
+
 <section class="ftco-section ftco-degree-bg">
     <div class="container">
         <div class="row">
             <div class="col-md-8 ftco-animate">
                 <h2 class="mb-3">@Html.DisplayFor(model => model.Name)</h2>
-                <p>
-                    <div class="progress custom-progress-success">
-                        <div class="progress-bar bg-primary" role="progressbar" 
-                             style="width: @((Model.CurrentFund < Model.Goal? 100*Model.CurrentFund/ Model.Goal : 100).ToString(CultureInfo.InvariantCulture))%" 
-                             aria-valuenow="@((Model.CurrentFund < Model.Goal? 100*Model.CurrentFund/ Model.Goal : 100).ToString(CultureInfo.InvariantCulture))" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="card w-100  ftco-animate mb-2">
+                    <div class="card-body">
+                        <h5 class="card-title">Cause Progress</h5>
+                        <p class="card-text">
+                            $@Html.DisplayFor(model => model.CurrentFund) raised of $@Html.DisplayFor(model => model.Goal)
+                        </p>
+                        <div class="row">
+                            <div class="col-12 col-md-9 col-lg-10">
+                                <div class="progress h-100">
+                                    <div class="progress-bar @animated @background cause-progress"
+                                         role="progressbar" aria-valuenow="@ariaValuenow.ToString(CultureInfo.InvariantCulture)"
+                                         aria-valuemin="0" aria-valuemax="100">
+                                        @ariaValuenow %
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 col-lg-2 ml-auto mt-2 mt-md-0">
+                                <button class="btn btn-primary mx-md-auto mt-auto w-100"
+                                        data-toggle="collapse" data-target="#donateMethod"
+                                        aria-expanded="false" aria-controls="donateMethod">
+                                    Donate
+                                </button>
+                            </div>
+                            <div class="collapse col-12" id="donateMethod">
+                                <div class="row">
+                                    <div class="col-md-12 mt-3 ftco-animate d-flex">
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" name="paypalForm"
+                                                  id="paypalForm" class="search-form d-none" method="post" target="_top">
+                                                @Html.Hidden("cmd", "_donations")
+                                                @Html.Hidden("custom", User.Identity.GetUserId())
+                                                @Html.Hidden("currency_code", "USD")
+                                                @Html.Hidden("return", Url.Action("PayPalResult", "Payment",
+                                                    null, Request.Url?.Scheme))
+                                                @Html.Hidden("cancel_return", Url.Action("CauseDetail", "Home",
+                                                    new { id = Model.Id }, Request.Url?.Scheme))
+                                                @Html.Hidden("notify_url", Url.Action("Receive", "PayPal",
+                                                    null, Request.Url?.Scheme))
+                                                @Html.Hidden("item_number", Model.Id)
+                                                @Html.Hidden("item_name", "Donate to project" + Model.Name)
+                                                @Html.Hidden("business", "sb-gboj43907912@business.example.com")
+                                                <!-- PayPal Logo -->
+                                            </form>
+                                            <button class="btn btn-white bg-white border-0 mx-auto ml-md-auto mr-md-0" id="paypalbtn"
+                                                    style="border-radius: 30px; padding: 10px 20px; outline: none !important">
+                                                <span>
+                                                    <img style="max-height: 20px"
+                                                         src="https://res.cloudinary.com/senbonzakura/image/upload/v1582569686/Give%20Aid%20Project/Paypal_wdtla5.png" alt="" />
+                                                </span>
+                                            </button>
+
+                                            <button class="btn btn-white bg-white border-0 mx-auto ml-md-2 mr-md-0"
+                                                    data-toggle="modal" data-target="#exampleModalCenter"
+                                                    style="border-radius: 30px; padding: 10px 20px; outline: none !important">
+                                                <span>
+                                                    <img style="max-height: 20px"
+                                                         src="https://res.cloudinary.com/senbonzakura/image/upload/v1582377977/Give%20Aid%20Project/vnpaylogo_hgu1jj.png" alt="" />
+                                                </span>
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-primary mx-auto ml-md-auto mr-md-0"
+                                               href="@Url.Action("Login", "Account")">
+                                                Login
+                                            </a>
+                                            <a class="btn btn-primary mx-auto ml-md-2 mr-md-0"
+                                               href="@Url.Action("Register", "Account")">
+                                                Register
+                                            </a>
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <span class="fund-raised d-block">$@Html.DisplayFor(model => model.CurrentFund) raised of $@Html.DisplayFor(model => model.Goal)</span>
-                </p>
+                </div>
                 <p>
                     <img src="@Model.CoverImg" alt="" class="img-fluid" style="width: 100%">
                 </p>
@@ -31,7 +119,9 @@
                 <p>@Html.DisplayFor(model => model.ContentPart2)</p>
                 @foreach (var item in Model.ProjectImages)
                 {
-                    <p><img src="@item.Url" alt="" class="img-fluid" style="width: 100%"></p>
+                    <p>
+                        <img src="@item.Url" alt="" class="img-fluid" style="width: 100%">
+                    </p>
                     <p>@item.Description</p>
                 }
                 <div class="tag-widget post-tag-container mb-5 mt-5">
@@ -56,7 +146,7 @@
                               "sunt placeat nam vero culpa sapiente consectetur similique, " +
                               "inventore eos fugit cupiditate numquam!")
                         </p>
-                        <p> @Model.HostEmail  @Model.HostPhone </p>
+                        <p> @Model.HostEmail @Model.HostPhone </p>
                     </div>
                 </div>
 
@@ -74,7 +164,9 @@
                                     <h3>@item.ApplicationUser.UserName</h3>
                                     <div class="meta">@item.CreatedAt</div>
                                     <p>@item.Content</p>
-                                    <p><a href="#" class="reply">Reply</a></p>
+                                    <p>
+                                        <a href="#" class="reply">Reply</a>
+                                    </p>
                                 </div>
                                 <ul class="children">
                                     @foreach (var childcomment in Model.ProjectComments.Where(childcomment => childcomment.ParentId == item.Id))
@@ -87,7 +179,9 @@
                                                 <h3>@childcomment.ApplicationUser.UserName</h3>
                                                 <div class="meta">@childcomment.CreatedAt</div>
                                                 <p>@childcomment.Content</p>
-                                                <p><a href="#" class="reply">Reply</a></p>
+                                                <p>
+                                                    <a href="#" class="reply">Reply</a>
+                                                </p>
                                             </div>
                                         </li>
                                     }
@@ -120,51 +214,27 @@
                             <div class="form-group">
                                 <input type="submit" value="Post Comment" class="btn py-3 px-4 btn-primary">
                             </div>
-
                         </form>
                     </div>
                 </div>
 
             </div> <!-- .col-md-8 -->
-            <div class="col-md-4 sidebar ftco-animate"> 
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <div class="sidebar-box mb-0">
-                        <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" name="paypalForm"
-                              id="paypalForm" class="search-form" method="post" target="_top">
-                            <h5>Donate with:</h5>
-                            @Html.Hidden("cmd", "_donations")
-                            @Html.Hidden("custom", User.Identity.GetUserId())
-                            @Html.Hidden("currency_code", "USD")
-                            @Html.Hidden("return", Url.Action("Result", "Payment",
-                                null, Request.Url?.Scheme))
-                            @Html.Hidden("cancel_return", Url.Action("CauseDetail", "Home",
-                                new { id = Model.Id }, Request.Url?.Scheme))
-                            @Html.Hidden("notify_url", Url.Action("Receive", "PayPal",
-                                null, Request.Url?.Scheme))
-                            @Html.Hidden("item_number", Model.Id)
-                            @Html.Hidden("item_name", "Donate to project" + Model.Name)
-                            @Html.Hidden("business", "sb-gboj43907912@business.example.com")
-                            <button class="btn btn-dark w-100" type="submit">
-                                <img class="paypal-button-logo paypal-button-logo-pp paypal-button-logo-black"
-                                     src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAyNCAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWluWU1pbiBtZWV0Ij4KICAgIDxwYXRoIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuNyIgZD0iTSAyMC43MDIgOS40NDYgQyAyMC45ODIgNy4zNDcgMjAuNzAyIDUuOTQ3IDE5LjU3OCA0LjU0OCBDIDE4LjM2MSAzLjE0OCAxNi4yMDggMi41NDggMTMuNDkzIDIuNTQ4IEwgNS41MzYgMi41NDggQyA0Ljk3NCAyLjU0OCA0LjUwNiAyLjk0OCA0LjQxMiAzLjU0OCBMIDEuMTM2IDI1Ljc0IEMgMS4wNDIgMjYuMjM5IDEuMzIzIDI2LjYzOSAxLjc5MSAyNi42MzkgTCA2Ljc1MyAyNi42MzkgTCA2LjM3OCAyOC45MzggQyA2LjI4NSAyOS4yMzggNi42NTkgMjkuNjM4IDYuOTQgMjkuNjM4IEwgMTEuMTUzIDI5LjYzOCBDIDExLjYyMSAyOS42MzggMTEuOTk1IDI5LjIzOCAxMi4wODkgMjguNzM5IEwgMTIuMTgyIDI4LjUzOSBMIDEyLjkzMSAyMy4zNDEgTCAxMy4wMjUgMjMuMDQxIEMgMTMuMTE5IDIyLjQ0MSAxMy40OTMgMjIuMTQxIDEzLjk2MSAyMi4xNDEgTCAxNC42MTYgMjIuMTQxIEMgMTguNjQyIDIyLjE0MSAyMS43MzEgMjAuMzQyIDIyLjY2OCAxNS40NDMgQyAyMy4wNDIgMTMuMzQ0IDIyLjg1NSAxMS41NDUgMjEuODI1IDEwLjM0NSBDIDIxLjQ1MSAxMC4wNDYgMjEuMDc2IDkuNjQ2IDIwLjcwMiA5LjQ0NiBMIDIwLjcwMiA5LjQ0NiI+PC9wYXRoPgogICAgPHBhdGggZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC43IiBkPSJNIDIwLjcwMiA5LjQ0NiBDIDIwLjk4MiA3LjM0NyAyMC43MDIgNS45NDcgMTkuNTc4IDQuNTQ4IEMgMTguMzYxIDMuMTQ4IDE2LjIwOCAyLjU0OCAxMy40OTMgMi41NDggTCA1LjUzNiAyLjU0OCBDIDQuOTc0IDIuNTQ4IDQuNTA2IDIuOTQ4IDQuNDEyIDMuNTQ4IEwgMS4xMzYgMjUuNzQgQyAxLjA0MiAyNi4yMzkgMS4zMjMgMjYuNjM5IDEuNzkxIDI2LjYzOSBMIDYuNzUzIDI2LjYzOSBMIDcuOTcgMTguMzQyIEwgNy44NzYgMTguNjQyIEMgOC4wNjMgMTguMDQzIDguNDM4IDE3LjY0MyA5LjA5MyAxNy42NDMgTCAxMS40MzMgMTcuNjQzIEMgMTYuMDIxIDE3LjY0MyAxOS41NzggMTUuNjQzIDIwLjYwOCA5Ljk0NiBDIDIwLjYwOCA5Ljc0NiAyMC42MDggOS41NDYgMjAuNzAyIDkuNDQ2Ij48L3BhdGg+CiAgICA8cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNIDkuMjggOS40NDYgQyA5LjI4IDkuMTQ2IDkuNDY4IDguODQ2IDkuODQyIDguNjQ2IEMgOS45MzYgOC42NDYgMTAuMTIzIDguNTQ2IDEwLjIxNiA4LjU0NiBMIDE2LjQ4OSA4LjU0NiBDIDE3LjIzOCA4LjU0NiAxNy44OTMgOC42NDYgMTguNTQ4IDguNzQ2IEMgMTguNzM2IDguNzQ2IDE4LjgyOSA4Ljc0NiAxOS4xMSA4Ljg0NiBDIDE5LjIwNCA4Ljk0NiAxOS4zOTEgOC45NDYgMTkuNTc4IDkuMDQ2IEMgMTkuNjcyIDkuMDQ2IDE5LjY3MiA5LjA0NiAxOS44NTkgOS4xNDYgQyAyMC4xNCA5LjI0NiAyMC40MjEgOS4zNDYgMjAuNzAyIDkuNDQ2IEMgMjAuOTgyIDcuMzQ3IDIwLjcwMiA1Ljk0NyAxOS41NzggNC42NDggQyAxOC4zNjEgMy4yNDggMTYuMjA4IDIuNTQ4IDEzLjQ5MyAyLjU0OCBMIDUuNTM2IDIuNTQ4IEMgNC45NzQgMi41NDggNC41MDYgMy4wNDggNC40MTIgMy41NDggTCAxLjEzNiAyNS43NCBDIDEuMDQyIDI2LjIzOSAxLjMyMyAyNi42MzkgMS43OTEgMjYuNjM5IEwgNi43NTMgMjYuNjM5IEwgNy45NyAxOC4zNDIgTCA5LjI4IDkuNDQ2IFoiPjwvcGF0aD4KICAgIDxnIHRyYW5zZm9ybT0ibWF0cml4KDAuNDk3NzM3LCAwLCAwLCAwLjUyNjEyLCAxLjEwMTQ0LCAwLjYzODY1NCkiIG9wYWNpdHk9IjAuMiI+CiAgICAgICAgPHBhdGggZmlsbD0iIzIzMWYyMCIgZD0iTTM5LjMgMTYuN2MwLjkgMC41IDEuNyAxLjEgMi4zIDEuOCAxIDEuMSAxLjYgMi41IDEuOSA0LjEgMC4zLTMuMi0wLjItNS44LTEuOS03LjgtMC42LTAuNy0xLjMtMS4yLTIuMS0xLjdDMzkuNSAxNC4yIDM5LjUgMTUuNCAzOS4zIDE2Ljd6Ij48L3BhdGg+CiAgICAgICAgPHBhdGggZmlsbD0iIzIzMWYyMCIgZD0iTTAuNCA0NS4yTDYuNyA1LjZDNi44IDQuNSA3LjggMy43IDguOSAzLjdoMTZjNS41IDAgOS44IDEuMiAxMi4yIDMuOSAxLjIgMS40IDEuOSAzIDIuMiA0LjggMC40LTMuNi0wLjItNi4xLTIuMi04LjRDMzQuNyAxLjIgMzAuNCAwIDI0LjkgMEg4LjljLTEuMSAwLTIuMSAwLjgtMi4zIDEuOUwwIDQ0LjFDMCA0NC41IDAuMSA0NC45IDAuNCA0NS4yeiI+PC9wYXRoPgogICAgICAgIDxwYXRoIGZpbGw9IiMyMzFmMjAiIGQ9Ik0xMC43IDQ5LjRsLTAuMSAwLjZjLTAuMSAwLjQgMC4xIDAuOCAwLjQgMS4xbDAuMy0xLjdIMTAuN3oiPjwvcGF0aD4KICAgIDwvZz4KPC9zdmc+Cg==" alt="pp">
-                                <img class="paypal-button-logo paypal-button-logo-paypal paypal-button-logo-black"
-                                     src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjMyIiB2aWV3Qm94PSIwIDAgMTAwIDMyIiB4bWxucz0iaHR0cDomI3gyRjsmI3gyRjt3d3cudzMub3JnJiN4MkY7MjAwMCYjeDJGO3N2ZyIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pbllNaW4gbWVldCI+PHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTSAxMiA0LjkxNyBMIDQuMiA0LjkxNyBDIDMuNyA0LjkxNyAzLjIgNS4zMTcgMy4xIDUuODE3IEwgMCAyNS44MTcgQyAtMC4xIDI2LjIxNyAwLjIgMjYuNTE3IDAuNiAyNi41MTcgTCA0LjMgMjYuNTE3IEMgNC44IDI2LjUxNyA1LjMgMjYuMTE3IDUuNCAyNS42MTcgTCA2LjIgMjAuMjE3IEMgNi4zIDE5LjcxNyA2LjcgMTkuMzE3IDcuMyAxOS4zMTcgTCA5LjggMTkuMzE3IEMgMTQuOSAxOS4zMTcgMTcuOSAxNi44MTcgMTguNyAxMS45MTcgQyAxOSA5LjgxNyAxOC43IDguMTE3IDE3LjcgNi45MTcgQyAxNi42IDUuNjE3IDE0LjYgNC45MTcgMTIgNC45MTcgWiBNIDEyLjkgMTIuMjE3IEMgMTIuNSAxNS4wMTcgMTAuMyAxNS4wMTcgOC4zIDE1LjAxNyBMIDcuMSAxNS4wMTcgTCA3LjkgOS44MTcgQyA3LjkgOS41MTcgOC4yIDkuMzE3IDguNSA5LjMxNyBMIDkgOS4zMTcgQyAxMC40IDkuMzE3IDExLjcgOS4zMTcgMTIuNCAxMC4xMTcgQyAxMi45IDEwLjUxNyAxMy4xIDExLjIxNyAxMi45IDEyLjIxNyBaIj48L3BhdGg+PHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTSAzNS4yIDEyLjExNyBMIDMxLjUgMTIuMTE3IEMgMzEuMiAxMi4xMTcgMzAuOSAxMi4zMTcgMzAuOSAxMi42MTcgTCAzMC43IDEzLjYxNyBMIDMwLjQgMTMuMjE3IEMgMjkuNiAxMi4wMTcgMjcuOCAxMS42MTcgMjYgMTEuNjE3IEMgMjEuOSAxMS42MTcgMTguNCAxNC43MTcgMTcuNyAxOS4xMTcgQyAxNy4zIDIxLjMxNyAxNy44IDIzLjQxNyAxOS4xIDI0LjgxNyBDIDIwLjIgMjYuMTE3IDIxLjkgMjYuNzE3IDIzLjggMjYuNzE3IEMgMjcuMSAyNi43MTcgMjkgMjQuNjE3IDI5IDI0LjYxNyBMIDI4LjggMjUuNjE3IEMgMjguNyAyNi4wMTcgMjkgMjYuNDE3IDI5LjQgMjYuNDE3IEwgMzIuOCAyNi40MTcgQyAzMy4zIDI2LjQxNyAzMy44IDI2LjAxNyAzMy45IDI1LjUxNyBMIDM1LjkgMTIuNzE3IEMgMzYgMTIuNTE3IDM1LjYgMTIuMTE3IDM1LjIgMTIuMTE3IFogTSAzMC4xIDE5LjMxNyBDIDI5LjcgMjEuNDE3IDI4LjEgMjIuOTE3IDI1LjkgMjIuOTE3IEMgMjQuOCAyMi45MTcgMjQgMjIuNjE3IDIzLjQgMjEuOTE3IEMgMjIuOCAyMS4yMTcgMjIuNiAyMC4zMTcgMjIuOCAxOS4zMTcgQyAyMy4xIDE3LjIxNyAyNC45IDE1LjcxNyAyNyAxNS43MTcgQyAyOC4xIDE1LjcxNyAyOC45IDE2LjExNyAyOS41IDE2LjcxNyBDIDMwIDE3LjQxNyAzMC4yIDE4LjMxNyAzMC4xIDE5LjMxNyBaIj48L3BhdGg+PHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTSA1NS4xIDEyLjExNyBMIDUxLjQgMTIuMTE3IEMgNTEgMTIuMTE3IDUwLjcgMTIuMzE3IDUwLjUgMTIuNjE3IEwgNDUuMyAyMC4yMTcgTCA0My4xIDEyLjkxNyBDIDQzIDEyLjQxNyA0Mi41IDEyLjExNyA0Mi4xIDEyLjExNyBMIDM4LjQgMTIuMTE3IEMgMzggMTIuMTE3IDM3LjYgMTIuNTE3IDM3LjggMTMuMDE3IEwgNDEuOSAyNS4xMTcgTCAzOCAzMC41MTcgQyAzNy43IDMwLjkxNyAzOCAzMS41MTcgMzguNSAzMS41MTcgTCA0Mi4yIDMxLjUxNyBDIDQyLjYgMzEuNTE3IDQyLjkgMzEuMzE3IDQzLjEgMzEuMDE3IEwgNTUuNiAxMy4wMTcgQyA1NS45IDEyLjcxNyA1NS42IDEyLjExNyA1NS4xIDEyLjExNyBaIj48L3BhdGg+PHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTSA2Ny41IDQuOTE3IEwgNTkuNyA0LjkxNyBDIDU5LjIgNC45MTcgNTguNyA1LjMxNyA1OC42IDUuODE3IEwgNTUuNSAyNS43MTcgQyA1NS40IDI2LjExNyA1NS43IDI2LjQxNyA1Ni4xIDI2LjQxNyBMIDYwLjEgMjYuNDE3IEMgNjAuNSAyNi40MTcgNjAuOCAyNi4xMTcgNjAuOCAyNS44MTcgTCA2MS43IDIwLjExNyBDIDYxLjggMTkuNjE3IDYyLjIgMTkuMjE3IDYyLjggMTkuMjE3IEwgNjUuMyAxOS4yMTcgQyA3MC40IDE5LjIxNyA3My40IDE2LjcxNyA3NC4yIDExLjgxNyBDIDc0LjUgOS43MTcgNzQuMiA4LjAxNyA3My4yIDYuODE3IEMgNzIgNS42MTcgNzAuMSA0LjkxNyA2Ny41IDQuOTE3IFogTSA2OC40IDEyLjIxNyBDIDY4IDE1LjAxNyA2NS44IDE1LjAxNyA2My44IDE1LjAxNyBMIDYyLjYgMTUuMDE3IEwgNjMuNCA5LjgxNyBDIDYzLjQgOS41MTcgNjMuNyA5LjMxNyA2NCA5LjMxNyBMIDY0LjUgOS4zMTcgQyA2NS45IDkuMzE3IDY3LjIgOS4zMTcgNjcuOSAxMC4xMTcgQyA2OC40IDEwLjUxNyA2OC41IDExLjIxNyA2OC40IDEyLjIxNyBaIj48L3BhdGg+PHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTSA5MC43IDEyLjExNyBMIDg3IDEyLjExNyBDIDg2LjcgMTIuMTE3IDg2LjQgMTIuMzE3IDg2LjQgMTIuNjE3IEwgODYuMiAxMy42MTcgTCA4NS45IDEzLjIxNyBDIDg1LjEgMTIuMDE3IDgzLjMgMTEuNjE3IDgxLjUgMTEuNjE3IEMgNzcuNCAxMS42MTcgNzMuOSAxNC43MTcgNzMuMiAxOS4xMTcgQyA3Mi44IDIxLjMxNyA3My4zIDIzLjQxNyA3NC42IDI0LjgxNyBDIDc1LjcgMjYuMTE3IDc3LjQgMjYuNzE3IDc5LjMgMjYuNzE3IEMgODIuNiAyNi43MTcgODQuNSAyNC42MTcgODQuNSAyNC42MTcgTCA4NC4zIDI1LjYxNyBDIDg0LjIgMjYuMDE3IDg0LjUgMjYuNDE3IDg0LjkgMjYuNDE3IEwgODguMyAyNi40MTcgQyA4OC44IDI2LjQxNyA4OS4zIDI2LjAxNyA4OS40IDI1LjUxNyBMIDkxLjQgMTIuNzE3IEMgOTEuNCAxMi41MTcgOTEuMSAxMi4xMTcgOTAuNyAxMi4xMTcgWiBNIDg1LjUgMTkuMzE3IEMgODUuMSAyMS40MTcgODMuNSAyMi45MTcgODEuMyAyMi45MTcgQyA4MC4yIDIyLjkxNyA3OS40IDIyLjYxNyA3OC44IDIxLjkxNyBDIDc4LjIgMjEuMjE3IDc4IDIwLjMxNyA3OC4yIDE5LjMxNyBDIDc4LjUgMTcuMjE3IDgwLjMgMTUuNzE3IDgyLjQgMTUuNzE3IEMgODMuNSAxNS43MTcgODQuMyAxNi4xMTcgODQuOSAxNi43MTcgQyA4NS41IDE3LjQxNyA4NS43IDE4LjMxNyA4NS41IDE5LjMxNyBaIj48L3BhdGg+PHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTSA5NS4xIDUuNDE3IEwgOTEuOSAyNS43MTcgQyA5MS44IDI2LjExNyA5Mi4xIDI2LjQxNyA5Mi41IDI2LjQxNyBMIDk1LjcgMjYuNDE3IEMgOTYuMiAyNi40MTcgOTYuNyAyNi4wMTcgOTYuOCAyNS41MTcgTCAxMDAgNS42MTcgQyAxMDAuMSA1LjIxNyA5OS44IDQuOTE3IDk5LjQgNC45MTcgTCA5NS44IDQuOTE3IEMgOTUuNCA0LjkxNyA5NS4yIDUuMTE3IDk1LjEgNS40MTcgWiI+PC9wYXRoPjwvc3ZnPg==" alt="paypal">
-                            </button>
-                        </form>
-                        <form action="@Url.Action("Donate", "VNpay")" name="vnPayForm"
-                              id="vnPayForm" class="search-form" method="post" target="_top">
-                            @Html.Hidden("userId", User.Identity.GetUserId())
-                            @Html.Hidden("projectId", Model.Id)
-                            <button class="btn btn-white text-center bg-white border-0 mb-2">
-                                <img alt="" style="max-width: 50%" class="my-auto mx-auto d-flex"
-                                     src="https://res.cloudinary.com/senbonzakura/image/upload/v1582377977/Give%20Aid%20Project/vnpaylogo_hgu1jj.png" />
-                            </button>
-                        </form>
-                    </div>
-                }
+            <div class="col-md-4 sidebar ftco-animate">
+                <div class="sidebar-box mb-0 py-0">
+                    <form action="#" class="search-form">
+                        <div class="form-group">
+                            <span class="icon fa fa-search"></span>
+                            <input type="text" class="form-control" placeholder="Search">
+                        </div>
+                    </form>
+                </div>
                 <div class="sidebar-box ftco-animate">
                     <div class="row">
+                        <div class="col-md-12 d-flex mb-sm-4 ftco-animate">
+                            <div class="staff w-100">
+                                <h3 class="text-primary text-center">Top Donation for this Cause</h3>
+                            </div>
+                        </div>
                         @Html.Action("SingleTopDonate", "Home", new { id = Model.Id })
                         <div class="col-md-12 d-flex mb-sm-4 ftco-animate">
                             <div class="staff w-100">
@@ -180,13 +250,27 @@
 
                 <div class="sidebar-box ftco-animate">
                     <ul class="categories">
-                        <li><h3>Categories</h3></li>
-                        <li><a href="#">Tour <span>(12)</span></a></li>
-                        <li><a href="#">Hotel <span>(22)</span></a></li>
-                        <li><a href="#">Coffee <span>(37)</span></a></li>
-                        <li><a href="#">Drinks <span>(42)</span></a></li>
-                        <li><a href="#">Foods <span>(14)</span></a></li>
-                        <li><a href="#">Travel <span>(140)</span></a></li>
+                        <li>
+                            <h3>Categories</h3>
+                        </li>
+                        <li>
+                            <a href="#">Tour <span>(12)</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Hotel <span>(22)</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Coffee <span>(37)</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Drinks <span>(42)</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Foods <span>(14)</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Travel <span>(140)</span></a>
+                        </li>
                     </ul>
                 </div>
 
@@ -195,33 +279,57 @@
                     <div class="block-21 mb-4 d-flex">
                         <a class="Cause-img mr-4" style="background-image: url(/Content/HomepageTheme/images/image_1.jpg);"></a>
                         <div class="text">
-                            <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
+                            <h3 class="heading">
+                                <a href="#">Even the all-powerful Pointing has no control about the blind texts</a>
+                            </h3>
                             <div class="meta">
-                                <div><a href="#"><span class="icon-calendar"></span> July 12, 2018</a></div>
-                                <div><a href="#"><span class="icon-person"></span> Admin</a></div>
-                                <div><a href="#"><span class="icon-chat"></span> 19</a></div>
+                                <div>
+                                    <a href="#"><span class="icon-calendar"></span> July 12, 2018</a>
+                                </div>
+                                <div>
+                                    <a href="#"><span class="icon-person"></span> Admin</a>
+                                </div>
+                                <div>
+                                    <a href="#"><span class="icon-chat"></span> 19</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="block-21 mb-4 d-flex">
                         <a class="Cause-img mr-4" style="background-image: url(/Content/HomepageTheme/images/image_2.jpg);"></a>
                         <div class="text">
-                            <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
+                            <h3 class="heading">
+                                <a href="#">Even the all-powerful Pointing has no control about the blind texts</a>
+                            </h3>
                             <div class="meta">
-                                <div><a href="#"><span class="icon-calendar"></span> July 12, 2018</a></div>
-                                <div><a href="#"><span class="icon-person"></span> Admin</a></div>
-                                <div><a href="#"><span class="icon-chat"></span> 19</a></div>
+                                <div>
+                                    <a href="#"><span class="icon-calendar"></span> July 12, 2018</a>
+                                </div>
+                                <div>
+                                    <a href="#"><span class="icon-person"></span> Admin</a>
+                                </div>
+                                <div>
+                                    <a href="#"><span class="icon-chat"></span> 19</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="block-21 mb-4 d-flex">
                         <a class="Cause-img mr-4" style="background-image: url(/Content/HomepageTheme/images/image_3.jpg);"></a>
                         <div class="text">
-                            <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
+                            <h3 class="heading">
+                                <a href="#">Even the all-powerful Pointing has no control about the blind texts</a>
+                            </h3>
                             <div class="meta">
-                                <div><a href="#"><span class="icon-calendar"></span> July 12, 2018</a></div>
-                                <div><a href="#"><span class="icon-person"></span> Admin</a></div>
-                                <div><a href="#"><span class="icon-chat"></span> 19</a></div>
+                                <div>
+                                    <a href="#"><span class="icon-calendar"></span> July 12, 2018</a>
+                                </div>
+                                <div>
+                                    <a href="#"><span class="icon-person"></span> Admin</a>
+                                </div>
+                                <div>
+                                    <a href="#"><span class="icon-chat"></span> 19</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -250,71 +358,78 @@
         </div>
     </div>
 </section> <!-- .section -->
-@*<h2>CauseDetail</h2>
-
-    <div>
-        <h4>CausesDetailViewModel</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Name)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Name)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Description)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Description)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Goal)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Goal)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.CurrentFund)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.CurrentFund)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.StartDate)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.StartDate)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.ExpireDate)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.ExpireDate)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.FollowCount)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.FollowCount)
-            </dd>
-
-        </dl>
-    </div>
-    <p>
-
-        @Html.ActionLink("Back to List", "Index")
-    </p>*@
+@section modalSize
+{modal-sm}
+@section modalTitle
+{
+    <text>
+        Donate with
+        <span>
+            <img style="max-height: 10px; margin-bottom: 15px"
+                 src="https://res.cloudinary.com/senbonzakura/image/upload/v1582377977/Give%20Aid%20Project/vnpaylogo_hgu1jj.png" alt="" />
+        </span>
+    </text>
+}
+@section modalBody
+{
+    @if (User.Identity.IsAuthenticated)
+    {
+        <form action="@Url.Action("Donate", "VNpay")" name="vnPayForm"
+              id="vnPayForm" method="post" target="_top">
+            @Html.Hidden("userId", User.Identity.GetUserId())
+            @Html.Hidden("projectId", Model.Id)
+            <div class="form-group">
+                <label for="amountVnpay">Amount: </label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend ">
+                        <span class="input-group-text bg-primary text-white">$</span>
+                    </div>
+                    <input type="text" id="amountVnpay" name="amountVnpay" min="1" value="1"
+                           class="form-control" aria-label="Amount (to the nearest dollar)">
+                    <div class="input-group-append ">
+                        <button type="submit" class="btn btn-primary ml-auto">Donate</button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group d-flex mb-0">
+                <img style="max-height: 20px" class="ml-auto my-auto"
+                     src="https://res.cloudinary.com/senbonzakura/image/upload/v1582377977/Give%20Aid%20Project/vnpaylogo_hgu1jj.png" alt="" />
+            </div>
+        </form>
+    }
+}
+@section scripts
+{
+    @if (User.Identity.IsAuthenticated)
+    {
+        <script>
+            $(function () {
+                $("#paypalbtn").click(function() {
+                    $("#paypalForm").submit();
+                });
+            });
+        </script>
+    }
+    <script>
+        var value = $("#ariaValuenowInput").val(),
+            i = value < 100 ? 0 : 99;
+        var progressBar = $(".cause-progress");
+        function countNumbers() {
+            if (i < value) {
+                if (i < value - 5) {
+                    i += 5;
+                } else if (i < value - 3) {
+                    i += 3;
+                } else {
+                    i++;
+                }
+                progressBar.css("width", i + "%");
+            }
+            // Wait for sometime before running this script again
+            setTimeout("countNumbers()", 20);
+        }
+        $(function () {
+            countNumbers();
+        });
+    </script>
+}
