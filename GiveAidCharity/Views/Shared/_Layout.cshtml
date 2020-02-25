@@ -29,14 +29,16 @@
     @Styles.Render("~/Content/HomepageTheme/css/icomoon.css")
     @Styles.Render("~/Content/HomepageTheme/css/style.css")
     @Styles.Render("~/Content/HomepageTheme/css/custom.css")
+
+    @RenderSection("style", false)
 </head>
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container">
             <a class="navbar-brand" href="@Url.Action("Index", "Home")">
-                <img src="https://res.cloudinary.com/senbonzakura/image/upload/v1581598102/Give%20Aid%20Project/LogoMain_ljuy2i.png" alt="" 
-                     style="max-height: 60px"/>
+                <img src="https://res.cloudinary.com/senbonzakura/image/upload/v1581598102/Give%20Aid%20Project/LogoMain_ljuy2i.png" alt=""
+                     style="max-height: 60px" />
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="oi oi-menu"></span> Menu
@@ -76,7 +78,25 @@
         </div>
     </div>
     @RenderBody()
-
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered @RenderSection("modalSize", false)" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">
+                        @RenderSection("modalTitle", false)
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @RenderSection("modalBody", false)
+                </div>
+                @RenderSection("modalFooter", false)
+            </div>
+        </div>
+    </div>
+    
     <footer class="ftco-footer ftco-section img">
         <div class="overlay"></div>
         <div class="container">

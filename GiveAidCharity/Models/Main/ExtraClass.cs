@@ -71,8 +71,8 @@ namespace GiveAidCharity.Models.Main
         public Donation()
         {
             Id = Guid.NewGuid().ToString();
-            CreatedAt = DateTime.Now;
-            UpdatedAt = DateTime.Now;
+            CreatedAt = DateTime.Now.ToLocalTime();
+            UpdatedAt = DateTime.Now.ToLocalTime();
             Status = DonationStatusEnum.Pending;
         }
     }

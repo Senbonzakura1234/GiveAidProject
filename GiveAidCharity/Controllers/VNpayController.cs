@@ -48,8 +48,12 @@ namespace GiveAidCharity.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Donate(string userId, string projectId)
+        public async Task<ActionResult> Donate(string userId, string projectId, double? amountVnpay)
         {
+            if (amountVnpay == null || amountVnpay < 1)
+            {
+                return RedirectToAction("CauseDetail", "Home", new {id = projectId});
+            }
             if (userId == null || projectId == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var user = await UserManager.FindByIdAsync(userId);
             var project = await _db.Projects.FindAsync(projectId);
@@ -60,7 +64,7 @@ namespace GiveAidCharity.Controllers
             {
                 ProjectId = projectId,
                 ApplicationUserId = userId,
-                Amount = 100,
+                Amount = amountVnpay.Value,
                 PaymentMethod = Donation.PaymentMethodEnum.VnPay,
             };
             _db.Donations.Add(donation);
