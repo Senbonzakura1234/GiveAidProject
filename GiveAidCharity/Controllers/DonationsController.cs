@@ -37,12 +37,12 @@ namespace GiveAidCharity.Controllers
                 nameProject = "";
             }
             Debug.WriteLine(start + " " + end);
-            if (string.IsNullOrWhiteSpace(start) && !CheckValidDate(start))
+            if (string.IsNullOrWhiteSpace(start) && !HelperMethod.CheckValidDate(start))
             {
                 start = DateTime.Now.AddYears(-1).ToString("yyyy-MM-dd");
             }
             var startDate = DateTime.ParseExact(start, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            if (string.IsNullOrWhiteSpace(end) && !CheckValidDate(end))
+            if (string.IsNullOrWhiteSpace(end) && !HelperMethod.CheckValidDate(end))
             {
                 end = DateTime.Now.ToString("yyyy-MM-dd");
             }
@@ -304,9 +304,5 @@ namespace GiveAidCharity.Controllers
         //    }
         //    base.Dispose(disposing);
         //}
-        private static bool CheckValidDate(string date)
-        {
-            return DateTime.TryParse(date, out _);
-        }
     }
 }

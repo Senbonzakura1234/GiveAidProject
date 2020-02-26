@@ -1,2 +1,12 @@
-﻿body {
+﻿.upper-stretch-card {
+    margin-bottom: 0;
+}
+    .upper-stretch-card .card {
+        border-radius: 0.3125rem 0.3125rem 0 0;
+    }
+    .upper-stretch-card .card .card-body{
+        padding-bottom: 0;
+    }
+.below-stretch-card .card {
+    border-radius: 0 0 0.3125rem 0.3125rem;
 }
