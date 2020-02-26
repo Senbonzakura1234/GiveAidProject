@@ -1,0 +1,174 @@
+﻿@model IEnumerable<GiveAidCharity.Models.HelperClass.ProjectListViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body table-responsive">
+            <canvas id="project_chart"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body table-responsive">
+            <h4 class="card-title">List Project</h4>
+            <table class="table">
+                <thead class="text-primary">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CoverImg)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Goal)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CurrentFund)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.StartDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ExpireDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Status)
+                        </th>
+                        <th class="text-center d-none d-lg-table-cell">
+                            Modify
+                        </th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a href="#" class="badge w-100 badge-gradient-primary w-100">
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a href="#">
+                                    <img src="@item.CoverImg" />
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => item.Goal)
+                            </td>
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => item.CurrentFund)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StartDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ExpireDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+                            <td class="text-center d-none d-lg-table-cell">
+                                <a class="badge badge-warning" href="#">
+                                    <span class="mdi mdi-pencil-box-outline"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            if ($("#project_chart").length) {
+                var projectName = [];
+                var currentFund = [];
+                $.ajax({
+                    url: "/Api/GetProjectData",
+                    type: "GET",
+                    success: function (res) {
+                        if (res != null) {
+                            console.log("Yes");
+                            for (let i = 0; i < res.listProject.length; i++) {
+                                projectName[i] = res.listProject[i].name;
+                                currentFund[i] = res.listProject[i].currentFund;
+                            }
+                        }
+                        console.log(projectName);
+                        var projectData = {
+                            labels: projectName,
+                            datasets: [{
+                                data: currentFund,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)'
+                                ],
+                                borderColor: [
+                                    'rgba(255,99,132,1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)',
+                                    'rgba(255,99,132,1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)'
+                                ],
+                                borderWidth: 1,
+                                fill: false
+                            }],
+                        };
+                        var projectOptions = {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                            },
+                            legend: {
+                                display: false
+                            },
+                            elements: {
+                                point: {
+                                    radius: 0
+                                }
+                            }
+                        };
+                        var projectChartCanvas = $("#project_chart").get(0).getContext("2d");
+                        // This will get the first returned node in the jQuery collection.
+                        var projectChart = new Chart(projectChartCanvas, {
+                            type: 'bar',
+                            data: projectData,
+                            options: projectOptions
+                        });
+                    }
+                });
+            };
+        });
+    </script>
+}

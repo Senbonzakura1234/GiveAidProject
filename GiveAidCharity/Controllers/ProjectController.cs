@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using GiveAidCharity.Models;
@@ -42,6 +44,26 @@ namespace GiveAidCharity.Controllers
             private set => _roleManager = value;
         }
         // GET: Project
+        public ActionResult Index()
+        {
+            var projects = _db.Projects.ToList();
+            var projectList = new List<ProjectListViewModel>();
+            foreach(var item in projects)
+            {
+                projectList.Add(new ProjectListViewModel { 
+                    Id = item.Id,
+                    Name = item.Name,
+                    CoverImg = item.CoverImg,
+                    Goal = item.Goal,
+                    CurrentFund = item.CurrentFund,
+                    StartDate = item.StartDate,
+                    ExpireDate = item.ExpireDate,
+                    CreatedAt = item.CreatedAt,
+                    Status = item.Status
+                });
+            }
+            return View(projectList);
+        }
         public ActionResult CreateProject()
         {
             var item = new ProjectCreateViewModel();
