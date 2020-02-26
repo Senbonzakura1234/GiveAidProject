@@ -1,0 +1,28 @@
+﻿using GiveAidCharity.Models.Main;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
+
+namespace GiveAidCharity.Models.HelperClass
+{
+    public class ProjectListViewModel
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string CoverImg { get; set; }
+        public double Goal { get; set; }
+        public double CurrentFund { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime StartDate { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime ExpireDate { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime CreatedAt { get; set; }
+        public Project.ProjectStatusEnum Status { get; set; }
+    }
+}

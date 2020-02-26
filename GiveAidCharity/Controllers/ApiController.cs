@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
@@ -106,6 +107,20 @@ namespace GiveAidCharity.Controllers
                 countPerMonth,
                 amountPerMonth,
                 PaymentMethod
+            }, JsonRequestBehavior.AllowGet);
+        }
+        [AllowAnonymous]
+        public async Task<ActionResult> GetProjectData()
+        {
+            var data = await _db.Projects.OrderByDescending(p => p.StartDate).Take(10).ToListAsync();
+            var listProject = new List<projectJsonModel>();
+            foreach (var item in data)
+            {
+                listProject.Add(new projectJsonModel { name = item.Name, currentFund = item.CurrentFund, startDate = item.StartDate });
+            }
+            return Json(new
+            {
+                listProject
             }, JsonRequestBehavior.AllowGet);
         }
     }

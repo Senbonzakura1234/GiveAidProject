@@ -184,6 +184,7 @@
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\PayPalController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
+    <Compile Include="Controllers\ProjectsController.cs" />
     <Compile Include="Controllers\VNpayController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -198,8 +199,10 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\HelperClass\DashboardViewModel.cs" />
     <Compile Include="Models\HelperClass\ExtraAttributes.cs" />
     <Compile Include="Models\HelperClass\HelperEnum.cs" />
+    <Compile Include="Models\HelperClass\JsonModel.cs" />
     <Compile Include="Models\HelperClass\Miscellaneous.cs" />
     <Compile Include="Models\HelperClass\ViewModels.cs" />
     <Compile Include="Models\HelperClass\VnPayLibrary.cs" />
@@ -776,10 +779,17 @@
     <Content Include="Views\Donations\Edit.cshtml" />
     <Content Include="Views\Donations\Index.cshtml" />
     <Content Include="Views\Payment\Result.cshtml" />
+    <Content Include="Views\Projects\Create.cshtml" />
+    <Content Include="Views\Projects\Delete.cshtml" />
+    <Content Include="Views\Projects\Details.cshtml" />
+    <Content Include="Views\Projects\Edit.cshtml" />
+    <Content Include="Views\Projects\Index.cshtml" />
+    <Content Include="Views\Project\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Api\" />
+    <Folder Include="Views\Chart\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

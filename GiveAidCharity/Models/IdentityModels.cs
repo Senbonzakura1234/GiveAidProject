@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
@@ -121,5 +122,6 @@ namespace GiveAidCharity.Models
         public DbSet<ProjectComment> ProjectComments { get; set; }
         public DbSet<Donation> Donations { get; set; }
         public DbSet<Follow> Follows { get; set; }
+        public IEnumerable ApplicationUsers { get; internal set; }
     }
 }
