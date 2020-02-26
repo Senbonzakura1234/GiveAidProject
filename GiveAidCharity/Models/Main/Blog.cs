@@ -12,10 +12,13 @@ namespace GiveAidCharity.Models.Main
         [ForeignKey("ApplicationUser")]
         public string ApplicationUserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
-        [ForeignKey("Project")]
-        public string ProjectId { get; set; }
-        public virtual Project Project { get; set; }
 
+        [ForeignKey("Category")]
+        public string CategoryId { get; set; }
+        public virtual Category Category { get; set; }
+
+        //Url to project
+        public string Rss { get; set; }
 
         [Required]
         public string Title { get; set; }
@@ -24,7 +27,7 @@ namespace GiveAidCharity.Models.Main
         [Required]
         public string ContentPart2 { get; set; }
         public string ContentPart3 { get; set; }
-
+        
         public BlogStatusEnum Status { get; set; }
         public enum BlogStatusEnum
         {

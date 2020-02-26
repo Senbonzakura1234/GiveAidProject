@@ -9,12 +9,16 @@ namespace GiveAidCharity.Models.Main
     {
         [Key] public string Id { get; set; }
 
-        [ForeignKey("ApplicationUser")] public string ApplicationUserId { get; set; }
+        [ForeignKey("ApplicationUser")] 
+        public string ApplicationUserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
+
+        [ForeignKey("Category")] 
+        public string CategoryId { get; set; }
+        public virtual Category Category { get; set; }
 
         public virtual ICollection<Donation> Donations { get; set; }
         public virtual ICollection<Follow> Follows { get; set; }
-        public virtual ICollection<Blog> Blogs { get; set; }
         public virtual ICollection<ProjectImage> ProjectImages { get; set; }
         public virtual ICollection<ProjectComment> ProjectComments { get; set; }
 

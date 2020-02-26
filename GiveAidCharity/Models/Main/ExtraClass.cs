@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 // ReSharper disable  UnusedMember.Global
@@ -112,6 +113,38 @@ namespace GiveAidCharity.Models.Main
             CreatedAt = DateTime.Now;
             UpdatedAt = DateTime.Now;
             Status = StatusEnum.Followed;
+        }
+    }
+
+    public class Category
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public virtual ICollection<Project> Projects { get; set; }
+        public virtual ICollection<Blog> Blogs { get; set; }
+
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime CreatedAt { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime UpdatedAt { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime? DeletedAt { get; set; }
+        public StatusEnum Status { get; set; }
+        public enum StatusEnum
+        {
+            Deleted = 0,
+            Show = 1
+        }
+        public Category()
+        {
+            Id = Guid.NewGuid().ToString();
+            CreatedAt = DateTime.Now;
+            UpdatedAt = DateTime.Now;
+            Status = StatusEnum.Show;
         }
     }
 }
