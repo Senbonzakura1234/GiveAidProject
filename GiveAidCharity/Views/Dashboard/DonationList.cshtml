@@ -1,0 +1,55 @@
+﻿@using GiveAidCharity.Models.Main
+@model IEnumerable<GiveAidCharity.Models.HelperClass.DonationListViewModel>
+
+<div class="row">
+    <div class="col-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Recent Top Donations</h4>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th> UserName</th>
+                                <th> Avatar</th>
+                                <th> Status</th>
+                                <th> Create At</th>
+                                <th> Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <img src="@item.Avatar" class="mr-2" alt="image"> @item.UserName
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("CauseDetail", "Home", new {id = item.ProjectId})">
+                                            @item.ProjectName
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <label class="badge
+                                                @(item.Status == Donation.DonationStatusEnum.Success ? "badge-gradient-primary"
+                                                    : item.Status == Donation.DonationStatusEnum.Pending ? "badge-gradient-warning"
+                                                        : "badge-secondary")">
+                                            @Html.DisplayFor(modelItem => item.Status)
+                                        </label>
+                                    </td>
+                                    <td> @item.CreateAt</td>
+                                    <td>
+                                        <a class="badge badge-warning" href="#">
+                                            <span class="mdi mdi-pencil-box-outline"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                          
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -37,8 +37,32 @@ namespace GiveAidCharity.Controllers
             private set => _userManager = value;
         }
 
+        public ActionResult Banner1Data()
+        {
+            var start = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd");
+            var startDate = DateTime.ParseExact(start, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            var data = _db.Donations.Where(d => d.CreatedAt >= startDate).Sum(d => d.Amount);
+            data = Math.Round(data, 2);
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
 
+        public ActionResult Banner2Data()
+        {
+            var start = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd");
+            var startDate = DateTime.ParseExact(start, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            var data = _db.Donations.Where(d => d.CreatedAt >= startDate).ToList().Count();
 
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Banner3Data()
+        {
+            var data = _db.Donations.ToList();
+
+            var amount = data.Average(d => d.Amount);
+            amount = Math.Round(amount, 2);
+            return Json(amount, JsonRequestBehavior.AllowGet);
+        }
         // GET: Api
         [HttpPost]
         [AllowAnonymous]
