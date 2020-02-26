@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using GiveAidCharity.Models;
+using GiveAidCharity.Models.HelperClass;
+using GiveAidCharity.Models.Main;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity.Owin;
 
@@ -67,19 +70,55 @@ namespace GiveAidCharity.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult GetDonations(DateTime fromDate, DateTime toDate)
+        public async Task<ActionResult> GetDonations(string fromDate, string toDate)
         {
-            var list = _db.Donations.Where(d => d.CreatedAt >= fromDate && d.CreatedAt <= toDate).ToList();
+            Debug.WriteLine(fromDate + " " + toDate);
+            if (string.IsNullOrWhiteSpace(fromDate) && !HelperMethod.CheckValidDate(fromDate))
+            {
+                fromDate = DateTime.Now.AddYears(-1).ToString("yyyy-MM-dd");
+            }
+            var startDate = DateTime.ParseExact(fromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            if (string.IsNullOrWhiteSpace(toDate) && !HelperMethod.CheckValidDate(toDate))
+            {
+                toDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            var endDate = DateTime.ParseExact(toDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            var list = await _db.Donations.Where(d => d.CreatedAt >= startDate && d.CreatedAt <= endDate).ToListAsync();
 
-            var countPerMonth = list.OrderBy(d => d.CreatedAt).GroupBy(d => new
+            var directBankPerMonth = list.Where(d => d.PaymentMethod == Donation.PaymentMethodEnum.DirectBankTransfer)
+                .OrderBy(d => d.CreatedAt).GroupBy(d => new
             {
                 d.CreatedAt.Month,
                 d.CreatedAt.Year
             }).Select(d => new
             {
-                Quantity = d.Count(),
-                d.FirstOrDefault().CreatedAt.Month,
-                d.FirstOrDefault().CreatedAt.Year,
+                Amount = d.Sum(donation => donation.Amount),
+                d.FirstOrDefault()?.CreatedAt.Month,
+                d.FirstOrDefault()?.CreatedAt.Year,
+            }).ToList();
+
+            var vnPayPerMonth = list.Where(d => d.PaymentMethod == Donation.PaymentMethodEnum.VnPay)
+                .OrderBy(d => d.CreatedAt).GroupBy(d => new
+            {
+                d.CreatedAt.Month,
+                d.CreatedAt.Year
+            }).Select(d => new
+            {
+                Amount = d.Sum(donation => donation.Amount),
+                d.FirstOrDefault()?.CreatedAt.Month,
+                d.FirstOrDefault()?.CreatedAt.Year,
+            }).ToList();
+
+            var paypalPerMonth = list.Where(d => d.PaymentMethod == Donation.PaymentMethodEnum.Paypal)
+                .OrderBy(d => d.CreatedAt).GroupBy(d => new
+            {
+                d.CreatedAt.Month,
+                d.CreatedAt.Year
+            }).Select(d => new
+            {
+                Amount = d.Sum(donation => donation.Amount),
+                d.FirstOrDefault()?.CreatedAt.Month,
+                d.FirstOrDefault()?.CreatedAt.Year,
             }).ToList();
 
             var amountPerMonth = list.OrderBy(d => d.CreatedAt).GroupBy(d => new
@@ -89,23 +128,34 @@ namespace GiveAidCharity.Controllers
             }).Select(d => new
             {
                 Amount = d.Sum(donation => donation.Amount),
-                d.FirstOrDefault().CreatedAt.Month,
-                d.FirstOrDefault().CreatedAt.Year
+                d.FirstOrDefault()?.CreatedAt.Month,
+                d.FirstOrDefault()?.CreatedAt.Year
             }).ToList();
 
-            var PaymentMethod = list.GroupBy(d => new
+            
+            return Json(new
+            {
+                directBankPerMonth,
+                vnPayPerMonth,
+                paypalPerMonth,
+                amountPerMonth
+            }, JsonRequestBehavior.AllowGet);
+        }
+        [AllowAnonymous]
+        public async Task<ActionResult> GetPaymentMethod()
+        {
+            var list = await _db.Donations.ToListAsync();
+            var paymentMethod = list.GroupBy(d => new
             {
                 d.PaymentMethod
             }).Select(d => new
             {
-                d.FirstOrDefault().PaymentMethod,
+                d.FirstOrDefault()?.PaymentMethod,
                 Quantity = d.Count()
             }).ToList();
             return Json(new
             {
-                countPerMonth,
-                amountPerMonth,
-                PaymentMethod
+                paymentMethod
             }, JsonRequestBehavior.AllowGet);
         }
     }
