@@ -122,6 +122,7 @@ namespace GiveAidCharity.Models
         public DbSet<ProjectComment> ProjectComments { get; set; }
         public DbSet<Donation> Donations { get; set; }
         public DbSet<Follow> Follows { get; set; }
+        public DbSet<Category> Categories { get; set; }
         public IEnumerable ApplicationUsers { get; internal set; }
     }
 }

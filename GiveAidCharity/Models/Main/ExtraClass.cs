@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 // ReSharper disable  UnusedMember.Global
@@ -89,8 +90,8 @@ namespace GiveAidCharity.Models.Main
         public string ProjectId { get; set; }
         public virtual Project Project { get; set; }
 
-        public StatusEnum Status { get; set; }
-        public enum StatusEnum
+        public FollowStatusEnum Status { get; set; }
+        public enum FollowStatusEnum
         {
             Followed = 0,
             Unfollowed = 1
@@ -111,7 +112,39 @@ namespace GiveAidCharity.Models.Main
             Id = Guid.NewGuid().ToString();
             CreatedAt = DateTime.Now;
             UpdatedAt = DateTime.Now;
-            Status = StatusEnum.Followed;
+            Status = FollowStatusEnum.Followed;
+        }
+    }
+
+    public class Category
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public virtual ICollection<Project> Projects { get; set; }
+        public virtual ICollection<Blog> Blogs { get; set; }
+
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime CreatedAt { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime UpdatedAt { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime? DeletedAt { get; set; }
+        public CategoryStatusEnum Status { get; set; }
+        public enum CategoryStatusEnum
+        {
+            Deleted = 0,
+            Show = 1
+        }
+        public Category()
+        {
+            Id = Guid.NewGuid().ToString();
+            CreatedAt = DateTime.Now;
+            UpdatedAt = DateTime.Now;
+            Status = CategoryStatusEnum.Show;
         }
     }
 }
