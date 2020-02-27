@@ -236,10 +236,26 @@
                             <ul class="nav flex-column sub-menu">
                                 <li class="nav-item">
                                     <a class="nav-link"
-                                       href="@Url.Action("Index", "Dashboard")">Index</a>
+                                       href="@Url.Action("Index", "Project")">Index</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="@Url.Action("CreateProject", "Project")">Create Project</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#drop-down-donation"
+                           aria-controls="drop-down-donation">
+                            <span class="menu-title">Donations</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                        </a>
+                        <div class="collapse" id="drop-down-donation">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                       href="@Url.Action("Index", "Donations")">Index</a>
                                 </li>
                             </ul>
                         </div>

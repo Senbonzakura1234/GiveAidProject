@@ -37,34 +37,28 @@ namespace GiveAidCharity.Controllers
             private set => _userManager = value;
         }
 
-        public ActionResult Banner1Data()
+        public async Task<ActionResult> Banner1Data()
         {
             var start = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd");
             var startDate = DateTime.ParseExact(start, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            var list = _db.Donations.Where(d => d.CreatedAt >= startDate).ToList();
-            var data = list.Count == 0 ? 0: Math.Round(list.Sum(d => d.Amount), 2);
+            var list = await _db.Donations.Where(d => d.CreatedAt >= startDate && d.Status == Donation.DonationStatusEnum.Success).ToListAsync();
+            
+            
+            var data = list.Count == 0 ? "0" : $"{Math.Round(list.Sum(d => d.Amount), 2):n}"; 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Banner2Data()
+        public async Task<ActionResult> Banner2Data()
         {
-            var start = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd");
-            var startDate = DateTime.ParseExact(start, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            var data = _db.Donations.Where(d => d.CreatedAt >= startDate).ToList().Count();
-
+            var list = await _db.Donations.Where(d => d.Status == Donation.DonationStatusEnum.Success).ToListAsync();
+            var data = list.Count == 0 ? "0" : $"{Math.Round(list.Sum(d => d.Amount), 2):n}";
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Banner3Data()
+        public async Task<ActionResult> Banner3Data()
         {
-            var data = _db.Donations.ToList();
-            double amount = 0;
-            if (data.Count != 0)
-            {
-                amount = data.Average(d => d.Amount);
-                amount = Math.Round(amount, 2);
-            }
-
+            var data = await _db.Donations.Where(d => d.Status == Donation.DonationStatusEnum.Success).ToListAsync();
+            var amount = data.Count != 0? $"{Math.Round(data.Average(d => d.Amount), 2):n}" : "0";
             return Json(amount, JsonRequestBehavior.AllowGet);
         }
         // GET: Api

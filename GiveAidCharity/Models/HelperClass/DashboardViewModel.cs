@@ -33,9 +33,9 @@ namespace GiveAidCharity.Models.HelperClass
         public string Avatar { get; set; }
         public string ProjectId { get; set; }
         public string ProjectName { get; set; }
+        public double Amount { get; set; }
         [DataType(DataType.DateTime)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime CreatedAt { get; set; }
-        public Donation.DonationStatusEnum Status { get; set; }
     }
 }

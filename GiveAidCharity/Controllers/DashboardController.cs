@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.Mvc;
 using GiveAidCharity.Models;
 using GiveAidCharity.Models.HelperClass;
+using GiveAidCharity.Models.Main;
 using Microsoft.AspNet.Identity.Owin;
 
 namespace GiveAidCharity.Controllers
@@ -37,11 +38,13 @@ namespace GiveAidCharity.Controllers
 
         public ActionResult DonationList()
         {
-            var data = _db.Donations.OrderByDescending(d => d.CreatedAt).Take(10).ToList();
+            var data = _db.Donations
+                .Where(d => d.Status == Donation.DonationStatusEnum.Success)
+                .OrderByDescending(d => d.CreatedAt).Take(10).ToList();
             var listDonation = data.OrderByDescending(d => d.Amount).Take(6).Select(s => new DonationListViewModel
             {
                 Id = s.Id,
-                Status = s.Status,
+                Amount = s.Amount,
                 UserName = s.ApplicationUser.UserName,
                 UserId = s.ApplicationUserId,
                 Avatar = s.ApplicationUser.Avatar,
@@ -54,7 +57,8 @@ namespace GiveAidCharity.Controllers
 
         public ActionResult ProjectList()
         {
-            var data = _db.Projects.OrderByDescending(d => d.CreatedAt).Take(5).Select(s => new ProjectListViewModel
+            var data = _db.Projects.Where(d => d.Status == Project.ProjectStatusEnum.Ongoing)
+                .OrderByDescending(d => d.CreatedAt).Take(5).Select(s => new ProjectListViewModel
             {
                 CreatedAt = s.CreatedAt,
                 Status = s.Status,

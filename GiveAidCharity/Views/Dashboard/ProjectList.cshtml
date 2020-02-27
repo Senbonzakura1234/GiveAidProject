@@ -1,16 +1,16 @@
 ﻿@model IEnumerable<GiveAidCharity.Models.HelperClass.ProjectListViewModel>
 @{
-    var indexOfListProject = 1;
+    var indexOfListProject = 0;
 }
 <div class="col-md-7 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Project Status</h4>
+            <h4 class="card-title">Recent Ongoing Project</h4>
             <div class="table-responsive">
                 <table class="table">
                     <thead>
                     <tr>
-                        <th>#</th>
+                        <th> # </th>
                         <th> Project Name</th>
                         <th> Create At</th>
                         <th> Progress</th>
@@ -20,17 +20,20 @@
                     @foreach (var item in Model)
                     {
                         var current = item.CurrentFund < item.Goal ? item.CurrentFund/item.Goal * 100 : 100;
+                        var background = current < 20 ? "bg-gradient-danger" :
+                            current < 70 && current >= 20 ? "bg-gradient-info" :
+                                current < 100 && current >= 70 ? "bg-gradient-success" : "bg-gradient-primary";
                         <tr>
-                            <td>@indexOfListProject</td>
+                            <td>@(++indexOfListProject)</td>
                             <td> @item.Name</td>
                             <td> @Html.DisplayFor(modelItem => item.CreatedAt)</td>
                             <td>
                                 <div class="progress">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="@current" class="progress-bar bg-gradient-success" role="progressbar" style="width: @(current + "%")"></div>
+                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="@current" class="progress-bar @background" role="progressbar" style="width: @(current + "%")"></div>
                                 </div>
                             </td>
                         </tr>
-                        indexOfListProject++;
+                        
                     }
                         
                     </tbody>

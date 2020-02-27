@@ -1,20 +1,23 @@
 ﻿@using GiveAidCharity.Models.Main
 @model IEnumerable<GiveAidCharity.Models.HelperClass.DonationListViewModel>
-
+@{
+    var indexOfListDonation = 0;
+}
 <div class="row">
     <div class="col-12 grid-margin">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Recent Top Donations</h4>
+                <h4 class="card-title">Top Recent Donations</h4>
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th> UserName</th>
-                                <th> Avatar</th>
-                                <th> Status</th>
-                                <th> Create At</th>
-                                <th> Edit</th>
+                                <th> # </th>
+                                <th> UserName </th>
+                                <th class="text-center"> Avatar</th>
+                                <th class="text-center"> Amount</th>
+                                <th class="text-center"> Create At</th>
+                                <th class="text-center"> Edit</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -22,23 +25,21 @@
                             {
                                 <tr>
                                     <td>
-                                        <img src="@item.Avatar" class="mr-2" alt="image"> @item.UserName
+                                        @(++indexOfListDonation)
                                     </td>
                                     <td>
+                                        <img src="@item.Avatar" class="mr-2" alt="image"> @item.UserName
+                                    </td>
+                                    <td class="text-center">
                                         <a href="@Url.Action("CauseDetail", "Home", new {id = item.ProjectId})">
                                             @item.ProjectName
                                         </a>
                                     </td>
-                                    <td>
-                                        <label class="badge
-                                                @(item.Status == Donation.DonationStatusEnum.Success ? "badge-gradient-primary"
-                                                    : item.Status == Donation.DonationStatusEnum.Pending ? "badge-gradient-warning"
-                                                        : "badge-secondary")">
-                                            @Html.DisplayFor(modelItem => item.Status)
-                                        </label>
+                                    <td class="text-center">
+                                        <b>$@item.Amount</b>
                                     </td>
-                                    <td> @item.CreatedAt</td>
-                                    <td>
+                                    <td class="text-center"> @item.CreatedAt</td>
+                                    <td class="text-center">
                                         <a class="badge badge-warning" href="#">
                                             <span class="mdi mdi-pencil-box-outline"></span>
                                         </a>

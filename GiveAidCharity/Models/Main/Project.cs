@@ -48,7 +48,9 @@ namespace GiveAidCharity.Models.Main
             Pending = 1,
             Ongoing = 2,
             Success = 3,
+            //if expired
             Suspended = -1,
+            //if rejected by admin while Establishing
             Canceled = -2
         }
 

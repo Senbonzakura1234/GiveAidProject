@@ -49,7 +49,9 @@ namespace GiveAidCharity.Controllers
         public async Task<ActionResult> Index()
         {
             var homepage = new HomeViewModel();
-            var projectsList = await _db.Projects.ToListAsync();
+            var projectsList = await _db.Projects
+                .Where(d => d.Status == Project.ProjectStatusEnum.Ongoing)
+                .ToListAsync();
             var causesList = projectsList.Select(t => new CausesListViewModel
             {
                 Id = t.Id,
@@ -61,10 +63,11 @@ namespace GiveAidCharity.Controllers
                 ExpireDate = t.ExpireDate,
                 FollowCount = t.Follows.Count,
                 CoverImg = t.CoverImg
-            })
-                .ToList();
+            }).Take(6).ToList();
             var donations = await _db.Donations.Where(d => d.Project.Status != Project.ProjectStatusEnum.Canceled
-                                               || d.Project.Status != Project.ProjectStatusEnum.Suspended).Take(9).ToListAsync();
+                                               && d.Project.Status != Project.ProjectStatusEnum.Pending
+                                               && d.Status == Donation.DonationStatusEnum.Success
+                                               ).Take(9).ToListAsync();
             var listDonations = (from item in donations let cause = new CausesListViewModel { Id = item.ProjectId, Name = item.Project.Name }
                                  select new DonationsListViewModel
                                  {
@@ -75,7 +78,7 @@ namespace GiveAidCharity.Controllers
                                      Cause = cause
                                  }).ToList();
             listDonations = listDonations.OrderByDescending(p => p.DonateDate).ToList();
-            listDonations = listDonations.Take(3).ToList();
+            listDonations = listDonations.Take(6).ToList();
             homepage.CausesList = causesList;
             homepage.DonationList = listDonations;
             return View(homepage);
@@ -107,7 +110,10 @@ namespace GiveAidCharity.Controllers
                 limit = 9;
             }
             //.Where(p => p.Status == Project.ProjectStatusEnum.Ongoing)
-            var projectsList = await _db.Projects.ToListAsync();
+            var projectsList = await _db.Projects
+                .Where(p => p.Status == Project.ProjectStatusEnum.Ongoing
+                            || p.Status == Project.ProjectStatusEnum.Success)
+                .ToListAsync();
             var causesList = projectsList.Select(t => new CausesListViewModel
                 {
                     Id = t.Id,
@@ -145,7 +151,9 @@ namespace GiveAidCharity.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var project = await _db.Projects.FindAsync(id);
-            if (project == null)
+            if (project == null 
+                || project.Status != Project.ProjectStatusEnum.Ongoing
+                || project.Status != Project.ProjectStatusEnum.Success)
             {
                 return HttpNotFound();
             }
@@ -264,7 +272,9 @@ namespace GiveAidCharity.Controllers
         {
 
             var donations = await _db.Donations.Where(d => d.Project.Status != Project.ProjectStatusEnum.Canceled
-                                                           || d.Project.Status != Project.ProjectStatusEnum.Suspended).Take(9)
+                                                           && d.Project.Status != Project.ProjectStatusEnum.Pending
+                                                           && d.Status == Donation.DonationStatusEnum.Success
+                                                           ).Take(9)
                 .ToListAsync();
             var listDonations = (from item in donations let cause = new CausesListViewModel {Id = item.ProjectId, Name = item.Project.Name} 
                 select new DonationsListViewModel {UserId = item.ApplicationUserId, Avatar = item.ApplicationUser.Avatar,
@@ -300,6 +310,19 @@ namespace GiveAidCharity.Controllers
         //        item.Avatar =
         //            "https://res.cloudinary.com/bangnguyen/image/upload/v1581844808/ProjectCharity/person_1_kvy425.jpg";
 
+        //        _db.Entry(item).State = EntityState.Modified;
+        //        await _db.SaveChangesAsync();
+        //    }
+
+        //    return null;
+        //}
+        //public async Task<ActionResult> Test()
+        //{
+        //    var res = await _db.Projects.ToListAsync();
+        //    foreach (var item in res)
+        //    {
+        //        item.Status = item.CurrentFund >= item.Goal ? 
+        //            Project.ProjectStatusEnum.Success : Project.ProjectStatusEnum.Ongoing;
         //        _db.Entry(item).State = EntityState.Modified;
         //        await _db.SaveChangesAsync();
         //    }
