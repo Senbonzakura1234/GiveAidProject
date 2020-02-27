@@ -33,7 +33,14 @@ namespace GiveAidCharity.Migrations
             "William", "David", "Richard", "Charles", "Joseph", "Thomas", "Christopher", 
             "Daniel", "Paul", "Mark", "Donald", "George", "Kenneth", "Steven", "Edward", 
             "Brian", "Ronald", "Anthony", "Kevin", "Jason", "Jeff" };
-
+        private string[] _categoryId =
+        {
+            "9104390c-469d-4647-aaf0-8c2998d31213",
+            "57e2b432-3542-49af-9ec0-704d744b715d",
+            "372a6e2a-665f-4bd4-90a2-ed50c44e80b1",
+            "68ebea3b-3a01-44b3-a768-7f0adb2cfa25",
+            "686808ac-ff5a-4502-96b8-6c76a9c5f78c"
+        };
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
@@ -56,7 +63,7 @@ namespace GiveAidCharity.Migrations
 
             //===========================================================================
             //SetRole(context);
-            ////===========================================================================
+            //////===========================================================================
             //SetUser(context);
             ////===========================================================================
             //ADD PROJECT
@@ -77,6 +84,7 @@ namespace GiveAidCharity.Migrations
             //        Id = DicId[f.projectid],
             //        ApplicationUserId = lsMemberFund[rdn.Next(1, lsMemberFund.Count - 1)],
             //        Name = f.projectname,
+            //        CategoryId = _categoryId[rdn.Next(0, 4)],
             //        Description = f.projectname,
             //        CoverImg = f.CoverImg,
             //        Goal = rdn.Next(100, 1000),
@@ -118,6 +126,7 @@ namespace GiveAidCharity.Migrations
             //ADD BLOG
             //var lsProjects = GetJsonData<Article>(Blog_Url);
             //var lsImages = GetJsonData<ArticleImage>(Image_Url);
+            //var rdn = new Random();
             //var listBlog = lsProjects.Select(f => new Blog()
             //{
             //    Id = Guid.NewGuid().ToString(),
@@ -125,7 +134,8 @@ namespace GiveAidCharity.Migrations
             //            .Where(p => p.Id.Contains($"{DicId[f.projectid]}"))
             //            .Select(p => p.ApplicationUserId)
             //            .SingleOrDefault(),
-            //    ProjectId = DicId[f.projectid],
+            //    Rss = DicId[f.projectid],
+            //    CategoryId = _categoryId[rdn.Next(0, 4)],
             //    Title = f.projectname,
             //    ContentPart1 = f.contentpart1,
             //    ContentPart2 = f.contentpart2,
@@ -192,12 +202,15 @@ namespace GiveAidCharity.Migrations
 
 
             ////Thêm thông tin donation
+
+            //Array values = Enum.GetValues(typeof(Donation.PaymentMethodEnum));
             //var rdn = new Random();
             //for (int i = 0; i < projectCount; i++)
             //{
             //    var donationPerPj = rdn.Next(15, 20);
             //    for (int j = 0; j < donationPerPj; j++)
             //    {
+            //        var randomPayment = (Donation.PaymentMethodEnum)values.GetValue(rdn.Next(values.Length));
             //        // var newSpan = new DateTime(0, 0, new Random().Next(0, 8));
             //        string projectId = lsProject[i];
             //        listDonation.Add(new Donation()
@@ -206,7 +219,7 @@ namespace GiveAidCharity.Migrations
             //            ApplicationUserId = lsMemberId[j],
             //            ProjectId = lsProject[i],
             //            Amount = rdn.Next(1, 100), //cost mỗi donation 1$-100$
-            //            PaymentMethod = Donation.PaymentMethodEnum.DirectBankTransfer,
+            //            PaymentMethod = randomPayment,
             //            Status = (Donation.DonationStatusEnum)rdn.Next(1, 3),
             //            CreatedAt = context.Projects.Where(o => o.Id == projectId).Select(p => p.StartDate).SingleOrDefault().AddDays(rdn.Next(0, 8)),
             //            DeletedAt = null
@@ -242,7 +255,6 @@ namespace GiveAidCharity.Migrations
                         ParentId = null,
                         Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
                                   " I am parent comment ",
-                        Status = ProjectComment.ProjectCommentStatusEnum.Published,
                         CreatedAt = context.Projects.Where(p => p.Id == projectId).Select(p => p.StartDate).SingleOrDefault().AddDays(spanTime),
                         DeletedAt = null
                     });
@@ -269,7 +281,6 @@ namespace GiveAidCharity.Migrations
                     ParentId = parentId,
                     Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
                               " ---I am child comment -- hello ",
-                    Status = ProjectComment.ProjectCommentStatusEnum.Published,
                     CreatedAt = context.ProjectComments.Where(p => p.Id == parentId).Select(p => p.CreatedAt).SingleOrDefault(),
                     DeletedAt = null
                 });
@@ -280,7 +291,17 @@ namespace GiveAidCharity.Migrations
             }
             context.ProjectComments.AddRange(listChildComment);
             context.SaveChanges();
-
+            //var listCategory = new List<Category>();
+            //listCategory.AddRange(new List<Category>
+            //{
+            //    new Category {Id =_categoryId[0], Name = "Humanitarian", Description = "crimes of war, terrorism"},
+            //    new Category {Id =_categoryId[1], Name = "Natural disaster", Description = "Save human in disaster"},
+            //    new Category {Id =_categoryId[2], Name = "Education", Description = "Give the change education"},
+            //    new Category {Id =_categoryId[3], Name = "Environment", Description = "Save the environment"},
+            //    new Category {Id =_categoryId[4], Name = "Culture", Description = "Save the cultural building"}
+            //});
+            //context.Categories.AddRange(listCategory);
+            //context.SaveChanges();
         }
 
         public void SetUser(GiveAidCharity.Models.ApplicationDbContext context)

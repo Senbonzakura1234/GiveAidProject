@@ -7,13 +7,13 @@ namespace GiveAidCharity.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class updateTable : IMigrationMetadata
+    public sealed partial class initialTable : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(updateTable));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(initialTable));
         
         string IMigrationMetadata.Id
         {
-            get { return "202002191713136_updateTable"; }
+            get { return "202002271600379_initialTable"; }
         }
         
         string IMigrationMetadata.Source

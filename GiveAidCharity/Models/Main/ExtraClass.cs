@@ -90,8 +90,8 @@ namespace GiveAidCharity.Models.Main
         public string ProjectId { get; set; }
         public virtual Project Project { get; set; }
 
-        public StatusEnum Status { get; set; }
-        public enum StatusEnum
+        public FollowStatusEnum Status { get; set; }
+        public enum FollowStatusEnum
         {
             Followed = 0,
             Unfollowed = 1
@@ -112,7 +112,7 @@ namespace GiveAidCharity.Models.Main
             Id = Guid.NewGuid().ToString();
             CreatedAt = DateTime.Now;
             UpdatedAt = DateTime.Now;
-            Status = StatusEnum.Followed;
+            Status = FollowStatusEnum.Followed;
         }
     }
 
@@ -133,8 +133,8 @@ namespace GiveAidCharity.Models.Main
         [DataType(DataType.DateTime)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime? DeletedAt { get; set; }
-        public StatusEnum Status { get; set; }
-        public enum StatusEnum
+        public CategoryStatusEnum Status { get; set; }
+        public enum CategoryStatusEnum
         {
             Deleted = 0,
             Show = 1
@@ -144,7 +144,7 @@ namespace GiveAidCharity.Models.Main
             Id = Guid.NewGuid().ToString();
             CreatedAt = DateTime.Now;
             UpdatedAt = DateTime.Now;
-            Status = StatusEnum.Show;
+            Status = CategoryStatusEnum.Show;
         }
     }
 }

@@ -41,8 +41,8 @@ namespace GiveAidCharity.Controllers
         {
             var start = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd");
             var startDate = DateTime.ParseExact(start, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            var data = _db.Donations.Where(d => d.CreatedAt >= startDate).Sum(d => d.Amount);
-            data = Math.Round(data, 2);
+            var list = _db.Donations.Where(d => d.CreatedAt >= startDate).ToList();
+            var data = list.Count == 0 ? 0: Math.Round(list.Sum(d => d.Amount), 2);
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
@@ -58,9 +58,13 @@ namespace GiveAidCharity.Controllers
         public ActionResult Banner3Data()
         {
             var data = _db.Donations.ToList();
+            double amount = 0;
+            if (data.Count != 0)
+            {
+                amount = data.Average(d => d.Amount);
+                amount = Math.Round(amount, 2);
+            }
 
-            var amount = data.Average(d => d.Amount);
-            amount = Math.Round(amount, 2);
             return Json(amount, JsonRequestBehavior.AllowGet);
         }
         // GET: Api

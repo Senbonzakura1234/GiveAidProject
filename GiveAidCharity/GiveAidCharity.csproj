@@ -188,13 +188,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202002191713136_updateTable.cs" />
-    <Compile Include="Migrations\202002191713136_updateTable.Designer.cs">
-      <DependentUpon>202002191713136_updateTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202002241328408_updateDonationModel.cs" />
-    <Compile Include="Migrations\202002241328408_updateDonationModel.Designer.cs">
-      <DependentUpon>202002241328408_updateDonationModel.cs</DependentUpon>
+    <Compile Include="Migrations\202002271600379_initialTable.cs" />
+    <Compile Include="Migrations\202002271600379_initialTable.Designer.cs">
+      <DependentUpon>202002271600379_initialTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -805,11 +801,8 @@
     <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202002191713136_updateTable.resx">
-      <DependentUpon>202002191713136_updateTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202002241328408_updateDonationModel.resx">
-      <DependentUpon>202002241328408_updateDonationModel.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202002271600379_initialTable.resx">
+      <DependentUpon>202002271600379_initialTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

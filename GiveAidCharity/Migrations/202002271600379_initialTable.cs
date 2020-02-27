@@ -3,7 +3,7 @@ namespace GiveAidCharity.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class updateTable : DbMigration
+    public partial class initialTable : DbMigration
     {
         public override void Up()
         {
@@ -13,7 +13,8 @@ namespace GiveAidCharity.Migrations
                     {
                         Id = c.String(nullable: false, maxLength: 128),
                         ApplicationUserId = c.String(maxLength: 128),
-                        ProjectId = c.String(maxLength: 128),
+                        CategoryId = c.String(maxLength: 128),
+                        Rss = c.String(),
                         Title = c.String(nullable: false),
                         ContentPart1 = c.String(nullable: false),
                         ContentPart2 = c.String(nullable: false),
@@ -25,9 +26,9 @@ namespace GiveAidCharity.Migrations
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserId)
-                .ForeignKey("dbo.Projects", t => t.ProjectId)
+                .ForeignKey("dbo.Categories", t => t.CategoryId)
                 .Index(t => t.ApplicationUserId)
-                .Index(t => t.ProjectId);
+                .Index(t => t.CategoryId);
             
             CreateTable(
                 "dbo.AspNetUsers",
@@ -98,6 +99,12 @@ namespace GiveAidCharity.Migrations
                         extra_info = c.String(),
                         vnp_ResponseCode = c.String(),
                         vnp_TransactionNo = c.String(),
+                        vnp_BankCode = c.String(),
+                        vnp_BankTranNo = c.String(),
+                        vnp_CardType = c.String(),
+                        vnp_OrderInfo = c.String(),
+                        vnp_PayDate = c.String(),
+                        vnp_TmnCode = c.String(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserId)
@@ -111,6 +118,7 @@ namespace GiveAidCharity.Migrations
                     {
                         Id = c.String(nullable: false, maxLength: 128),
                         ApplicationUserId = c.String(maxLength: 128),
+                        CategoryId = c.String(maxLength: 128),
                         Name = c.String(nullable: false),
                         Description = c.String(),
                         CoverImg = c.String(nullable: false),
@@ -128,7 +136,23 @@ namespace GiveAidCharity.Migrations
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserId)
-                .Index(t => t.ApplicationUserId);
+                .ForeignKey("dbo.Categories", t => t.CategoryId)
+                .Index(t => t.ApplicationUserId)
+                .Index(t => t.CategoryId);
+            
+            CreateTable(
+                "dbo.Categories",
+                c => new
+                    {
+                        Id = c.String(nullable: false, maxLength: 128),
+                        Name = c.String(),
+                        Description = c.String(),
+                        CreatedAt = c.DateTime(nullable: false),
+                        UpdatedAt = c.DateTime(nullable: false),
+                        DeletedAt = c.DateTime(),
+                        Status = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
             
             CreateTable(
                 "dbo.Follows",
@@ -230,7 +254,7 @@ namespace GiveAidCharity.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.Blogs", "ProjectId", "dbo.Projects");
+            DropForeignKey("dbo.Blogs", "CategoryId", "dbo.Categories");
             DropForeignKey("dbo.Blogs", "ApplicationUserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
@@ -240,6 +264,7 @@ namespace GiveAidCharity.Migrations
             DropForeignKey("dbo.ProjectComments", "ApplicationUserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.Follows", "ProjectId", "dbo.Projects");
             DropForeignKey("dbo.Follows", "ApplicationUserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Projects", "CategoryId", "dbo.Categories");
             DropForeignKey("dbo.Projects", "ApplicationUserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.Donations", "ApplicationUserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
@@ -252,12 +277,13 @@ namespace GiveAidCharity.Migrations
             DropIndex("dbo.ProjectComments", new[] { "ApplicationUserId" });
             DropIndex("dbo.Follows", new[] { "ProjectId" });
             DropIndex("dbo.Follows", new[] { "ApplicationUserId" });
+            DropIndex("dbo.Projects", new[] { "CategoryId" });
             DropIndex("dbo.Projects", new[] { "ApplicationUserId" });
             DropIndex("dbo.Donations", new[] { "ProjectId" });
             DropIndex("dbo.Donations", new[] { "ApplicationUserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
-            DropIndex("dbo.Blogs", new[] { "ProjectId" });
+            DropIndex("dbo.Blogs", new[] { "CategoryId" });
             DropIndex("dbo.Blogs", new[] { "ApplicationUserId" });
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.AspNetUserRoles");
@@ -265,6 +291,7 @@ namespace GiveAidCharity.Migrations
             DropTable("dbo.ProjectImages");
             DropTable("dbo.ProjectComments");
             DropTable("dbo.Follows");
+            DropTable("dbo.Categories");
             DropTable("dbo.Projects");
             DropTable("dbo.Donations");
             DropTable("dbo.AspNetUserClaims");
