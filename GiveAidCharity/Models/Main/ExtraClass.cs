@@ -132,7 +132,7 @@ namespace GiveAidCharity.Models.Main
         {
             UpVote = 1,
             Neutral = 0,
-            DownVote = -1,
+            DownVote = -1
         }
 
         [DataType(DataType.DateTime)]

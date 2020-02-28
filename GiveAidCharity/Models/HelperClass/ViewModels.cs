@@ -158,4 +158,42 @@ namespace GiveAidCharity.Models.HelperClass
         [Display(Name = "Payment Method")]
         public Donation.PaymentMethodEnum PaymentMethod { get; set; }
     }
+
+    //Use this to create Blog list view, remember to filter to show blog has Published as status
+    public class BlogListViewModel
+    {
+        public string Id { get; set; }
+        public string UserId { get; set; }
+        public string Username { get; set; }
+        public string Avatar { get; set; } // avatar of user who create this post
+        public string CategoryId { get; set; }
+        public string CategoryName { get; set; }
+        public int Vote { get; set; }
+        //this field showing Vote points of this post
+        public string Title { get; set; }
+        public string Description { get; set; } // This == ContentPart1 of Blog
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime CreatedAt { get; set; }
+    }
+
+    //Use this to create Blog detail view
+    public class BlogDetailViewModel
+    {
+        public string Id { get; set; }
+        public string UserId { get; set; }
+        public string Username { get; set; }
+        public string Avatar { get; set; } // avatar of user who create this post
+        public Category Category { get; set; }
+        public int Vote { get; set; }
+        //this field showing Vote points of this post
+        public string Title { get; set; }
+        public string ContentPart1 { get; set; }
+        public string ContentPart2 { get; set; }
+        public string ContentPart3 { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime CreatedAt { get; set; }
+
+    }
 }

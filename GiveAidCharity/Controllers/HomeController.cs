@@ -48,9 +48,10 @@ namespace GiveAidCharity.Controllers
 
         public async Task<ActionResult> Index()
         {
+            //.Where(d => d.Status == Project.ProjectStatusEnum.Ongoing)
             var homepage = new HomeViewModel();
             var projectsList = await _db.Projects
-                .Where(d => d.Status == Project.ProjectStatusEnum.Ongoing)
+
                 .ToListAsync();
             var causesList = projectsList.Select(t => new CausesListViewModel
             {
@@ -109,10 +110,10 @@ namespace GiveAidCharity.Controllers
             {
                 limit = 9;
             }
-            //.Where(p => p.Status == Project.ProjectStatusEnum.Ongoing)
             var projectsList = await _db.Projects
                 .Where(p => p.Status == Project.ProjectStatusEnum.Ongoing
                             || p.Status == Project.ProjectStatusEnum.Success)
+                .Where(p => p.Status == Project.ProjectStatusEnum.Ongoing)
                 .ToListAsync();
             var causesList = projectsList.Select(t => new CausesListViewModel
                 {
@@ -282,7 +283,7 @@ namespace GiveAidCharity.Controllers
             return View(listDonations);
         }
 
-        //public async Task<ActionResult> Test()
+        //public async Task<ActionResult> Test1()
         //{
         //    var res = await _db.Projects.ToListAsync();
         //    foreach (var item in res)
@@ -295,44 +296,45 @@ namespace GiveAidCharity.Controllers
         //                item.CurrentFund += donate.Amount;
         //            }
         //        }
-
         //        _db.Entry(item).State = EntityState.Modified;
         //        await _db.SaveChangesAsync();
         //    }
-
-        //    return null;
+        //    return RedirectToAction("Test2");
         //}
-        //public async Task<ActionResult> Test()
+        //public async Task<ActionResult> Test2()
         //{
         //    var res = await _db.Users.ToArrayAsync();
         //    foreach (var item in res)
         //    {
         //        item.Avatar =
         //            "https://res.cloudinary.com/bangnguyen/image/upload/v1581844808/ProjectCharity/person_1_kvy425.jpg";
-
         //        _db.Entry(item).State = EntityState.Modified;
         //        await _db.SaveChangesAsync();
         //    }
-
-        //    return null;
+        //    return RedirectToAction("Test3");
         //}
-        //public async Task<ActionResult> Test()
+        //public async Task<ActionResult> Test3()
         //{
         //    var res = await _db.Projects.ToListAsync();
         //    foreach (var item in res)
         //    {
-        //        item.Status = item.CurrentFund >= item.Goal ? 
+        //        item.Status = item.CurrentFund >= item.Goal ?
         //            Project.ProjectStatusEnum.Success : Project.ProjectStatusEnum.Ongoing;
         //        _db.Entry(item).State = EntityState.Modified;
         //        await _db.SaveChangesAsync();
         //    }
-
-        //    return null;
+        //    return RedirectToAction("Test4");
         //}
-        [HttpPost]
-        public ActionResult Donate(double amount, string projectId)
-        {
-            return null;
-        }
+        //public async Task<ActionResult> Test4()
+        //{
+        //    var res = await _db.Blogs.ToListAsync();
+        //    foreach (var item in res)
+        //    {
+        //        item.Status = Blog.BlogStatusEnum.Published;
+        //        _db.Entry(item).State = EntityState.Modified;
+        //        await _db.SaveChangesAsync();
+        //    }
+        //    return RedirectToAction("Index");
+        //}
     }
 }
