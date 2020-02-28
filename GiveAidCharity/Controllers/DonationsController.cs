@@ -18,8 +18,14 @@ namespace GiveAidCharity.Controllers
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
         // GET: Donations
-        public async Task<ActionResult> Index(int? page, int? limit, string start, string end, string nameProject, double? minAmount, double? maxAmount, int? status, int? method, int? sortBy, int? direct, int? advance)
+        public async Task<ActionResult> Index(int? page, int? limit, string start, string end, 
+            string nameProject, double? minAmount, double? maxAmount, int? status, int? method,
+            int? sortBy, int? direct, int? advance, int? view)
         {
+            if (view == null || view > 1 || view < 0)
+            {
+                view = 0;
+            }
             if (advance == null || advance > 1 || advance < 0)
             {
                 advance = 0;
@@ -171,6 +177,7 @@ namespace GiveAidCharity.Controllers
             }
 
             Debug.WriteLine(startDate + " " + endDate);
+            ViewBag.view = view;
             ViewBag.advance = advance;
             ViewBag.Start = start;
             ViewBag.End = end;
@@ -190,7 +197,21 @@ namespace GiveAidCharity.Controllers
 
             listDonation = listDonation.Skip(((page ?? 1) - 1) * (limit ?? 10)).Take((limit ?? 10)).ToList();
 
-            return View(listDonation.ToList());
+            var listDonationView = listDonation.Select(item => new DonationListViewModel
+                {
+                    Status = item.Status,
+                    CreatedAt = item.CreatedAt,
+                    Amount = item.Amount,
+                    ProjectId = item.ProjectId,
+                    UserName = item.ApplicationUser.UserName,
+                    PaymentMethod = item.PaymentMethod,
+                    Avatar = item.ApplicationUser.Avatar,
+                    UserId = item.ApplicationUserId,
+                    Id = item.Id,
+                    ProjectName = item.Project.Name
+                })
+                .ToList();
+            return View(listDonationView);
         }
 
         //// GET: Donations/Details/5

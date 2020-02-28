@@ -37,5 +37,7 @@ namespace GiveAidCharity.Models.HelperClass
         [DataType(DataType.DateTime)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime CreatedAt { get; set; }
+        public Donation.DonationStatusEnum Status { get; set; }
+        public Donation.PaymentMethodEnum PaymentMethod { get; set; }
     }
 }

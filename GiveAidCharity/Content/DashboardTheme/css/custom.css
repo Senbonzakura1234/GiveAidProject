@@ -10,3 +10,6 @@
 .below-stretch-card .card {
     border-radius: 0 0 0.3125rem 0.3125rem;
 }
+.form-control:not(:disabled):not(:focus) {
+    border: 1px solid #9a55ff;
+}

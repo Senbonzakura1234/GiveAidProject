@@ -1,6 +1,7 @@
-@using GiveAidCharity.Models.HelperClass
+﻿@using GiveAidCharity.Models.HelperClass
 @using GiveAidCharity.Models.Main
-@model IEnumerable<GiveAidCharity.Models.Main.Donation>
+@model IEnumerable<GiveAidCharity.Models.HelperClass.DonationListViewModel>
+
 @* ReSharper disable  Html.IdNotResolved *@
 @{
     ViewBag.Title = "Index";
@@ -8,21 +9,22 @@
 
     ViewBag.Title = "List";
 
-    var advance = ((int?) ViewBag.advance).Value;
-    var status = ((int?) ViewBag.status).Value;
-    var method = ((int?) ViewBag.method).Value;
-    var totalPage = ((int?) ViewBag.TotalPage).Value;
-    var currentPage = ((int?) ViewBag.CurrentPage).Value;
-    var limit = ((int?) ViewBag.Limit).Value;
+    var view = ((int?)ViewBag.view).Value;
+    var advance = ((int?)ViewBag.advance).Value;
+    var status = ((int?)ViewBag.status).Value;
+    var method = ((int?)ViewBag.method).Value;
+    var totalPage = ((int?)ViewBag.TotalPage).Value;
+    var currentPage = ((int?)ViewBag.CurrentPage).Value;
+    var limit = ((int?)ViewBag.Limit).Value;
     var start = ViewBag.Start.ToString();
     var end = ViewBag.End.ToString();
     var nameProject = ViewBag.nameProject.ToString();
-    var minAmount = ((double?) ViewBag.minAmount).Value;
-    var maxAmount = ((double?) ViewBag.maxAmount).Value;
+    var minAmount = ((double?)ViewBag.minAmount).Value;
+    var maxAmount = ((double?)ViewBag.maxAmount).Value;
 
-    var sortBy = ((int?) ViewBag.sortBy).Value;
-    var direct = ((int?) ViewBag.direct).Value;
-    var directSet = ((int?) ViewBag.directSet).Value;
+    var sortBy = ((int?)ViewBag.sortBy).Value;
+    var direct = ((int?)ViewBag.direct).Value;
+    var directSet = ((int?)ViewBag.directSet).Value;
 
     var currentPara = "?start=" + ViewBag.Start + "&end=" + ViewBag.End +
                       "&nameProject=" + nameProject + "&minAmount=" + ViewBag.minAmount +
@@ -31,7 +33,7 @@
 
     var startPage = ((currentPage - 1) * limit + 1);
     var endPage = ((currentPage - 1) * limit + Model.Count());
-    var totalItem =   ((int?) ViewBag.TotalItem).Value;
+    var totalItem = ((int?)ViewBag.TotalItem).Value;
 
 }
 
@@ -48,21 +50,22 @@
             <div class="card-body table-responsive">
                 <h4 class="card-title">Date filer</h4>
                 <p class="card-description"> Basic form layout </p>
-                @using (Html.BeginForm("Index", "Donations", FormMethod.Get, new {id = "productForm"}))
+                @using (Html.BeginForm("Index", "Donations", FormMethod.Get, new { id = "productForm" }))
                 {
-                    <input type="hidden" id="startTime" name="start" value="@start"/>
-                    <input type="hidden" id="endTime" name="end" value="@end"/>
+                    <input type="hidden" id="startTime" name="start" value="@start" />
+                    <input type="hidden" id="endTime" name="end" value="@end" />
 
-                    @Html.Hidden("status", status, new {id = "status"})
-                    @Html.Hidden("method", method, new {id = "method"})
-                    @Html.Hidden("sortBy", sortBy, new {id = "sortBy"})
-                    @Html.Hidden("direct", direct, new {id = "direct"})
-                    @Html.Hidden("advance", advance, new {id = "advance"})
+                    @Html.Hidden("status", status, new { id = "status" })
+                    @Html.Hidden("method", method, new { id = "method" })
+                    @Html.Hidden("sortBy", sortBy, new { id = "sortBy" })
+                    @Html.Hidden("direct", direct, new { id = "direct" })
+                    @Html.Hidden("advance", advance, new { id = "advance" })
+                    @Html.Hidden("view", view, new { id = "view" })
                     <div class="form-row">
                         <div class="col-md-12 form-group">
                             <label for="nameProject">Search by project name</label>
                             <input type="text" id="nameProject" name="nameProject" value="@nameProject"
-                                   class="form-control"/>
+                                   class="form-control" />
                         </div>
                     </div>
 
@@ -78,7 +81,7 @@
                         <div class="col-md-6 form-group">
                             <label for="dateFilter">Date range picker</label>
                             <input type="text" id="dateFilter" value=""
-                                   class="form-control"/>
+                                   class="form-control" />
                         </div>
                         <div class="col-md-6 form-group">
                             @Html.Label("", "Amount Range")
@@ -95,18 +98,18 @@
                             @Html.Label("statusSelect", "Status")
                             @Html.DropDownList("statusSelect",
                                 EnumHelper.GetSelectList(typeof(Donation.DonationStatusEnum)),
-                                "-- Status --",
-                                new {@class = "form-control", id = "statusSelect"})
+                                null,
+                                new { @class = "form-control", id = "statusSelect" })
                         </div>
                         <div class="col-md-6 form-group">
                             @Html.Label("methodSelect", "Payment Method")
                             @Html.DropDownList("methodSelect",
                                 EnumHelper.GetSelectList(typeof(Donation.PaymentMethodEnum)),
-                                "-- Payment Method --",
-                                new {@class = "form-control", id = "methodSelect"})
+                                null,
+                                new { @class = "form-control", id = "methodSelect" })
                         </div>
-                        @Html.Hidden("minAmount", minAmount, new {id = "minAmount"})
-                        @Html.Hidden("maxAmount", maxAmount, new {id = "maxAmount"})
+                        @Html.Hidden("minAmount", minAmount, new { id = "minAmount" })
+                        @Html.Hidden("maxAmount", maxAmount, new { id = "maxAmount" })
                     </div>
                 }
 
@@ -119,10 +122,12 @@
             <div class="card-body">
                 <nav class="view-option">
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-list-tab" data-toggle="tab" href="#nav-list" 
-                           role="tab" aria-controls="nav-list" aria-selected="true">List view</a>
-                        <a class="nav-item nav-link" id="nav-chart-tab" data-toggle="tab" href="#nav-chart" 
-                           role="tab" aria-controls="nav-chart" aria-selected="false">Chart view</a>
+                        <a aria-controls="nav-list" aria-selected="@(view == 0? "true": "false")" 
+                           class="nav-item nav-link @(view == 0? "active": "")" 
+                           data-toggle="tab" href="#nav-list" id="nav-list-tab" role="tab">List view</a>
+                        <a aria-controls="nav-chart" aria-selected="@(view == 1? "true": "false")" 
+                           class="nav-item nav-link @(view == 1? "active": "")" 
+                           data-toggle="tab" href="#nav-chart" id="nav-chart-tab" role="tab">Chart view</a>
                     </div>
                 </nav>
             </div>
@@ -131,7 +136,7 @@
 
     <div class="col-12">
         <div class="row tab-content" id="nav-tabContent">
-            <div class="col-md-12 grid-margin stretch-card tab-pane fade show active below-stretch-card"
+            <div class="col-md-12 grid-margin stretch-card tab-pane @(view == 0? "show active": "") fade below-stretch-card"
                  id="nav-list" role="tabpanel" aria-labelledby="nav-list-tab">
                 <div class="card">
                     <div class="card-body table-responsive">
@@ -148,10 +153,10 @@
                                     <th class="text-center">
                                         View
                                     </th>
-                                    <th class="text-center">
+                                    <th>
                                         <a href="#/" class="sortData text-primary" data-direct="@directSet"
-                                            data-sort="@((int) HelperEnum.DonationSortEnum.UserName)">
-                                            @Html.DisplayNameFor(model => model.ApplicationUser.UserName)
+                                           data-sort="@((int) HelperEnum.DonationSortEnum.UserName)">
+                                            @Html.DisplayNameFor(model => model.UserName)
                                             <span style="font-size: 15px" class="mdi
                                                 @(direct == (int) HelperEnum.DonationDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
                                                 @(sortBy == (int) HelperEnum.DonationSortEnum.UserName ? "" : "d-none")">
@@ -160,7 +165,7 @@
                                     </th>
                                     <th class="text-center">
                                         <a href="#/" class="sortData text-primary" data-direct="@directSet"
-                                            data-sort="@((int) HelperEnum.DonationSortEnum.ProjectName)">
+                                           data-sort="@((int) HelperEnum.DonationSortEnum.ProjectName)">
                                             Project
                                             <span style="font-size: 15px" class="mdi
                                                 @(direct == (int) HelperEnum.DonationDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
@@ -170,7 +175,7 @@
                                     </th>
                                     <th class="text-center">
                                         <a href="#/" class="sortData text-primary" data-direct="@directSet"
-                                            data-sort="@((int) HelperEnum.DonationSortEnum.Amount)">
+                                           data-sort="@((int) HelperEnum.DonationSortEnum.Amount)">
                                             @Html.DisplayNameFor(model => model.Amount)
                                             <span style="font-size: 15px" class="mdi
                                                 @(direct == (int) HelperEnum.DonationDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
@@ -180,7 +185,7 @@
                                     </th>
                                     <th class="text-center">
                                         <a href="#/" class="sortData text-primary" data-direct="@directSet"
-                                            data-sort="@((int) HelperEnum.DonationSortEnum.PaymentMethod)">
+                                           data-sort="@((int) HelperEnum.DonationSortEnum.PaymentMethod)">
                                             @Html.DisplayNameFor(model => model.PaymentMethod)
                                             <span style="font-size: 15px" class="mdi
                                                 @(direct == (int) HelperEnum.DonationDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
@@ -190,7 +195,7 @@
                                     </th>
                                     <th class="text-center">
                                         <a href="#/" class="sortData text-primary" data-direct="@directSet"
-                                            data-sort="@((int) HelperEnum.DonationSortEnum.Status)">
+                                           data-sort="@((int) HelperEnum.DonationSortEnum.Status)">
                                             @Html.DisplayNameFor(model => model.Status)
                                             <span style="font-size: 15px" class="mdi
                                                 @(direct == (int) HelperEnum.DonationDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
@@ -200,7 +205,7 @@
                                     </th>
                                     <th class="text-center">
                                         <a href="#/" class="sortData text-primary" data-direct="@directSet"
-                                            data-sort="@((int) HelperEnum.DonationSortEnum.CreatedAt)">
+                                           data-sort="@((int) HelperEnum.DonationSortEnum.CreatedAt)">
                                             @Html.DisplayNameFor(model => model.CreatedAt)
                                             <span style="font-size: 15px" class="mdi
                                                 @(direct == (int) HelperEnum.DonationDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
@@ -223,13 +228,14 @@
                                             </a>
                                         </td>
                                         <td>
-                                            <a href="#" class="badge w-100 badge-gradient-primary w-100">
-                                                @item.ApplicationUser.UserName                                                  
+                                            <a href="#">
+                                                <img src="@item.Avatar" class="mr-2" alt="image">
+                                                @item.UserName
                                             </a>
                                         </td>
                                         <td>
                                             <a href="#" class="badge w-100 badge-gradient-primary w-100">
-                                                @item.Project.Name
+                                                @item.ProjectName
                                             </a>
                                         </td>
                                         <td class="text-center">
@@ -361,8 +367,8 @@
                 </div>
             </div>
 
-            <div class="col-md-12 tab-pane fade grid-margin stretch-card below-stretch-card" 
-                    id="nav-chart" role="tabpanel" aria-labelledby="nav-chart-tab">
+            <div class="col-md-12 tab-pane fade @(view == 1? "show active": "") grid-margin stretch-card below-stretch-card"
+                 id="nav-chart" role="tabpanel" aria-labelledby="nav-chart-tab">
                 <div class="card">
                     <div class="card-body row">
                         <div class="col-xl-9">
@@ -389,366 +395,5 @@
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            const advance = $("#advance").val();
-            // ReSharper disable  CoercedEqualsUsing
-            if (advance == 1) {
-                $("#searchCollapseAdvance").addClass("show");
-            } else if (advance == 0) {
-                $("#searchCollapseAdvance").removeClass("show");
-            }
-            $("#searchCollapseTrigger").click(function() {
-                if ($("#advance").val() == 0) {
-                    $("#advance").val(1);
-                } else if ($("#advance").val() == 1) {
-                    $("#advance").val(0);
-                }
-            });
-
-            const dataStatus = $("#status").val();
-            const methodStatus = $("#method").val();
-            $("#statusSelect").val(dataStatus);
-            $("#methodSelect").val(methodStatus);
-
-            $("#statusSelect").on('change',
-                function() {
-                    const data = $(this).val();
-                    $("#status").val(data);
-                    console.log($("#status").val());
-                });
-            $("#methodSelect").on('change',
-                function() {
-                    const data = $(this).val();
-                    $("#method").val(data);
-                    console.log($("#method").val());
-                });
-
-            $(".sortData").click(function() {
-                const sortByData = $(this).data("sort");
-                $('input[name="sortBy"]').val(sortByData);
-                const directData = $(this).data("direct");
-                $('input[name="direct"]').val(directData);
-                console.log(directData);
-                $("#productForm").submit();
-            });
-
-            const minAmount = $("#minAmount").val();
-            const maxAmount = $("#maxAmount").val();
-            $("#slider-range").slider({
-                range: true,
-                min: 0,
-                max: 100,
-                values: [minAmount, maxAmount],
-                slide: function(event, ui) {
-                    $("#amount").html(`$${ui.values[0]} - $${ui.values[1]}`);
-                    $("#minAmount").val(ui.values[0]);
-                    $("#maxAmount").val(ui.values[1]);
-                }
-            });
-            $("#amount")
-                .html(`$${$("#slider-range").slider("values", 0)} - $${$("#slider-range").slider("values", 1)}`);
-
-            $("#nameProject").autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "/Api/AjaxFindByProjectName",
-                        type: "POST",
-                        dataType: "json",
-                        data: { nameProject: request.term },
-                        success: function(data) {
-                            console.log(request);
-                            console.log(response);
-                            console.log(data);
-                            response($.map(data,
-                                function(item) {
-                                    return { label: item, value: item };
-                                }));
-                        }
-                    });
-                }
-            });
-        });
-
-        $(function() {
-            // init start time and end time;
-            var startDate = new Date();
-            startDate.setFullYear(startDate.getFullYear() - 1);
-            var endDate = new Date();
-
-            // check start and end parameter
-            const startPara = $("#startTime").val();
-            if (startPara != null && startPara !== "") {
-                startDate = new Date(startPara);
-            }
-
-            const endPara = $("#endTime").val();
-            if (endPara != null && endPara !== "") {
-                endDate = new Date(endPara);
-            }
-
-            $("#dateFilter").daterangepicker({
-                autoUpdateInput: true,
-                startDate: startDate,
-                endDate: endDate,
-                locale: {
-                    cancelLabel: 'Clear'
-                }
-            });
-
-            $("#dateFilter").on('apply.daterangepicker',
-                function(ev, picker) {
-                    const start = picker.startDate.format('YYYY-MM-DD');
-                    const end = picker.endDate.format('YYYY-MM-DD');
-                    $("#startTime").val(start);
-                    $("#endTime").val(end);
-                    console.log(start + " " + end);
-                    console.log(startPara + " " + endPara);
-                    loadDonationChart();
-                });
-
-
-            var datetimeChart = [];
-            var amount = [];
-            var paypal = [];
-            var vnPay = [];
-            var directBank = [];
-            var namePaymentMethod = [];
-            var valuePaymentMethod = [];
-            var totalPaymentMethod = 0;
-
-            function loadDonationChart() {
-                if ($("#curve_chart").length) {
-                    datetimeChart = [];
-                    paypal = [];
-                    amount = [];
-                    $.ajax({
-                        url: "/Api/GetDonations",
-                        data: {
-                            fromDate: $("#startTime").val(),
-                            toDate: $("#endTime").val()
-                        },
-                        success: function(res) {
-                            console.log(res);
-
-                            for (let k = 0; k < res.paypalPerMonth.length; k++) {
-                                paypal.push(res.paypalPerMonth[k].Amount);
-                               
-                            }
-
-                            for (let k = 0; k < res.directBankPerMonth.length; k++) {
-                                directBank.push(res.directBankPerMonth[k].Amount);
-                            }
-
-                            for (let k = 0; k < res.vnPayPerMonth.length; k++) {
-                                vnPay.push(res.vnPayPerMonth[k].Amount);
-                            }
-
-                            for (let k = 0; k < res.amountPerMonth.length; k++) {
-                                amount.push(res.amountPerMonth[k].Amount);
-                                const dateChart = res.amountPerMonth[k].Month + "/" + res.amountPerMonth[k].Year;
-
-                                datetimeChart.push(dateChart);
-                            }
-
-                            
-
-                            drawChart();
-                        }
-                    });
-                }
-            }
-
-             if ($("#traffic-chart").length) {
-                $.ajax({
-                    url: "/Api/GetPaymentMethod",
-                    success: function(res) {
-                        for (let i = 0; i < res.paymentMethod.length; i++) {
-
-                            if (res.paymentMethod[i].PaymentMethod === 0) {
-                                namePaymentMethod.push("Paypal");
-                            } else if (res.paymentMethod[i].PaymentMethod === 1) {
-                                namePaymentMethod.push("VnPay");
-                            } else if (res.paymentMethod[i].PaymentMethod === 2) {
-                                namePaymentMethod.push("DirectBankTransfer");
-                            } else {
-                                namePaymentMethod.push(res.paymentMethod[i].PaymentMethod);
-                            }
-
-                            valuePaymentMethod.push(res.paymentMethod[i].Quantity);
-                            totalPaymentMethod += res.paymentMethod[i].Quantity;
-                        }
-                        const ctxColor = document.getElementById("traffic-chart").getContext("2d");
-                        const colorGradientStrokeBlue = ctxColor.createLinearGradient(0, 0, 0, 181);
-                        colorGradientStrokeBlue.addColorStop(0, "rgba(54, 215, 232, 1)");
-                        colorGradientStrokeBlue.addColorStop(1, "rgba(177, 148, 250, 1)");
-                        const colorGradientLegendBlue =
-                            "linear-gradient(to right, rgba(54, 215, 232, 1), rgba(177, 148, 250, 1))";
-
-                        const colorGradientStrokeRed = ctxColor.createLinearGradient(0, 0, 0, 50);
-                        colorGradientStrokeRed.addColorStop(0, "rgba(255, 191, 150, 1)");
-                        colorGradientStrokeRed.addColorStop(1, "rgba(254, 112, 150, 1)");
-                        const colorGradientLegendRed =
-                            "linear-gradient(to right, rgba(255, 191, 150, 1), rgba(254, 112, 150, 1))";
-
-                        const colorGradientStrokeGreen = ctxColor.createLinearGradient(0, 0, 0, 300);
-                        colorGradientStrokeGreen.addColorStop(0, "rgba(6, 185, 157, 1)");
-                        colorGradientStrokeGreen.addColorStop(1, "rgba(132, 217, 210, 1)");
-                        const colorGradientLegendGreen =
-                            "linear-gradient(to right, rgba(6, 185, 157, 1), rgba(132, 217, 210, 1))";
-
-                        var trafficChartData = {
-                            datasets: [
-                                {
-                                    data: valuePaymentMethod,
-                                    backgroundColor: [
-                                        colorGradientStrokeBlue,
-                                        colorGradientStrokeGreen,
-                                        colorGradientStrokeRed
-                                    ],
-                                    hoverBackgroundColor: [
-                                        colorGradientStrokeBlue,
-                                        colorGradientStrokeGreen,
-                                        colorGradientStrokeRed
-                                    ],
-                                    borderColor: [
-                                        colorGradientStrokeBlue,
-                                        colorGradientStrokeGreen,
-                                        colorGradientStrokeRed
-                                    ],
-                                    legendColor: [
-                                        colorGradientLegendBlue,
-                                        colorGradientLegendGreen,
-                                        colorGradientLegendRed
-                                    ]
-                                }
-                            ],
-
-                            // These labels appear in the legend and in the tooltips when hovering different arcs
-                            labels: namePaymentMethod
-                        };
-                        const trafficChartOptions = {
-                            responsive: true,
-                            animation: {
-                                animateScale: true,
-                                animateRotate: true
-                            },
-                            legend: false,
-                            // ReSharper disable once UnusedParameter
-                            legendCallback: function(chart) {
-                                const text = [];
-                                text.push("<ul>");
-                                for (let i = 0; i < trafficChartData.datasets[0].data.length; i++) {
-                                    console.log();
-                                    text.push(
-                                        `<li><span class="legend-dots" style="background:${trafficChartData.datasets[0]
-                                        .legendColor[i]}"></span>`);
-                                    if (trafficChartData.labels[i]) {
-                                        text.push(trafficChartData.labels[i]);
-                                    }
-                                    text.push(`<span class="float-right">
-                                        ${new Number(trafficChartData.datasets[0].data[i] / totalPaymentMethod * 100)
-                                        .toPrecision(3)}
-                                    %</span>`);
-                                    text.push("</li>");
-                                }
-                                text.push("</ul>");
-                                return text.join("");
-                            }
-                        };
-                        const trafficChartCanvas = $("#traffic-chart").get(0).getContext("2d");
-                        const trafficChart = new window.Chart(trafficChartCanvas,
-                            {
-                                type: "doughnut",
-                                data: trafficChartData,
-                                options: trafficChartOptions
-                            });
-                        $("#traffic-chart-legend").html(trafficChart.generateLegend());
-                    }
-                });
-                
-            }
-
-            function drawChart() {
-                window.Highcharts.chart("curve_chart",
-                {
-                    title: {
-                        text: "List Donation"
-                    },
-
-                    yAxis: {
-                        title: {
-                            text: ""
-                        }
-                    },
-
-                    xAxis: [
-                        {
-                            categories: datetimeChart,
-                            labels: {
-                                formatter: function() {
-                                    return `<span style="color:blue;">${this.value}</span>`;
-                                },
-                                step: 2
-                            }
-                        }
-                    ],
-
-                    legend: {
-                        layout: "vertical",
-                        align: "right",
-                        verticalAlign: "middle"
-                    },
-
-                    plotOptions: {
-                        series: {
-                            label: {
-                                connectorAllowed: false
-                            }
-                        }
-                    },
-
-                    series: [
-                        {
-                            name: "Online Banking",
-                            data: directBank
-                        },
-                        {
-                            name: "VNpay",
-                            data: vnPay
-                        },
-                        {
-                            name: "Paypal",
-                            data: paypal
-                        }, {
-                            name: "Total",
-                            data: amount
-                        }
-                    ],
-
-                    responsive: {
-                        rules: [
-                            {
-                                condition: {
-                                    maxWidth: 500
-                                },
-                                chartOptions: {
-                                    legend: {
-                                        layout: "horizontal",
-                                        align: "center",
-                                        verticalAlign: "bottom"
-                                    }
-                                }
-                            }
-                        ]
-                    }
-                });
-            }
-
-
-            loadDonationChart();
-        });
-
-
-    </script>
+    @Scripts.Render("~/Content/DashboardTheme/js/PageJs/donations-list.js")
 }
