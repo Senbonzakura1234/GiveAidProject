@@ -1,95 +1,453 @@
-﻿@model IEnumerable<GiveAidCharity.Models.HelperClass.ProjectListViewModel>
+﻿@using GiveAidCharity.Models.HelperClass
+@using GiveAidCharity.Models.Main
+@model IEnumerable<GiveAidCharity.Models.HelperClass.ProjectListViewModel>
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+
+
+    var view = ((int?)ViewBag.view).Value;
+    var advance = ((int?)ViewBag.advance).Value;
+
+    var totalPage = ((int?)ViewBag.TotalPage).Value;
+    var currentPage = ((int?)ViewBag.CurrentPage).Value;
+    var limit = ((int?)ViewBag.Limit).Value;
+    var start = ViewBag.Start.ToString();
+    var end = ViewBag.End.ToString();
+
+    var status = ((int?)ViewBag.status).Value;
+    var nameProject = ViewBag.nameProject.ToString();
+    //var minAmount = ((double?)ViewBag.minAmount).Value;
+    //var maxAmount = ((double?)ViewBag.maxAmount).Value;
+
+    var sortBy = ((int?)ViewBag.sortBy).Value;
+    var direct = ((int?)ViewBag.direct).Value;
+    var directSet = ((int?)ViewBag.directSet).Value;
+
+    var currentPara = "?start=" + ViewBag.Start + "&end=" + ViewBag.End +
+                      "&nameProject=" + nameProject + "&status=" + status +
+                      "&sortBy=" + sortBy + "&direct=" + direct +
+                      "&advance=" + advance + "&view=" + view;
+
+    var startPage = ((currentPage - 1) * limit + 1);
+    var endPage = ((currentPage - 1) * limit + Model.Count());
+    var totalItem = ((int?)ViewBag.TotalItem).Value;
+}
+@section styles
+{
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    @Styles.Render("~/Content/DashboardTheme/css/paginate.css")
+    @Styles.Render("~/Content/DashboardTheme/css/slider-range.css")
 }
 
-<div class="col-md-12 grid-margin stretch-card">
-    <div class="card">
-        <div class="card-body table-responsive">
-            <canvas id="project_chart"></canvas>
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body table-responsive">
+                <h4 class="card-title">Date filer</h4>
+                <p class="card-description"> Basic form layout </p>
+                @using (Html.BeginForm("Index", "Project", FormMethod.Get, new { id = "productForm" }))
+                {
+                    <input type="hidden" id="startTime" name="start" value="@start" />
+                    <input type="hidden" id="endTime" name="end" value="@end" />
+
+                    @Html.Hidden("status", status, new { id = "status" })
+                    @Html.Hidden("sortBy", sortBy, new { id = "sortBy" })
+                    @Html.Hidden("direct", direct, new { id = "direct" })
+                    @Html.Hidden("advance", advance, new { id = "advance" })
+                    @Html.Hidden("view", view, new { id = "view" })
+                    <div class="form-row">
+                        <div class="col-md-12 form-group">
+                            <label for="nameProject">Search by project name</label>
+                            <input type="text" id="nameProject" name="nameProject" value="@nameProject"
+                                   class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-row mb-4">
+                        <a class="btn btn-gradient-primary" data-toggle="collapse" href="#searchCollapseAdvance" role="button" aria-expanded="false"
+                           aria-controls="multiCollapseExample1" id="searchCollapseTrigger">
+                            Advanced Search
+                        </a>
+                        <a href="@Url.Action("Index", "Donations")" class="btn btn-light ml-auto">Clear Filter</a>
+                        <button type="submit" class="btn btn-gradient-primary ml-2">Submit</button>
+                    </div>
+                    <div class="form-row collapse show" id="searchCollapseAdvance">
+                        <div class="col-md-6 form-group">
+                            <label for="dateFilter">Date range picker</label>
+                            <input type="text" id="dateFilter" value=""
+                                   class="form-control" />
+                        </div>
+                        <div class="col-md-6 form-group">
+                            @Html.Label("", "Amount Range")
+                            <div class="px-3 mt-3">
+                                <div id="slider-range">
+
+                                </div>
+                            </div>
+                            <div class="px-3 mt-1">
+                                <div id="amount" class="text-primary"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            @Html.Label("statusSelect", "Status")
+                            @Html.DropDownList("statusSelect",
+                                EnumHelper.GetSelectList(typeof(Project.ProjectStatusEnum)),
+                                null,
+                                new { @class = "form-control", id = "statusSelect" })
+                        </div>
+                        <div class="col-md-6 form-group">
+
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 grid-margin stretch-card upper-stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <nav class="view-option">
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a aria-controls="nav-list" aria-selected="@(view == 0? "true": "false")"
+                           class="nav-item nav-link @(view == 0? "active": "")"
+                           data-toggle="tab" href="#nav-list" id="nav-list-tab" role="tab">List view</a>
+                        <a aria-controls="nav-chart" aria-selected="@(view == 1? "true": "false")"
+                           class="nav-item nav-link @(view == 1? "active": "")"
+                           data-toggle="tab" href="#nav-chart" id="nav-chart-tab" role="tab">Chart view</a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-12">
+        <div class="row tab-content" id="nav-tabContent">
+            <div class="col-12 grid-margin stretch-card tab-pane @(view == 0? "show active": "") fade below-stretch-card"
+                 id="nav-list" role="tabpanel" aria-labelledby="nav-list-tab">
+                <div class="card">
+                    <div class="card-body table-responsive">
+                        <h4 class="card-title">List Project</h4>
+                        <p class="card-description d-sm-flex">
+                            <span class="text-muted text-small my-auto">
+                                Showing from @(startPage) to @(endPage)
+                                of @(totalItem) results
+                            </span>
+                        </p>
+                        <table class="table">
+                            <thead class="text-primary">
+                                <tr>
+                                    <th>
+                                        <a href="#/" class="sortData text-primary" data-direct="@directSet"
+                                           data-sort="@((int) HelperEnum.ProjectSortEnum.ProjectName)">
+                                            @Html.DisplayNameFor(model => model.Name)
+                                            <span style="font-size: 15px" class="mdi
+                                                @(direct == (int) HelperEnum.ProjectDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
+                                                @(sortBy == (int) HelperEnum.ProjectSortEnum.ProjectName ? "" : "d-none")">
+                                            </span>
+                                        </a>
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.CoverImg)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Goal)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.CurrentFund)
+                                    </th>
+                                    <th>
+                                        <a href="#/" class="sortData text-primary" data-direct="@directSet"
+                                           data-sort="@((int) HelperEnum.ProjectSortEnum.StartDate)">
+                                            @Html.DisplayNameFor(model => model.StartDate)
+                                            <span style="font-size: 15px" class="mdi
+                                                @(direct == (int) HelperEnum.ProjectDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
+                                                @(sortBy == (int) HelperEnum.ProjectSortEnum.StartDate ? "" : "d-none")">
+                                            </span>
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="#/" class="sortData text-primary" data-direct="@directSet"
+                                           data-sort="@((int) HelperEnum.ProjectSortEnum.ExpireDate)">
+                                            @Html.DisplayNameFor(model => model.ExpireDate)
+                                            <span style="font-size: 15px" class="mdi
+                                                @(direct == (int) HelperEnum.ProjectDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
+                                                @(sortBy == (int) HelperEnum.ProjectSortEnum.ExpireDate ? "" : "d-none")">
+                                            </span>
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="#/" class="sortData text-primary" data-direct="@directSet"
+                                           data-sort="@((int) HelperEnum.ProjectSortEnum.Status)">
+                                            @Html.DisplayNameFor(model => model.Status)
+                                            <span style="font-size: 15px" class="mdi
+                                                @(direct == (int) HelperEnum.ProjectDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
+                                                @(sortBy == (int) HelperEnum.ProjectSortEnum.Status ? "" : "d-none")">
+                                            </span>
+                                        </a>
+                                    </th>
+                                    <th class="text-center d-none d-lg-table-cell">
+                                        Modify
+                                    </th>
+                                </tr>
+
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a href="#" class="badge w-100 badge-gradient-primary w-100">
+                                                @Html.DisplayFor(modelItem => item.Name)
+                                            </a>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="#">
+                                                <img src="@item.CoverImg" alt="" />
+                                            </a>
+                                        </td>
+                                        <td class="text-center">
+                                            @Html.DisplayFor(modelItem => item.Goal)
+                                        </td>
+                                        <td class="text-center">
+                                            @Html.DisplayFor(modelItem => item.CurrentFund)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.StartDate)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ExpireDate)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Status)
+                                        </td>
+                                        <td class="text-center d-none d-lg-table-cell">
+                                            <a class="badge badge-warning" href="#">
+                                                <span class="mdi mdi-pencil-box-outline"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        @if (totalPage > 0)
+                        {
+                            <div>
+                                <ul class="pagination text-center">
+                                    <li class="page-item ml-auto" style="opacity: 0"></li>
+
+                                    @if (currentPage > 3)
+                                    {
+                                        <li class="page-item">
+                                            <a class="page-link" href="@currentPara&page=@(1)&limit=@(limit)">
+                                                <i class="mdi mdi-chevron-double-left"></i>
+                                            </a>
+                                        </li>
+                                    }
+
+                                    @if (currentPage > 1)
+                                    {
+                                        <li class="page-item">
+                                            <a class="page-link" href="@currentPara&page=@(currentPage - 1)&limit=@(limit)">
+                                                <i class="mdi mdi-chevron-left"></i>
+                                            </a>
+                                        </li>
+                                    }
+
+                                    @if (currentPage > 2)
+                                    {
+                                        <li class="page-item">
+                                            <a class="page-link" href="@currentPara&page=@(currentPage - 2)&limit=@(limit)">
+                                                @(currentPage - 2)
+                                            </a>
+                                        </li>
+                                    }
+
+                                    @if (currentPage > 1)
+                                    {
+                                        <li class="page-item">
+                                            <a class="page-link" href="@currentPara&page=@(currentPage - 1)&limit=@(limit)">
+                                                @(currentPage - 1)
+                                            </a>
+                                        </li>
+                                    }
+
+                                    <li class="active page-item" aria-current="page">
+                                        <a class="page-link" href="@currentPara&page=@(currentPage)&limit=@(limit)">
+                                            @currentPage
+                                        </a>
+                                    </li>
+
+                                    @if (totalPage - currentPage > 0)
+                                    {
+                                        <li class="page-item">
+                                            <a class="page-link" href="@currentPara&page=@(currentPage + 1)&limit=@(limit)">
+                                                @(currentPage + 1)
+                                            </a>
+                                        </li>
+                                    }
+
+                                    @if (totalPage - currentPage > 1)
+                                    {
+                                        <li class="page-item">
+                                            <a class="page-link" href="@currentPara&page=@(currentPage + 2)&limit=@(limit)">
+                                                @(currentPage + 2)
+                                            </a>
+                                        </li>
+                                    }
+
+                                    @if (currentPage < totalPage)
+                                    {
+                                        <li class="page-item">
+                                            <a class="page-link" href="@currentPara&page=@(currentPage + 1)&limit=@(limit)">
+                                                <i class="mdi mdi-chevron-right"></i>
+                                            </a>
+                                        </li>
+                                    }
+
+                                    @if (currentPage < totalPage - 2)
+                                    {
+                                        <li class="page-item">
+                                            <a class="page-link" href="@currentPara&page=@(totalPage)&limit=@(limit)">
+                                                <i class="mdi mdi-chevron-double-right"></i>
+                                            </a>
+                                        </li>
+                                    }
+
+                                    <li class="page-item mr-auto" style="opacity: 0"></li>
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 grid-margin stretch-card tab-pane fade @(view == 1? "show active": "") below-stretch-card"
+                 id="nav-chart" role="tabpanel" aria-labelledby="nav-chart-tab">
+                <div class="card">
+                    <div class="card-body table-responsive">
+                        <canvas id="project_chart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-<div class="col-12 grid-margin stretch-card">
-    <div class="card">
-        <div class="card-body table-responsive">
-            <h4 class="card-title">List Project</h4>
-            <table class="table">
-                <thead class="text-primary">
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Name)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.CoverImg)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Goal)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.CurrentFund)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.StartDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ExpireDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Status)
-                        </th>
-                        <th class="text-center d-none d-lg-table-cell">
-                            Modify
-                        </th>
-                    </tr>
-
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                <a href="#" class="badge w-100 badge-gradient-primary w-100">
-                                    @Html.DisplayFor(modelItem => item.Name)
-                                </a>
-                            </td>
-                            <td class="text-center">
-                                <a href="#">
-                                    <img src="@item.CoverImg" />
-                                </a>
-                            </td>
-                            <td class="text-center">
-                                @Html.DisplayFor(modelItem => item.Goal)
-                            </td>
-                            <td class="text-center">
-                                @Html.DisplayFor(modelItem => item.CurrentFund)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.StartDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ExpireDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Status)
-                            </td>
-                            <td class="text-center d-none d-lg-table-cell">
-                                <a class="badge badge-warning" href="#">
-                                    <span class="mdi mdi-pencil-box-outline"></span>
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                </thead>
-            </table>
-        </div>
-    </div>
-</div>
-
 @section scripts
 {
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript">
+        $(function() {
+            const advance = $("#advance").val();
+            // ReSharper disable  CoercedEqualsUsing
+            if (advance == 1) {
+                $("#searchCollapseAdvance").addClass("show");
+            } else if (advance == 0) {
+                $("#searchCollapseAdvance").removeClass("show");
+            }
+
+
+
+
+            $("#nav-list-tab").click(function () {
+                $("#view").val(0);
+            });
+
+            $("#nav-chart-tab").click(function () {
+                $("#view").val(1);
+            });
+
+            $("#searchCollapseTrigger").click(function () {
+                if ($("#advance").val() == 0) {
+                    $("#advance").val(1);
+                } else if ($("#advance").val() == 1) {
+                    $("#advance").val(0);
+                }
+            });
+
+            const dataStatus = $("#status").val();
+            $("#statusSelect").val(dataStatus);
+
+            $("#statusSelect").on("change",
+                function () {
+                    const data = $(this).val();
+                    $("#status").val(data);
+                    console.log($("#status").val());
+                });
+            $(".sortData").click(function () {
+                const sortByData = $(this).data("sort");
+                $('input[name="sortBy"]').val(sortByData);
+                const directData = $(this).data("direct");
+                $('input[name="direct"]').val(directData);
+                console.log(directData);
+                $("#productForm").submit();
+            });
+            $("#nameProject").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Api/AjaxFindByProjectName",
+                        type: "POST",
+                        dataType: "json",
+                        data: { nameProject: request.term },
+                        success: function (data) {
+                            console.log(request);
+                            console.log(response);
+                            console.log(data);
+                            response($.map(data,
+                                function (item) {
+                                    return { label: item, value: item };
+                                }));
+                        }
+                    });
+                }
+            });
+        });
+
+        $(function () {
+            // init start time and end time;
+            var startDate = new Date();
+            startDate.setFullYear(startDate.getFullYear() - 1);
+            var endDate = new Date();
+
+            // check start and end parameter
+            const startPara = $("#startTime").val();
+            if (startPara != null && startPara !== "") {
+                startDate = new Date(startPara);
+            }
+
+            const endPara = $("#endTime").val();
+            if (endPara != null && endPara !== "") {
+                endDate = new Date(endPara);
+            }
+
+            $("#dateFilter").daterangepicker({
+                autoUpdateInput: true,
+                startDate: startDate,
+                endDate: endDate,
+                locale: {
+                    cancelLabel: "Clear"
+                }
+            });
+
+            $("#dateFilter").on("apply.daterangepicker",
+                function (ev, picker) {
+                    const start = picker.startDate.format("YYYY-MM-DD");
+                    const end = picker.endDate.format("YYYY-MM-DD");
+                    $("#startTime").val(start);
+                    $("#endTime").val(end);
+                    console.log(start + " " + end);
+                    console.log(startPara + " " + endPara);
+                });
+
+
+
+        });
+
+
+
         $(function () {
             if ($("#project_chart").length) {
                 var projectName = [];
@@ -106,7 +464,7 @@
                             }
                         }
                         console.log(projectName);
-                        var projectData = {
+                        const projectData = {
                             labels: projectName,
                             datasets: [{
                                 data: currentFund,
@@ -140,9 +498,9 @@
                                 ],
                                 borderWidth: 1,
                                 fill: false
-                            }],
+                            }]
                         };
-                        var projectOptions = {
+                        const projectOptions = {
                             scales: {
                                 yAxes: [{
                                     ticks: {
@@ -159,9 +517,10 @@
                                 }
                             }
                         };
-                        var projectChartCanvas = $("#project_chart").get(0).getContext("2d");
+                        const projectChartCanvas = $("#project_chart").get(0).getContext("2d");
                         // This will get the first returned node in the jQuery collection.
-                        var projectChart = new Chart(projectChartCanvas, {
+                        // ReSharper disable once UnusedLocals
+                        const projectChart = new window.Chart(projectChartCanvas, {
                             type: 'bar',
                             data: projectData,
                             options: projectOptions

@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -6,6 +10,7 @@ using System.Web.Mvc;
 using GiveAidCharity.Models;
 using GiveAidCharity.Models.HelperClass;
 using GiveAidCharity.Models.Main;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -44,13 +49,153 @@ namespace GiveAidCharity.Controllers
             private set => _roleManager = value;
         }
         // GET: Project
-        public ActionResult Index()
+        public async Task<ActionResult> Index(int? page, int? limit, string start, string end,
+            string nameProject, int? status, int? sortBy, int? direct, int? advance, int? view)
         {
-            var projects = _db.Projects.ToList();
-            var projectList = new List<ProjectListViewModel>();
-            foreach(var item in projects)
+            if (view == null || view > 1 || view < 0)
             {
-                projectList.Add(new ProjectListViewModel { 
+                view = 0;
+            }
+            if (advance == null || advance > 1 || advance < 0)
+            {
+                advance = 0;
+            }
+            if (nameProject.IsNullOrWhiteSpace())
+            {
+                nameProject = "";
+            }
+
+            Debug.WriteLine(start + " " + end);
+            if (string.IsNullOrWhiteSpace(start) && !HelperMethod.CheckValidDate(start))
+            {
+                start = DateTime.Now.AddYears(-1).ToString("yyyy-MM-dd");
+            }
+            var startDate = DateTime.ParseExact(start, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            if (string.IsNullOrWhiteSpace(end) && !HelperMethod.CheckValidDate(end))
+            {
+                end = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            var endDate = DateTime.ParseExact(end, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+
+            var projects = await _db.Projects.Where(d => d.CreatedAt >= startDate && d.CreatedAt <= endDate &&
+                                                         d.Name.Contains(nameProject)).ToListAsync();
+
+            if (status != null && Enum.IsDefined(typeof(Project.ProjectStatusEnum), status))
+            {
+                projects = projects.Where(d => d.Status == (Project.ProjectStatusEnum)status).ToList();
+            }
+            else
+            {
+                status = 20;
+            }
+
+
+            if (sortBy == null || !Enum.IsDefined(typeof(HelperEnum.ProjectSortEnum), sortBy))
+            {
+                Debug.WriteLine(sortBy);
+                sortBy = 0;
+            }
+
+            if (direct == null || !Enum.IsDefined(typeof(HelperEnum.ProjectDirectEnum), direct))
+            {
+                Debug.WriteLine(direct);
+                direct = 0;
+            }
+
+            var listProduct = new List<Project>();
+
+            switch (sortBy)
+            {
+                case (int)HelperEnum.ProjectSortEnum.StartDate when direct is (int)HelperEnum.ProjectDirectEnum.Asc:
+                    {
+                        var dataList = projects.OrderBy(p => p.StartDate).ToList();
+                        listProduct.AddRange(dataList);
+                        break;
+                    }
+                case (int)HelperEnum.ProjectSortEnum.StartDate:
+                    {
+                        var dataList = projects.OrderByDescending(p => p.StartDate).ToList();
+                        listProduct.AddRange(dataList);
+                        break;
+                    }
+                case (int)HelperEnum.ProjectSortEnum.ExpireDate when direct is (int)HelperEnum.ProjectDirectEnum.Asc:
+                    {
+                        var dataList = projects.OrderBy(p => p.ExpireDate).ToList();
+                        listProduct.AddRange(dataList);
+                        break;
+                    }
+                case (int)HelperEnum.ProjectSortEnum.ExpireDate:
+                    {
+                        var dataList = projects.OrderByDescending(p => p.ExpireDate).ToList();
+                        listProduct.AddRange(dataList);
+                        break;
+                    }
+                case (int)HelperEnum.ProjectSortEnum.ProjectName when direct is (int)HelperEnum.ProjectDirectEnum.Asc:
+                    {
+                        var dataList = projects.OrderBy(p => p.Name).ToList();
+                        listProduct.AddRange(dataList);
+                        break;
+                    }
+                case (int)HelperEnum.ProjectSortEnum.ProjectName:
+                    {
+                        var dataList = projects.OrderByDescending(p => p.Name).ToList();
+                        listProduct.AddRange(dataList);
+                        break;
+                    }
+                case (int)HelperEnum.ProjectSortEnum.ProcessPercent when direct is (int)HelperEnum.ProjectDirectEnum.Asc:
+                    {
+                        var dataList = projects.OrderBy(p => p.CurrentFund).ToList();
+                        listProduct.AddRange(dataList);
+                        break;
+                    }
+                case (int)HelperEnum.ProjectSortEnum.ProcessPercent:
+                    {
+                        var dataList = projects.OrderByDescending(p => p.CurrentFund).ToList();
+                        listProduct.AddRange(dataList);
+                        break;
+                    }
+                case (int)HelperEnum.ProjectSortEnum.Status when direct is (int)HelperEnum.ProjectDirectEnum.Asc:
+                    {
+                        var dataList = projects.OrderBy(p => p.Status).ToList();
+                        listProduct.AddRange(dataList);
+                        break;
+                    }
+                case (int)HelperEnum.ProjectSortEnum.Status:
+                    {
+                        var dataList = projects.OrderByDescending(p => p.Status).ToList();
+                        listProduct.AddRange(dataList);
+                        break;
+                    }
+                default:
+                    {
+                        var dataList = projects.OrderBy(p => p.CreatedAt).ToList();
+                        listProduct.AddRange(dataList);
+                        break;
+                    }
+            }
+
+            Debug.WriteLine(startDate + " " + endDate);
+            ViewBag.view = view;
+            ViewBag.advance = advance;
+            ViewBag.Start = start;
+            ViewBag.End = end;
+            ViewBag.CurrentPage = page ?? 1;
+            ViewBag.TotalItem = listProduct.Count;
+            ViewBag.Limit = limit ?? 10;
+            ViewBag.TotalPage = Math.Ceiling((double)listProduct.Count / (limit ?? 10));
+            ViewBag.nameProject = nameProject;
+            ViewBag.status = status;
+
+            ViewBag.sortBy = sortBy;
+            ViewBag.direct = direct;
+            ViewBag.directSet = direct is (int)HelperEnum.DonationDirectEnum.Asc ? (int)HelperEnum.DonationDirectEnum.Desc : (int)HelperEnum.DonationDirectEnum.Asc;
+
+            listProduct = listProduct.Skip(((page ?? 1) - 1) * (limit ?? 10)).Take((limit ?? 10)).ToList();
+
+
+            var data = listProduct.Select(item => new ProjectListViewModel
+                {
                     Id = item.Id,
                     Name = item.Name,
                     CoverImg = item.CoverImg,
@@ -60,9 +205,9 @@ namespace GiveAidCharity.Controllers
                     ExpireDate = item.ExpireDate,
                     CreatedAt = item.CreatedAt,
                     Status = item.Status
-                });
-            }
-            return View(projectList);
+                })
+                .ToList();
+            return View(data);
         }
         public ActionResult CreateProject()
         {

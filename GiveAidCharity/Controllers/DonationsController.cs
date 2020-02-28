@@ -64,7 +64,7 @@ namespace GiveAidCharity.Controllers
             }
             else
             {
-                status = 4;
+                status = 20;
             }
 
             if (method != null && Enum.IsDefined(typeof(Donation.PaymentMethodEnum), method))
@@ -73,7 +73,7 @@ namespace GiveAidCharity.Controllers
             }
             else
             {
-                method = 4;
+                method = 20;
             }
 
             
@@ -197,7 +197,7 @@ namespace GiveAidCharity.Controllers
 
             listDonation = listDonation.Skip(((page ?? 1) - 1) * (limit ?? 10)).Take((limit ?? 10)).ToList();
 
-            var listDonationView = listDonation.Select(item => new DonationListViewModel
+            var data = listDonation.Select(item => new DonationListViewModel
                 {
                     Status = item.Status,
                     CreatedAt = item.CreatedAt,
@@ -211,7 +211,7 @@ namespace GiveAidCharity.Controllers
                     ProjectName = item.Project.Name
                 })
                 .ToList();
-            return View(listDonationView);
+            return View(data);
         }
 
         //// GET: Donations/Details/5

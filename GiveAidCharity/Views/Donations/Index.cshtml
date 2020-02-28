@@ -8,16 +8,22 @@
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 
     ViewBag.Title = "List";
+    
+
+   
+    var method = ((int?)ViewBag.method).Value;
+
 
     var view = ((int?)ViewBag.view).Value;
     var advance = ((int?)ViewBag.advance).Value;
-    var status = ((int?)ViewBag.status).Value;
-    var method = ((int?)ViewBag.method).Value;
+
     var totalPage = ((int?)ViewBag.TotalPage).Value;
     var currentPage = ((int?)ViewBag.CurrentPage).Value;
     var limit = ((int?)ViewBag.Limit).Value;
     var start = ViewBag.Start.ToString();
     var end = ViewBag.End.ToString();
+
+    var status = ((int?)ViewBag.status).Value;
     var nameProject = ViewBag.nameProject.ToString();
     var minAmount = ((double?)ViewBag.minAmount).Value;
     var maxAmount = ((double?)ViewBag.maxAmount).Value;
@@ -29,7 +35,8 @@
     var currentPara = "?start=" + ViewBag.Start + "&end=" + ViewBag.End +
                       "&nameProject=" + nameProject + "&minAmount=" + ViewBag.minAmount +
                       "&maxAmount=" + ViewBag.maxAmount + "&status=" + status +
-                      "&method=" + method + "&sortBy=" + sortBy + "&direct=" + direct + "&advance=" + advance;
+                      "&method=" + method + "&sortBy=" + sortBy + "&direct=" + direct +
+                      "&advance=" + advance + "&view=" + view;
 
     var startPage = ((currentPage - 1) * limit + 1);
     var endPage = ((currentPage - 1) * limit + Model.Count());
@@ -394,6 +401,7 @@
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     @Scripts.Render("~/Content/DashboardTheme/js/PageJs/donations-list.js")
 }
