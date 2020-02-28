@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,6 +18,7 @@ namespace GiveAidCharity.Models.Main
         public string CategoryId { get; set; }
         public virtual Category Category { get; set; }
 
+        public virtual ICollection<BlogComment> BlogComments { get; set; }
         //Url to project
         public string Rss { get; set; }
 

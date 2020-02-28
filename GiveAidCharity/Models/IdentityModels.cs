@@ -120,6 +120,7 @@ namespace GiveAidCharity.Models
         public DbSet<ProjectImage> ProjectImages { get; set; }
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<ProjectComment> ProjectComments { get; set; }
+        public DbSet<BlogComment> BlogComments { get; set; }
         public DbSet<Donation> Donations { get; set; }
         public DbSet<Follow> Follows { get; set; }
         public DbSet<Category> Categories { get; set; }
