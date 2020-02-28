@@ -19,6 +19,7 @@ namespace GiveAidCharity.Models.Main
         public virtual Category Category { get; set; }
 
         public virtual ICollection<BlogComment> BlogComments { get; set; }
+        public virtual ICollection<Vote> Votes { get; set; }
         //Url to project
         public string Rss { get; set; }
 

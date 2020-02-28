@@ -115,6 +115,44 @@ namespace GiveAidCharity.Models.Main
             Status = FollowStatusEnum.Followed;
         }
     }
+    public class Vote
+    {
+        [Key]
+        public string Id { get; set; }
+
+        [ForeignKey("ApplicationUser")]
+        public string ApplicationUserId { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
+        [ForeignKey("Blog")]
+        public string BlogId { get; set; }
+        public virtual Blog Blog { get; set; }
+
+        public VoteStatusEnum Status { get; set; }
+        public enum VoteStatusEnum
+        {
+            UpVote = 1,
+            Neutral = 0,
+            DownVote = -1,
+        }
+
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime CreatedAt { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime UpdatedAt { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime? DeletedAt { get; set; }
+
+        public Vote()
+        {
+            Id = Guid.NewGuid().ToString();
+            CreatedAt = DateTime.Now;
+            UpdatedAt = DateTime.Now;
+            Status = VoteStatusEnum.UpVote;
+        }
+    }
 
     public class Category
     {
