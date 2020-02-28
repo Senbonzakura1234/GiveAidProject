@@ -188,9 +188,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202002271600379_initialTable.cs" />
-    <Compile Include="Migrations\202002271600379_initialTable.Designer.cs">
-      <DependentUpon>202002271600379_initialTable.cs</DependentUpon>
+    <Compile Include="Migrations\202002281731239_initialTable.cs" />
+    <Compile Include="Migrations\202002281731239_initialTable.Designer.cs">
+      <DependentUpon>202002281731239_initialTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -798,8 +798,8 @@
     <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202002271600379_initialTable.resx">
-      <DependentUpon>202002271600379_initialTable.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202002281731239_initialTable.resx">
+      <DependentUpon>202002281731239_initialTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

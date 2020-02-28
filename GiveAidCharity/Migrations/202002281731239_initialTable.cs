@@ -8,17 +8,14 @@ namespace GiveAidCharity.Migrations
         public override void Up()
         {
             CreateTable(
-                "dbo.Blogs",
+                "dbo.BlogComments",
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 128),
                         ApplicationUserId = c.String(maxLength: 128),
-                        CategoryId = c.String(maxLength: 128),
-                        Rss = c.String(),
-                        Title = c.String(nullable: false),
-                        ContentPart1 = c.String(nullable: false),
-                        ContentPart2 = c.String(nullable: false),
-                        ContentPart3 = c.String(),
+                        BlogId = c.String(maxLength: 128),
+                        ParentId = c.String(),
+                        Content = c.String(nullable: false),
                         Status = c.Int(nullable: false),
                         CreatedAt = c.DateTime(nullable: false),
                         UpdatedAt = c.DateTime(nullable: false),
@@ -26,9 +23,9 @@ namespace GiveAidCharity.Migrations
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserId)
-                .ForeignKey("dbo.Categories", t => t.CategoryId)
+                .ForeignKey("dbo.Blogs", t => t.BlogId)
                 .Index(t => t.ApplicationUserId)
-                .Index(t => t.CategoryId);
+                .Index(t => t.BlogId);
             
             CreateTable(
                 "dbo.AspNetUsers",
@@ -64,17 +61,69 @@ namespace GiveAidCharity.Migrations
                 .Index(t => t.UserName, unique: true, name: "UserNameIndex");
             
             CreateTable(
-                "dbo.AspNetUserClaims",
+                "dbo.Blogs",
                 c => new
                     {
-                        Id = c.Int(nullable: false, identity: true),
-                        UserId = c.String(nullable: false, maxLength: 128),
-                        ClaimType = c.String(),
-                        ClaimValue = c.String(),
+                        Id = c.String(nullable: false, maxLength: 128),
+                        ApplicationUserId = c.String(maxLength: 128),
+                        CategoryId = c.String(maxLength: 128),
+                        Rss = c.String(),
+                        Title = c.String(nullable: false),
+                        ContentPart1 = c.String(nullable: false),
+                        ContentPart2 = c.String(nullable: false),
+                        ContentPart3 = c.String(),
+                        Status = c.Int(nullable: false),
+                        CreatedAt = c.DateTime(nullable: false),
+                        UpdatedAt = c.DateTime(nullable: false),
+                        DeletedAt = c.DateTime(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
-                .Index(t => t.UserId);
+                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserId)
+                .ForeignKey("dbo.Categories", t => t.CategoryId)
+                .Index(t => t.ApplicationUserId)
+                .Index(t => t.CategoryId);
+            
+            CreateTable(
+                "dbo.Categories",
+                c => new
+                    {
+                        Id = c.String(nullable: false, maxLength: 128),
+                        Name = c.String(),
+                        Description = c.String(),
+                        CreatedAt = c.DateTime(nullable: false),
+                        UpdatedAt = c.DateTime(nullable: false),
+                        DeletedAt = c.DateTime(),
+                        Status = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.Projects",
+                c => new
+                    {
+                        Id = c.String(nullable: false, maxLength: 128),
+                        ApplicationUserId = c.String(maxLength: 128),
+                        CategoryId = c.String(maxLength: 128),
+                        Name = c.String(nullable: false),
+                        Description = c.String(),
+                        CoverImg = c.String(nullable: false),
+                        ContentPart1 = c.String(nullable: false),
+                        ContentPart2 = c.String(nullable: false),
+                        Goal = c.Double(nullable: false),
+                        CurrentFund = c.Double(nullable: false),
+                        StartDate = c.DateTime(nullable: false),
+                        ExpireDate = c.DateTime(nullable: false),
+                        Status = c.Int(nullable: false),
+                        CreatedAt = c.DateTime(nullable: false),
+                        UpdatedAt = c.DateTime(nullable: false),
+                        DeletedAt = c.DateTime(),
+                        ReceiverEmail = c.String(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserId)
+                .ForeignKey("dbo.Categories", t => t.CategoryId)
+                .Index(t => t.ApplicationUserId)
+                .Index(t => t.CategoryId);
             
             CreateTable(
                 "dbo.Donations",
@@ -111,48 +160,6 @@ namespace GiveAidCharity.Migrations
                 .ForeignKey("dbo.Projects", t => t.ProjectId)
                 .Index(t => t.ApplicationUserId)
                 .Index(t => t.ProjectId);
-            
-            CreateTable(
-                "dbo.Projects",
-                c => new
-                    {
-                        Id = c.String(nullable: false, maxLength: 128),
-                        ApplicationUserId = c.String(maxLength: 128),
-                        CategoryId = c.String(maxLength: 128),
-                        Name = c.String(nullable: false),
-                        Description = c.String(),
-                        CoverImg = c.String(nullable: false),
-                        ContentPart1 = c.String(nullable: false),
-                        ContentPart2 = c.String(nullable: false),
-                        Goal = c.Double(nullable: false),
-                        CurrentFund = c.Double(nullable: false),
-                        StartDate = c.DateTime(nullable: false),
-                        ExpireDate = c.DateTime(nullable: false),
-                        Status = c.Int(nullable: false),
-                        CreatedAt = c.DateTime(nullable: false),
-                        UpdatedAt = c.DateTime(nullable: false),
-                        DeletedAt = c.DateTime(),
-                        ReceiverEmail = c.String(),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserId)
-                .ForeignKey("dbo.Categories", t => t.CategoryId)
-                .Index(t => t.ApplicationUserId)
-                .Index(t => t.CategoryId);
-            
-            CreateTable(
-                "dbo.Categories",
-                c => new
-                    {
-                        Id = c.String(nullable: false, maxLength: 128),
-                        Name = c.String(),
-                        Description = c.String(),
-                        CreatedAt = c.DateTime(nullable: false),
-                        UpdatedAt = c.DateTime(nullable: false),
-                        DeletedAt = c.DateTime(),
-                        Status = c.Int(nullable: false),
-                    })
-                .PrimaryKey(t => t.Id);
             
             CreateTable(
                 "dbo.Follows",
@@ -210,6 +217,37 @@ namespace GiveAidCharity.Migrations
                 .Index(t => t.ProjectId);
             
             CreateTable(
+                "dbo.Votes",
+                c => new
+                    {
+                        Id = c.String(nullable: false, maxLength: 128),
+                        ApplicationUserId = c.String(maxLength: 128),
+                        BlogId = c.String(maxLength: 128),
+                        Status = c.Int(nullable: false),
+                        CreatedAt = c.DateTime(nullable: false),
+                        UpdatedAt = c.DateTime(nullable: false),
+                        DeletedAt = c.DateTime(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserId)
+                .ForeignKey("dbo.Blogs", t => t.BlogId)
+                .Index(t => t.ApplicationUserId)
+                .Index(t => t.BlogId);
+            
+            CreateTable(
+                "dbo.AspNetUserClaims",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        UserId = c.String(nullable: false, maxLength: 128),
+                        ClaimType = c.String(),
+                        ClaimValue = c.String(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .Index(t => t.UserId);
+            
+            CreateTable(
                 "dbo.AspNetUserLogins",
                 c => new
                     {
@@ -254,49 +292,59 @@ namespace GiveAidCharity.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.Blogs", "CategoryId", "dbo.Categories");
-            DropForeignKey("dbo.Blogs", "ApplicationUserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.BlogComments", "BlogId", "dbo.Blogs");
+            DropForeignKey("dbo.BlogComments", "ApplicationUserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Donations", "ProjectId", "dbo.Projects");
+            DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Votes", "BlogId", "dbo.Blogs");
+            DropForeignKey("dbo.Votes", "ApplicationUserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Blogs", "CategoryId", "dbo.Categories");
             DropForeignKey("dbo.ProjectImages", "ProjectId", "dbo.Projects");
             DropForeignKey("dbo.ProjectComments", "ProjectId", "dbo.Projects");
             DropForeignKey("dbo.ProjectComments", "ApplicationUserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.Follows", "ProjectId", "dbo.Projects");
             DropForeignKey("dbo.Follows", "ApplicationUserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Donations", "ProjectId", "dbo.Projects");
+            DropForeignKey("dbo.Donations", "ApplicationUserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.Projects", "CategoryId", "dbo.Categories");
             DropForeignKey("dbo.Projects", "ApplicationUserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Donations", "ApplicationUserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Blogs", "ApplicationUserId", "dbo.AspNetUsers");
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
+            DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
+            DropIndex("dbo.Votes", new[] { "BlogId" });
+            DropIndex("dbo.Votes", new[] { "ApplicationUserId" });
             DropIndex("dbo.ProjectImages", new[] { "ProjectId" });
             DropIndex("dbo.ProjectComments", new[] { "ProjectId" });
             DropIndex("dbo.ProjectComments", new[] { "ApplicationUserId" });
             DropIndex("dbo.Follows", new[] { "ProjectId" });
             DropIndex("dbo.Follows", new[] { "ApplicationUserId" });
-            DropIndex("dbo.Projects", new[] { "CategoryId" });
-            DropIndex("dbo.Projects", new[] { "ApplicationUserId" });
             DropIndex("dbo.Donations", new[] { "ProjectId" });
             DropIndex("dbo.Donations", new[] { "ApplicationUserId" });
-            DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
-            DropIndex("dbo.AspNetUsers", "UserNameIndex");
+            DropIndex("dbo.Projects", new[] { "CategoryId" });
+            DropIndex("dbo.Projects", new[] { "ApplicationUserId" });
             DropIndex("dbo.Blogs", new[] { "CategoryId" });
             DropIndex("dbo.Blogs", new[] { "ApplicationUserId" });
+            DropIndex("dbo.AspNetUsers", "UserNameIndex");
+            DropIndex("dbo.BlogComments", new[] { "BlogId" });
+            DropIndex("dbo.BlogComments", new[] { "ApplicationUserId" });
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetUserLogins");
+            DropTable("dbo.AspNetUserClaims");
+            DropTable("dbo.Votes");
             DropTable("dbo.ProjectImages");
             DropTable("dbo.ProjectComments");
             DropTable("dbo.Follows");
-            DropTable("dbo.Categories");
-            DropTable("dbo.Projects");
             DropTable("dbo.Donations");
-            DropTable("dbo.AspNetUserClaims");
-            DropTable("dbo.AspNetUsers");
+            DropTable("dbo.Projects");
+            DropTable("dbo.Categories");
             DropTable("dbo.Blogs");
+            DropTable("dbo.AspNetUsers");
+            DropTable("dbo.BlogComments");
         }
     }
 }

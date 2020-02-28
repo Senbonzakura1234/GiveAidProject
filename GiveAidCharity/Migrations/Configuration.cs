@@ -41,6 +41,11 @@ namespace GiveAidCharity.Migrations
             "68ebea3b-3a01-44b3-a768-7f0adb2cfa25",
             "686808ac-ff5a-4502-96b8-6c76a9c5f78c"
         };
+
+        private string _blogCommentParent =
+            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s";
+
+        private string _blogCommentChild = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters";
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
@@ -61,12 +66,25 @@ namespace GiveAidCharity.Migrations
             }
 
 
-            //===========================================================================
+            //=============================================================================
             //SetRole(context);
-            //////===========================================================================
+            //////=========================================================================
             //SetUser(context);
             ////===========================================================================
-            //ADD PROJECT
+            ////ADD Categories
+            //var listCategory = new List<Category>();
+            //listCategory.AddRange(new List<Category>
+            //{
+            //    new Category {Id =_categoryId[0], Name = "Humanitarian", Description = "crimes of war, terrorism"},
+            //    new Category {Id =_categoryId[1], Name = "Natural disaster", Description = "Save human in disaster"},
+            //    new Category {Id =_categoryId[2], Name = "Education", Description = "Give the change education"},
+            //    new Category {Id =_categoryId[3], Name = "Environment", Description = "Save the environment"},
+            //    new Category {Id =_categoryId[4], Name = "Culture", Description = "Save the cultural building"}
+            //});
+            //context.Categories.AddRange(listCategory);
+            //context.SaveChanges();
+            ////===========================================================================
+            ////ADD PROJECT
             //try
             //{
             //    var lsProjects = GetJsonData<Article>(Blog_Url);
@@ -96,7 +114,6 @@ namespace GiveAidCharity.Migrations
             //        DeletedAt = null,
             //    })
             //        .ToList();
-
             //    foreach (var v in listProjects)
             //    {
             //        v.CreatedAt = v.StartDate.AddDays(2);
@@ -123,7 +140,7 @@ namespace GiveAidCharity.Migrations
             //}
 
             //===========================================================================
-            //ADD BLOG
+            ////ADD BLOG
             //var lsProjects = GetJsonData<Article>(Blog_Url);
             //var lsImages = GetJsonData<ArticleImage>(Image_Url);
             //var rdn = new Random();
@@ -151,15 +168,10 @@ namespace GiveAidCharity.Migrations
             //    DeletedAt = null
             //})
             //    .ToList();
-            //foreach (var v in listBlog)
-            //{
-
-            //}
             //context.Blogs.AddRange(listBlog);
             //context.SaveChanges();
-
             //===========================================================================
-            //ADD PROJECT IMAGE
+            ////ADD PROJECT IMAGE
             //var lsImages = GetJsonData<ArticleImage>(Image_Url);
             //var listImages = lsImages.Select(f => new ProjectImage()
             //{
@@ -237,71 +249,118 @@ namespace GiveAidCharity.Migrations
             //}
 
             //===========================================================================
-            //ADD COMMENT
-            var listComment = new List<ProjectComment>();
-            var listChildComment = new List<ProjectComment>();
+            ////ADD Project comment
+            //var listComment = new List<ProjectComment>();
+            //var listChildComment = new List<ProjectComment>();
 
-            for (int i = 1; i <= 30; i++)
+            //for (int i = 1; i <= 30; i++)
+            //{
+            //    string projectId = DicId[$"{i}"];
+            //    for (int j = 0; j < 3; j++)
+            //    {
+            //        var spanTime = new Random().Next(1, 3);
+            //        listComment.Add(new ProjectComment
+            //        {
+            //            Id = Guid.NewGuid().ToString(),
+            //            ApplicationUserId = context.Projects.Where(p => p.Id == projectId).Select(p => p.ApplicationUserId).SingleOrDefault(),
+            //            ProjectId = projectId,
+            //            ParentId = null,
+            //            Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+            //                      " I am parent comment ",
+            //            CreatedAt = context.Projects.Where(p => p.Id == projectId).Select(p => p.StartDate).SingleOrDefault().AddDays(spanTime),
+            //            DeletedAt = null
+            //        });
+            //    }
+
+            //}
+            //foreach (var c in listComment)
+            //{
+            //    c.UpdatedAt = c.CreatedAt;
+            //}
+            //context.ProjectComments.AddRange(listComment);
+            //context.SaveChanges();
+            ////var listComment = context.ProjectComments.Select(row => row).ToList();
+
+            //foreach (var c in listComment)
+            //{
+            //    string projectId = c.ProjectId;
+            //    string parentId = c.Id;
+            //    listChildComment.Add(new ProjectComment
+            //    {
+            //        Id = Guid.NewGuid().ToString(),
+            //        ApplicationUserId = context.Projects.Where(p => p.Id == projectId).Select(p => p.ApplicationUserId).SingleOrDefault(),
+            //        ProjectId = projectId,
+            //        ParentId = parentId,
+            //        Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+            //                  " ---I am child comment -- hello ",
+            //        CreatedAt = context.ProjectComments.Where(p => p.Id == parentId).Select(p => p.CreatedAt).SingleOrDefault(),
+            //        DeletedAt = null
+            //    });
+            //}
+            //foreach (var p in listChildComment)
+            //{
+            //    p.UpdatedAt = p.CreatedAt;
+            //}
+            //context.ProjectComments.AddRange(listChildComment);
+            //context.SaveChanges();
+            //=======================================================
+
+            ////Add BlogComment
+            var listBlogComments = new List<BlogComment>();
+            var listChildBlogComments = new List<BlogComment>();
+            var listBlog = context.Blogs.ToList();
+
+            var rdn = new Random();
+            Array values = Enum.GetValues(typeof(BlogComment.BlogCommentStatusEnum));
+            foreach (var p in listBlog)
             {
-                string projectId = DicId[$"{i}"];
-                for (int j = 0; j < 3; j++)
+                for (int i = 0; i <= 30; i++)
                 {
-                    var spanTime = new Random().Next(1, 3);
-                    listComment.Add(new ProjectComment
+                    for (int j = 0; j < 3; j++)
                     {
-                        Id = Guid.NewGuid().ToString(),
-                        ApplicationUserId = context.Projects.Where(p => p.Id == projectId).Select(p => p.ApplicationUserId).SingleOrDefault(),
-                        ProjectId = projectId,
-                        ParentId = null,
-                        Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
-                                  " I am parent comment ",
-                        CreatedAt = context.Projects.Where(p => p.Id == projectId).Select(p => p.StartDate).SingleOrDefault().AddDays(spanTime),
-                        DeletedAt = null
-                    });
+                        var spanTime = new Random().Next(1, 3);
+                        var randomCommentEnum = (BlogComment.BlogCommentStatusEnum)values.GetValue(rdn.Next(values.Length));
+                        listBlogComments.Add(new BlogComment
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            ApplicationUserId = p.ApplicationUserId,
+                            BlogId = p.Id,
+                            ParentId = null,
+                            Content = _blogCommentParent,
+                            Status = (BlogComment.BlogCommentStatusEnum)rdn.Next(0, 2),
+                            CreatedAt = p.CreatedAt.AddDays(spanTime)
+                        });
+                    }
                 }
-
             }
-            foreach (var c in listComment)
+
+            foreach (var c in listBlogComments)
             {
                 c.UpdatedAt = c.CreatedAt;
             }
-            context.ProjectComments.AddRange(listComment);
+            context.BlogComments.AddRange(listBlogComments);
             context.SaveChanges();
-            //var listComment = context.ProjectComments.Select(row => row).ToList();
 
-            foreach (var c in listComment)
+
+            foreach (var c in listBlogComments)
             {
-                string projectId = c.ProjectId;
-                string parentId = c.Id;
-                listChildComment.Add(new ProjectComment
+                listChildBlogComments.Add(new BlogComment
                 {
                     Id = Guid.NewGuid().ToString(),
-                    ApplicationUserId = context.Projects.Where(p => p.Id == projectId).Select(p => p.ApplicationUserId).SingleOrDefault(),
-                    ProjectId = projectId,
-                    ParentId = parentId,
-                    Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
-                              " ---I am child comment -- hello ",
-                    CreatedAt = context.ProjectComments.Where(p => p.Id == parentId).Select(p => p.CreatedAt).SingleOrDefault(),
+                    ApplicationUserId = c.ApplicationUserId,
+                    BlogId = c.BlogId,
+                    ParentId = c.Id,
+                    Content = _blogCommentChild,
+                    CreatedAt = c.CreatedAt,
                     DeletedAt = null
                 });
             }
-            foreach (var p in listChildComment)
+            foreach (var p in listChildBlogComments)
             {
                 p.UpdatedAt = p.CreatedAt;
             }
-            context.ProjectComments.AddRange(listChildComment);
+            context.BlogComments.AddRange(listChildBlogComments);
             context.SaveChanges();
-            //var listCategory = new List<Category>();
-            //listCategory.AddRange(new List<Category>
-            //{
-            //    new Category {Id =_categoryId[0], Name = "Humanitarian", Description = "crimes of war, terrorism"},
-            //    new Category {Id =_categoryId[1], Name = "Natural disaster", Description = "Save human in disaster"},
-            //    new Category {Id =_categoryId[2], Name = "Education", Description = "Give the change education"},
-            //    new Category {Id =_categoryId[3], Name = "Environment", Description = "Save the environment"},
-            //    new Category {Id =_categoryId[4], Name = "Culture", Description = "Save the cultural building"}
-            //});
-            //context.Categories.AddRange(listCategory);
-            //context.SaveChanges();
         }
 
         public void SetUser(GiveAidCharity.Models.ApplicationDbContext context)

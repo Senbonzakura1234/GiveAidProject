@@ -19,6 +19,7 @@ namespace GiveAidCharity.Models
         public virtual ICollection<Blog> Blogs { get; set; }
         public virtual ICollection<Donation> Donations { get; set; }
         public virtual ICollection<Follow> Follows { get; set; }
+        public virtual ICollection<Vote> Votes { get; set; }
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -120,8 +121,10 @@ namespace GiveAidCharity.Models
         public DbSet<ProjectImage> ProjectImages { get; set; }
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<ProjectComment> ProjectComments { get; set; }
+        public DbSet<BlogComment> BlogComments { get; set; }
         public DbSet<Donation> Donations { get; set; }
         public DbSet<Follow> Follows { get; set; }
+        public DbSet<Vote> Votes { get; set; }
         public DbSet<Category> Categories { get; set; }
         public IEnumerable ApplicationUsers { get; internal set; }
     }

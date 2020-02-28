@@ -47,4 +47,47 @@ namespace GiveAidCharity.Models.Main
             Status = ProjectCommentStatusEnum.Published;
         }
     }
+    public class BlogComment
+    {
+        [Key]
+        public string Id { get; set; }
+
+        [ForeignKey("ApplicationUser")]
+        public string ApplicationUserId { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
+        [ForeignKey("Blog")]
+        public string BlogId { get; set; }
+        public virtual Blog Blog { get; set; }
+
+        public string ParentId { get; set; }
+
+        [Required]
+        public string Content { get; set; }
+
+        public BlogCommentStatusEnum Status { get; set; }
+        public enum BlogCommentStatusEnum
+        {
+            Published,
+            UnPublished,
+            Deleted
+        }
+
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime CreatedAt { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime UpdatedAt { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime? DeletedAt { get; set; }
+
+        public BlogComment()
+        {
+            Id = Guid.NewGuid().ToString();
+            CreatedAt = DateTime.Now;
+            UpdatedAt = DateTime.Now;
+            Status = BlogCommentStatusEnum.Published;
+        }
+    }
 }
