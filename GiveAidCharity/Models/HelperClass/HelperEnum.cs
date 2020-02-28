@@ -22,5 +22,20 @@ namespace GiveAidCharity.Models.HelperClass
             Asc = 0,
             Desc = 1
         }
+
+        public enum ProjectSortEnum
+        {
+            StartDate = 0,
+            ExpireDate = 1,
+            ProjectName = 2,
+            ProcessPercent = 3,
+            Status = 4
+        }
+
+        public enum ProjectDirectEnum
+        {
+            Asc = 0,
+            Desc = 1
+        }
     }
 }

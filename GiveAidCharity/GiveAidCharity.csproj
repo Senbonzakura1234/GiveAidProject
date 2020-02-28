@@ -275,6 +275,7 @@
     <Content Include="Content\DashboardTheme\js\hoverable-collapse.js" />
     <Content Include="Content\DashboardTheme\js\misc.js" />
     <Content Include="Content\DashboardTheme\js\off-canvas.js" />
+    <Content Include="Content\DashboardTheme\js\PageJs\donations-list.js" />
     <Content Include="Content\DashboardTheme\js\todo.js" />
     <Content Include="Content\DashboardTheme\js\todolist.js" />
     <Content Include="Content\DashboardTheme\vendors\chart.js\Chart.min.js" />
@@ -774,11 +775,11 @@
     <Content Include="Views\Donations\Delete.cshtml" />
     <Content Include="Views\Donations\Details.cshtml" />
     <Content Include="Views\Donations\Edit.cshtml" />
-    <Content Include="Views\Donations\Index.cshtml" />
     <Content Include="Views\Payment\Result.cshtml" />
     <Content Include="Views\Project\Index.cshtml" />
     <Content Include="Views\Dashboard\DonationList.cshtml" />
     <Content Include="Views\Dashboard\ProjectList.cshtml" />
+    <Content Include="Views\Donations\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
