@@ -1,4 +1,5 @@
-﻿@model GiveAidCharity.Models.HelperClass.BlogDetailViewModel
+﻿@using Microsoft.AspNet.Identity
+@model GiveAidCharity.Models.HelperClass.BlogDetailViewModel
 
 @{
     ViewBag.Title = "BlogSingle";
@@ -176,3 +177,24 @@
         </div>
     </div>
 </section> <!-- .section -->
+
+<input type="hidden" name="userId" value="@User.Identity.GetUserId()"/>
+<input type="hidden" name="blogId" value="@Model.Id" />
+<input type="hidden" name="status" value="1" />
+@section scripts
+{
+    <script>
+
+        $.ajax({
+            url: '/Api/Vote',
+            data: {
+                userId: $('input[name="userId"]').val(),
+                blogId: $('input[name="blogId"]').val(),
+                status: $('input[name="status"]').val()
+            },
+            success: function(res) {
+                console.log(res);
+            }
+        });
+    </script>
+}

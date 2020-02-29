@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -11,6 +12,7 @@ using GiveAidCharity.Models;
 using GiveAidCharity.Models.HelperClass;
 using GiveAidCharity.Models.Main;
 using Microsoft.Ajax.Utilities;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 
 namespace GiveAidCharity.Controllers
@@ -194,6 +196,51 @@ namespace GiveAidCharity.Controllers
             {
                 listProject
             }, JsonRequestBehavior.AllowGet);
+        }
+
+        public async Task<ActionResult> Vote(string userId, string blogId, int? status)
+        {
+            if (status == null || !Enum.IsDefined(typeof(Vote.VoteStatusEnum), status))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var currentUserid = User.Identity.GetUserId();
+            if (currentUserid == null || userId == null || !currentUserid.Equals(userId))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var user = await UserManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var votes = await _db.Votes.Where(v => v.ApplicationUserId == userId && v.BlogId == blogId).ToListAsync();
+            if (votes.Count != 0)
+            {
+                votes = votes.Where(v => v.Status != Models.Main.Vote.VoteStatusEnum.Neutral).ToList();
+                if (votes.Count > 0)
+                {
+                    foreach (var item in votes)
+                    {
+                        item.Status = Models.Main.Vote.VoteStatusEnum.Neutral;
+                        item.UpdatedAt = DateTime.Now;
+                        _db.Entry(item).State = EntityState.Modified;
+                    }
+                }
+            }
+            var vote = new Vote
+            {
+                ApplicationUserId = userId,
+                BlogId = blogId,
+                Status = (Vote.VoteStatusEnum) status
+            };
+            _db.Votes.Add(vote);
+            await _db.SaveChangesAsync();
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
     }
 }
