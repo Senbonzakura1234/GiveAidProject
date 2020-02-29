@@ -1,0 +1,87 @@
+﻿@using GiveAidCharity.Models.Main
+@model IEnumerable<GiveAidCharity.Models.Main.Category>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    int indexSo = 1;
+}
+
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body table-responsive">
+                <h4 class="card-title">Danh mục</h4>
+                <p class="card-description d-sm-flex">
+                    <br class="d-sm-none" />
+
+                    <a class="btn btn-sm btn-primary ml-auto mr-2 mt-2 mt-sm-0" href="@Url.Action("Create", "Categories")">
+                        Create new <span class="mdi mdi-plus-circle"></span>
+                    </a>
+                </p>
+                <table class="table" id="update-student">
+                    <thead class="text-primary">
+                        <tr>
+                            <th class="text-center">
+                                #
+                            </th>
+                            <th class="text-center">
+                                @Html.DisplayNameFor(model => model.Name)
+                            </th>
+                            <th class="text-center">
+                                @Html.DisplayNameFor(model => model.Description)
+                            </th>
+                            <th class="text-center d-none d-xl-table-cell">
+                                @Html.DisplayNameFor(model => model.CreatedAt)
+                            </th>
+                            <th class="d-none d-xl-table-cell text-center">
+                                @Html.DisplayNameFor(model => model.Status)
+                            </th>
+                            <th class="text-center d-none d-lg-table-cell">
+                                Sửa
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+
+                            <tr>
+                                <td>
+                                    <b class="text-small">@indexSo</b>
+                                </td>
+                                <td class="text-center">
+                                    <a href="@Url.Action("Details", "Categories", new {id = item.Id})" class="badge w-100 badge-gradient-primary w-100">
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <b class="text-small"> @Html.DisplayFor(modelItem => item.Description)</b>
+                                </td>
+                                <td class="text-center d-none d-xl-table-cell">
+                                    <b class="text-small"> @Html.DisplayFor(modelItem => item.CreatedAt)</b>
+                                </td>
+                                <td class="d-none d-xl-table-cell ">
+                                    <a class="badge w-100 @(item.Status == Category.CategoryStatusEnum.Show ? "badge-gradient-primary" : "badge-gradient-secondary")">
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </a>
+                                </td>
+                                <td class="text-center d-none d-lg-table-cell">
+                                    <a class="badge badge-warning" href="@Url.Action("Edit", new{id = item.Id})">
+                                        <span class="mdi mdi-pencil-box-outline"></span>
+                                    </a>
+                                </td>
+                            </tr>
+
+                            {
+                                indexSo++;
+                            }
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>

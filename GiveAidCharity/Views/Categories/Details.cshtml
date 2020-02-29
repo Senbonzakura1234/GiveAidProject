@@ -1,0 +1,198 @@
+﻿@using GiveAidCharity.Models.HelperClass
+@using GiveAidCharity.Models.Main
+@model GiveAidCharity.Models.Main.Category
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    var listBlog = ViewBag.listBlog as List<BlogListViewModel>;
+    var listProject = ViewBag.listProject as List<ProjectListViewModel>;
+}
+
+    <div class="row">
+        <div class="col-lg-6 col-xl-4 grid-margin stretch-card style-detail">
+            <div class="card">
+                <div class="card-img-top text-center pt-3">
+                    <img class="border-primary" src="~/Content/HomepageTheme/images/bg_1.jpg"
+                         style="max-width: 100%; max-height: 180px; padding: 4px; border: 2px solid; border-radius: 100%" alt="Avatar" />
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <b>ID # @Html.DisplayFor(model => model.Id)</b>
+                    </h5>
+                    <p class="card-text">
+                        <b>@Html.DisplayNameFor(model => model.Name): </b>
+                        @Html.DisplayFor(model => model.Name)
+                    </p>
+                    <p class="card-text">
+                        <b>@Html.DisplayNameFor(model => model.Description): </b>
+                        @Html.DisplayFor(model => model.Description)
+                    </p>
+                    <p class="card-text">
+                        <b>@Html.DisplayNameFor(model => model.CreatedAt): </b>
+                        @Html.DisplayFor(model => model.CreatedAt)
+                    </p>
+                    <p class="card-text">
+                        <b>@Html.DisplayNameFor(model => model.UpdatedAt): </b>
+                        @Html.DisplayFor(model => model.UpdatedAt)
+                    </p>
+
+                    <p class="card-text">
+                        <b>@Html.DisplayNameFor(model => model.Status): </b>
+                        <span class="badge @(Model.Status == Category.CategoryStatusEnum.Deleted ? "badge-gradient-secondary" : "badge-gradient-primary")">
+                            @Html.DisplayFor(model => model.Status)
+                        </span>
+                    </p>
+
+                    <div class="d-sm-flex">
+                        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-sm btn-warning mr-3" })
+                        <a class="btn btn-light btn-sm mt-2 mt-sm-0" href="@Url.Action("Index")">
+                            Back
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-8 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body table-responsive">
+                    <h4 class="card-title">Blog</h4>
+                    <p class="card-description d-sm-flex">
+                        <span class="text-muted text-small my-auto">List Blog</span>
+                        <br class="d-sm-none" />
+
+                    </p>
+                    <table class="table" id="update-student">
+                        <thead class="text-primary">
+                            <tr>
+                                <th class="text-center">
+                                    Name
+                                </th>
+                                <th class="text-center d-none d-xl-table-cell">
+                                    Count comment
+                                </th>
+                                <th class="d-none d-xl-table-cell">
+                                    Count vote
+                                </th>
+                                <th class="text-center d-none d-lg-table-cell">
+                                    Create At
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (listBlog != null)
+                            {
+                                foreach (var item in listBlog)
+                                {
+
+                                    <tr>
+
+                                        <td class="text-center">
+                                            <a href="#" class="badge w-100 badge-gradient-primary w-100">
+                                                @Html.DisplayFor(modelItem => item.Title)
+                                            </a>
+                                        </td>
+                                        <td class="text-center">
+                                            <b class="text-small">@Html.DisplayFor(modelItem => item.Comment)</b>
+                                        </td>
+                                        <td class="text-center">
+                                            <b class="text-small">@Html.DisplayFor(modelItem => item.Vote)</b>
+                                        </td>
+                                        <td class="text-center">
+                                            <b class="text-small">@Html.DisplayFor(modelItem => item.CreatedAt)</b>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="row">
+   
+
+</div>
+
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body table-responsive">
+                <h4 class="card-title">Project</h4>
+                <p class="card-description d-sm-flex">
+                    <span class="text-muted text-small my-auto">List Project</span>
+                    <br class="d-sm-none" />
+
+                </p>
+                <table class="table" id="update-student">
+                    <thead class="text-primary">
+                        <tr>
+                            <th class="text-center">
+                                Name
+                            </th>
+                            <th class="text-center d-none d-xl-table-cell">
+                                Avatar
+                            </th>
+                            <th class="text-center d-none d-xl-table-cell">
+                                Current Fund
+                            </th>
+                            <th class="text-center d-none d-xl-table-cell">
+                                Goal
+                            </th>
+                            <th class="d-none d-xl-table-cell text-center">
+                                CreatedAt
+                            </th>
+                            <th class="d-none d-xl-table-cell text-center">
+                                ExpireDate
+                            </th>
+                            <th class="text-center d-none d-lg-table-cell">
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (listProject != null)
+                        {
+                            foreach (var item in listProject)
+                            {
+
+                        <tr>
+
+                            <td class="text-center">
+                                <a href="#" class="badge w-100 badge-gradient-primary w-100">
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </a>
+                            </td>
+                            <td class="text-center d-none d-xl-table-cell">
+                                <img src="@Html.DisplayFor(modelItem => item.CoverImg)" width="100px" height="120px" />
+                            </td>
+                            <td class="text-center">
+                                <b class="text-small">@Html.DisplayFor(modelItem => item.CurrentFund)</b>
+                            </td>
+                            <td class="text-center">
+                                <b class="text-small">@Html.DisplayFor(modelItem => item.Goal)</b>
+                            </td>
+                            <td class="text-center">
+                                <b class="text-small">@Html.DisplayFor(modelItem => item.CreatedAt)</b>
+                            </td>
+                            <td class="text-center">
+                                <b class="text-small">@Html.DisplayFor(modelItem => item.ExpireDate)</b>
+                            </td>
+                            <td class="d-none d-xl-table-cell text-center">
+                                <a class="badge w-100 @(item.Status == Project.ProjectStatusEnum.Success ? "badge-gradient-primary" : "badge-gradient-secondary")">
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                </a>
+                            </td>
+                        </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
