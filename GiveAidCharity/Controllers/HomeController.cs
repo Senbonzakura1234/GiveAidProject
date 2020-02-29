@@ -80,8 +80,10 @@ namespace GiveAidCharity.Controllers
                                  }).ToList();
             listDonations = listDonations.OrderByDescending(p => p.DonateDate).ToList();
             listDonations = listDonations.Take(6).ToList();
+            var categories = await _db.Categories.ToListAsync();
             homepage.CausesList = causesList;
             homepage.DonationList = listDonations;
+            homepage.Categories = categories;
             return View(homepage);
         }
 
@@ -113,7 +115,6 @@ namespace GiveAidCharity.Controllers
             var projectsList = await _db.Projects
                 .Where(p => p.Status == Project.ProjectStatusEnum.Ongoing
                             || p.Status == Project.ProjectStatusEnum.Success)
-                .Where(p => p.Status == Project.ProjectStatusEnum.Ongoing)
                 .ToListAsync();
             var causesList = projectsList.Select(t => new CausesListViewModel
                 {
@@ -152,13 +153,16 @@ namespace GiveAidCharity.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var project = await _db.Projects.FindAsync(id);
-            if (project == null 
-                || project.Status != Project.ProjectStatusEnum.Ongoing
-                || project.Status != Project.ProjectStatusEnum.Success)
+            Debug.WriteLine(project.Status);
+
+            if (project == null)
             {
                 return HttpNotFound();
             }
-
+            if(project.Status != Project.ProjectStatusEnum.Ongoing && project.Status != Project.ProjectStatusEnum.Success)
+            {
+                return HttpNotFound();
+            }
             var host = await UserManager.FindByIdAsync(project.ApplicationUserId);
             var images = await _db.ProjectImages.Where(p => p.ProjectId == id && p.Description != null).ToListAsync();
             var comments = await _db.ProjectComments.Where(p => p.ProjectId == id).ToListAsync();
@@ -282,7 +286,50 @@ namespace GiveAidCharity.Controllers
                     Username = item.ApplicationUser.UserName, Amount = item.Amount, Cause = cause}).ToList();
             return View(listDonations);
         }
+        public async Task<ActionResult> CategoryView(string id, int? page, int? limit)
+        {
+            if (page == null)
+            {
+                page = 1;
+            }
 
+            if (limit == null)
+            {
+                limit = 9;
+            }
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var Category = await _db.Categories.FindAsync(id);
+            if (Category == null)
+            {
+                return HttpNotFound();
+            }
+            var projects = Category.Projects.ToList();
+            var projectInCategory = projects.Select(t => new CausesListViewModel
+            {
+                Id = t.Id,
+                Name = t.Name,
+                CurrentFund = t.CurrentFund,
+                Goal = t.Goal,
+                Description = t.Description,
+                StartDate = t.StartDate,
+                ExpireDate = t.ExpireDate,
+                FollowCount = t.Follows.Count,
+                CoverImg = t.CoverImg
+            }).ToList();
+            ViewBag.TotalPage = Math.Ceiling((double)projectInCategory.Count / limit.Value);
+            ViewBag.CurrentPage = page;
+
+            ViewBag.Limit = limit;
+
+            ViewBag.TotalItem = projectInCategory.Count;
+
+            projectInCategory = projectInCategory.Skip((page.Value - 1) * limit.Value).Take(limit.Value).ToList();
+
+            return View(projectInCategory);
+        }
         //public async Task<ActionResult> Test1()
         //{
         //    var res = await _db.Projects.ToListAsync();

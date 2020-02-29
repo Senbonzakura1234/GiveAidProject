@@ -780,6 +780,7 @@
     <Content Include="Views\Dashboard\DonationList.cshtml" />
     <Content Include="Views\Dashboard\ProjectList.cshtml" />
     <Content Include="Views\Donations\Index.cshtml" />
+    <Content Include="Views\Home\CategoryView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
