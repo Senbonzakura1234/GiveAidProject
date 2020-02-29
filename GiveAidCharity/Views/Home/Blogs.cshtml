@@ -1,0 +1,47 @@
+﻿@using GiveAidCharity.Models.HelperClass
+@model IEnumerable<GiveAidCharity.Models.HelperClass.BlogListViewModel>
+
+@{
+    ViewBag.Title = "Blogs";
+}
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row d-flex">
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-4 d-flex ftco-animate">
+                        <div class="blog-entry align-self-stretch">
+                            <a href="@Url.Action("BlogSingle", "Home", new{id = item.Id})" class="block-20" style="background-image: url('/Content/HomepageTheme/images/image_1.jpg');">
+                            </a>
+                            <div class="text p-4 d-block">
+                                <div class="meta mb-3">
+                                    <div><a href="#">@Html.DisplayFor(model => item.CreatedAt)</a></div>
+                                    <div><a href="#">@HelperMethod.SubString(item.Username)</a></div>
+                                    <div><a href="#" class="meta-chat"><span class="icon-chat"></span> @item.Comment</a></div>
+                                    <div><a href="#" class="meta-chat"><span class="icon-favorite"></span> @item.Vote</a></div>
+                                </div>
+                                <h3 class="heading mt-3"><a href="#">Hurricane Irma has devastated Florida</a></h3>
+                                <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+            <div class="row mt-5">
+                <div class="col text-center">
+                    <div class="block-27">
+                        <ul>
+                            <li><a href="#">&lt;</a></li>
+                            <li class="active"><span>1</span></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">4</a></li>
+                            <li><a href="#">5</a></li>
+                            <li><a href="#">&gt;</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>

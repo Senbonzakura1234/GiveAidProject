@@ -50,9 +50,7 @@ namespace GiveAidCharity.Controllers
         {
             //.Where(d => d.Status == Project.ProjectStatusEnum.Ongoing)
             var homepage = new HomeViewModel();
-            var projectsList = await _db.Projects
-
-                .ToListAsync();
+            var projectsList = await _db.Projects.Where(d => d.Status == Project.ProjectStatusEnum.Ongoing).ToListAsync();
             var causesList = projectsList.Select(t => new CausesListViewModel
             {
                 Id = t.Id,
@@ -113,7 +111,6 @@ namespace GiveAidCharity.Controllers
             var projectsList = await _db.Projects
                 .Where(p => p.Status == Project.ProjectStatusEnum.Ongoing
                             || p.Status == Project.ProjectStatusEnum.Success)
-                .Where(p => p.Status == Project.ProjectStatusEnum.Ongoing)
                 .ToListAsync();
             var causesList = projectsList.Select(t => new CausesListViewModel
                 {
@@ -153,8 +150,8 @@ namespace GiveAidCharity.Controllers
             }
             var project = await _db.Projects.FindAsync(id);
             if (project == null 
-                || project.Status != Project.ProjectStatusEnum.Ongoing
-                || project.Status != Project.ProjectStatusEnum.Success)
+                && project.Status != Project.ProjectStatusEnum.Ongoing
+                && project.Status != Project.ProjectStatusEnum.Success)
             {
                 return HttpNotFound();
             }
@@ -283,58 +280,123 @@ namespace GiveAidCharity.Controllers
             return View(listDonations);
         }
 
-        //public async Task<ActionResult> Test1()
-        //{
-        //    var res = await _db.Projects.ToListAsync();
-        //    foreach (var item in res)
-        //    {
-        //        item.CurrentFund = 0;
-        //        foreach (var donate in item.Donations)
-        //        {
-        //            if (donate.Status == Donation.DonationStatusEnum.Success)
-        //            {
-        //                item.CurrentFund += donate.Amount;
-        //            }
-        //        }
-        //        _db.Entry(item).State = EntityState.Modified;
-        //        await _db.SaveChangesAsync();
-        //    }
-        //    return RedirectToAction("Test2");
-        //}
-        //public async Task<ActionResult> Test2()
-        //{
-        //    var res = await _db.Users.ToArrayAsync();
-        //    foreach (var item in res)
-        //    {
-        //        item.Avatar =
-        //            "https://res.cloudinary.com/bangnguyen/image/upload/v1581844808/ProjectCharity/person_1_kvy425.jpg";
-        //        _db.Entry(item).State = EntityState.Modified;
-        //        await _db.SaveChangesAsync();
-        //    }
-        //    return RedirectToAction("Test3");
-        //}
-        //public async Task<ActionResult> Test3()
-        //{
-        //    var res = await _db.Projects.ToListAsync();
-        //    foreach (var item in res)
-        //    {
-        //        item.Status = item.CurrentFund >= item.Goal ?
-        //            Project.ProjectStatusEnum.Success : Project.ProjectStatusEnum.Ongoing;
-        //        _db.Entry(item).State = EntityState.Modified;
-        //        await _db.SaveChangesAsync();
-        //    }
-        //    return RedirectToAction("Test4");
-        //}
-        //public async Task<ActionResult> Test4()
-        //{
-        //    var res = await _db.Blogs.ToListAsync();
-        //    foreach (var item in res)
-        //    {
-        //        item.Status = Blog.BlogStatusEnum.Published;
-        //        _db.Entry(item).State = EntityState.Modified;
-        //        await _db.SaveChangesAsync();
-        //    }
-        //    return RedirectToAction("Index");
-        //}
+        public ActionResult Blogs(int? page, int? limit)
+        {
+            if (page == null)
+            {
+                page = 1;
+            }
+
+            if (limit == null)
+            {
+                limit = 9;
+            }
+
+            var data = _db.Blogs.Select(b => new BlogListViewModel
+            {
+                Id = b.Id,
+                CreatedAt = b.CreatedAt,
+                Avatar = b.ApplicationUser.Avatar,
+                Username = b.ApplicationUser.UserName,
+                Vote = b.Votes.Count(v => v.Status == Vote.VoteStatusEnum.UpVote) - b.Votes.Count(v => v.Status == Vote.VoteStatusEnum.DownVote),
+                Description = b.ContentPart1,
+                UserId = b.ApplicationUserId,
+                CategoryId = b.CategoryId,
+                CategoryName = b.Category.Name,
+                Title = b.Title,
+                Comment = b.BlogComments.Count
+            }).ToList();
+
+            ViewBag.TotalPage = Math.Ceiling((double)data.Count / limit.Value);
+            ViewBag.CurrentPage = page;
+
+            ViewBag.Limit = limit;
+
+            ViewBag.TotalItem = data.Count;
+
+            data = data.Skip((page.Value - 1) * limit.Value).Take(limit.Value).ToList();
+
+            return View(data);
+        }
+
+        public ActionResult BlogSingle(string id)
+        {
+            var data = _db.Blogs.Find(id);
+            if (data == null)
+            {
+                return HttpNotFound();
+            }
+
+            var resulte = new BlogDetailViewModel
+            {
+                CreatedAt = data.CreatedAt,
+                Avatar = data.ApplicationUser.Avatar,
+                Username = data.ApplicationUser.UserName,
+                Id = data.Id,
+                Vote = data.Votes.Count(v => v.Status == Vote.VoteStatusEnum.UpVote) - data.Votes.Count(v => v.Status == Vote.VoteStatusEnum.DownVote),
+                UserId = data.ApplicationUserId,
+                Title = data.Title,
+                BlogComments = data.BlogComments,
+                Category = data.Category,
+                ContentPart1 = data.ContentPart1,
+                ContentPart2 = data.ContentPart2,
+                ContentPart3 = data.ContentPart3
+            };
+
+            return View(resulte);
+        }
+//        public async Task<ActionResult> Test1()
+//        {
+//            var res = await _db.Projects.ToListAsync();
+//            foreach (var item in res)
+//            {
+//                item.CurrentFund = 0;
+//                foreach (var donate in item.Donations)
+//                {
+//                    if (donate.Status == Donation.DonationStatusEnum.Success)
+//                    {
+//                        item.CurrentFund += donate.Amount;
+//                    }
+//                }
+//                _db.Entry(item).State = EntityState.Modified;
+//                await _db.SaveChangesAsync();
+//            }
+//            return RedirectToAction("Index");
+//        }
+//        public async Task<ActionResult> Test2()
+//        {
+//            var res = await _db.Users.ToArrayAsync();
+//            foreach (var item in res)
+//            {
+//                item.Avatar =
+//                    "https://res.cloudinary.com/bangnguyen/image/upload/v1581844808/ProjectCharity/person_1_kvy425.jpg";
+//                _db.Entry(item).State = EntityState.Modified;
+//                await _db.SaveChangesAsync();
+//            }
+//            return RedirectToAction("Index");
+//        }
+//        public async Task<ActionResult> Test3()
+//        {
+//            var res = await _db.Projects.ToListAsync();
+//            foreach (var item in res)
+//            {
+//                item.Status = item.CurrentFund >= item.Goal ?
+//                    Project.ProjectStatusEnum.Success : Project.ProjectStatusEnum.Ongoing;
+//                _db.Entry(item).State = EntityState.Modified;
+//                await _db.SaveChangesAsync();
+//            }
+//            return RedirectToAction("Index");
+//        }
+//        public async Task<ActionResult> Test4()
+//        {
+//            var res = await _db.Blogs.ToListAsync();
+//            foreach (var item in res)
+//            {
+//                item.Status = Blog.BlogStatusEnum.Published;
+//                _db.Entry(item).State = EntityState.Modified;
+//                await _db.SaveChangesAsync();
+//            }
+//            return RedirectToAction("Index");
+//        }
     }
 }
