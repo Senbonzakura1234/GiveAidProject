@@ -65,6 +65,7 @@ namespace GiveAidCharity.Models.HelperClass
     {
         public IEnumerable<CausesListViewModel> CausesList { get; set; }
         public IEnumerable<DonationsListViewModel> DonationList { get; set; }
+        public IEnumerable<Category> Categories { get; set; }
     }
 
     public class CausesDetailViewModel

@@ -781,6 +781,7 @@
     <Content Include="Views\Dashboard\DonationList.cshtml" />
     <Content Include="Views\Dashboard\ProjectList.cshtml" />
     <Content Include="Views\Donations\Index.cshtml" />
+    <Content Include="Views\Home\CategoryView.cshtml" />
     <Content Include="Views\Home\Blogs.cshtml" />
     <Content Include="Views\Home\BlogSingle.cshtml" />
     <Content Include="Views\Categories\Create.cshtml" />
