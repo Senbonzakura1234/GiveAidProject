@@ -179,6 +179,7 @@
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\DonationsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MailTestController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PartialPartController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
@@ -195,6 +196,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\HelperClass\DashboardViewModel.cs" />
+    <Compile Include="Models\HelperClass\Email.cs" />
     <Compile Include="Models\HelperClass\ExtraAttributes.cs" />
     <Compile Include="Models\HelperClass\HelperEnum.cs" />
     <Compile Include="Models\HelperClass\JsonModel.cs" />
@@ -787,6 +789,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Views\Api\" />
     <Folder Include="Views\Chart\" />
+    <Folder Include="Views\MailTest\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
