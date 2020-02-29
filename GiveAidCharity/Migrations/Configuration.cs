@@ -45,7 +45,14 @@ namespace GiveAidCharity.Migrations
         private string _blogCommentParent =
             "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s";
 
-        private string _blogCommentChild = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters";
+        private string _blogCommentChild = 
+            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters";
+        private string _projectCommentParent =
+            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s";
+
+        private string _projectCommentChild =
+            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters";
+
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
@@ -53,317 +60,27 @@ namespace GiveAidCharity.Migrations
 
         protected override void Seed(GiveAidCharity.Models.ApplicationDbContext context)
         {
-            IDictionary<string, string> DicId = new Dictionary<string, string>();
-            var lsId = GetJsonData<Id>(Id_arr);
-            var lId = lsId.Select(f => new Id
-            {
-                num = f.num,
-                gu = f.gu
-            }).ToList();
-            foreach (var v in lId)
-            {
-                DicId.Add($"{v.num}", $"{v.gu}");
-            }
+            //SeedRole(context);
+            
+            //SeedUser(context);
 
+            //SeedCategories(context);
 
-            //=============================================================================
-            //SetRole(context);
-            //////=========================================================================
-            //SetUser(context);
-            ////===========================================================================
-            ////ADD Categories
-            //var listCategory = new List<Category>();
-            //listCategory.AddRange(new List<Category>
-            //{
-            //    new Category {Id =_categoryId[0], Name = "Humanitarian", Description = "crimes of war, terrorism"},
-            //    new Category {Id =_categoryId[1], Name = "Natural disaster", Description = "Save human in disaster"},
-            //    new Category {Id =_categoryId[2], Name = "Education", Description = "Give the change education"},
-            //    new Category {Id =_categoryId[3], Name = "Environment", Description = "Save the environment"},
-            //    new Category {Id =_categoryId[4], Name = "Culture", Description = "Save the cultural building"}
-            //});
-            //context.Categories.AddRange(listCategory);
-            //context.SaveChanges();
-            ////===========================================================================
-            ////ADD PROJECT
-            //try
-            //{
-            //    var lsProjects = GetJsonData<Article>(Blog_Url);
-            //    var lsImages = GetJsonData<ArticleImage>(Image_Url);
+            //SeedProjects(context);
 
-            //    //Lấy List Id của member
-            //    var lsMemberFund = (from tb1 in context.Users
-            //                        from tb2 in tb1.Roles
-            //                        join tb3 in context.Roles on tb2.RoleId equals tb3.Id
-            //                        where tb3.Name == "FundRaiser"
-            //                        select tb1.Id).ToList();
-            //    var rdn = new Random();
-            //    var listProjects = lsProjects.Select(f => new Project
-            //    {
-            //        Id = DicId[f.projectid],
-            //        ApplicationUserId = lsMemberFund[rdn.Next(1, lsMemberFund.Count - 1)],
-            //        Name = f.projectname,
-            //        CategoryId = _categoryId[rdn.Next(0, 4)],
-            //        Description = f.projectname,
-            //        CoverImg = f.CoverImg,
-            //        Goal = rdn.Next(100, 1000),
-            //        ContentPart1 = f.contentpart1,
-            //        ContentPart2 = f.contentpart2,
-            //        StartDate = new DateTime(2019, 02, 14).AddDays(rdn.Next(1, 340)),
-            //        CurrentFund = 0,
-            //        Status = 0,
-            //        DeletedAt = null,
-            //    })
-            //        .ToList();
-            //    foreach (var v in listProjects)
-            //    {
-            //        v.CreatedAt = v.StartDate.AddDays(2);
-            //        v.UpdatedAt = v.StartDate.AddDays(-2);
-            //        v.ExpireDate = v.StartDate.AddDays(10);
-            //        v.ReceiverEmail = context.Users.Find(v.ApplicationUserId).Email.ToString();
-            //    }
-            //    context.Projects.AddRange(listProjects);
-            //    context.SaveChanges();
-            //}
-            //catch (DbEntityValidationException e)
-            //{
-            //    foreach (var eve in e.EntityValidationErrors)
-            //    {
-            //        Debug.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-            //            eve.Entry.Entity.GetType().Name, eve.Entry.State);
-            //        foreach (var ve in eve.ValidationErrors)
-            //        {
-            //            Debug.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-            //                ve.PropertyName, ve.ErrorMessage);
-            //        }
-            //    }
-            //    throw;
-            //}
+            //SeedBlogs(context);
 
-            //===========================================================================
-            ////ADD BLOG
-            //var lsProjects = GetJsonData<Article>(Blog_Url);
-            //var lsImages = GetJsonData<ArticleImage>(Image_Url);
-            //var rdn = new Random();
-            //var listBlog = lsProjects.Select(f => new Blog()
-            //{
-            //    Id = Guid.NewGuid().ToString(),
-            //    ApplicationUserId = context.Projects.AsEnumerable()
-            //            .Where(p => p.Id.Contains($"{DicId[f.projectid]}"))
-            //            .Select(p => p.ApplicationUserId)
-            //            .SingleOrDefault(),
-            //    Rss = DicId[f.projectid],
-            //    CategoryId = _categoryId[rdn.Next(0, 4)],
-            //    Title = f.projectname,
-            //    ContentPart1 = f.contentpart1,
-            //    ContentPart2 = f.contentpart2,
-            //    Status = Blog.BlogStatusEnum.Published,
-            //    CreatedAt = context.Projects.AsEnumerable()
-            //            .Where(p => p.Id.Contains($"{DicId[f.projectid]}"))
-            //            .Select(p => p.CreatedAt)
-            //            .SingleOrDefault(),
-            //    UpdatedAt = context.Projects.AsEnumerable()
-            //            .Where(p => p.Id.Contains($"{DicId[f.projectid]}"))
-            //            .Select(p => p.CreatedAt)
-            //            .SingleOrDefault(),
-            //    DeletedAt = null
-            //})
-            //    .ToList();
-            //context.Blogs.AddRange(listBlog);
-            //context.SaveChanges();
-            //===========================================================================
-            ////ADD PROJECT IMAGE
-            //var lsImages = GetJsonData<ArticleImage>(Image_Url);
-            //var listImages = lsImages.Select(f => new ProjectImage()
-            //{
+            //SeedProjectImages(context);
 
-            //    Id = Guid.NewGuid().ToString(),
-            //    ProjectId = DicId[f.projectid],
-            //    Url = f.imgUrl,
-            //    Description = f.content,
-            //    Status = ProjectImage.ProjectImageStatusEnum.Show,
-            //    CreatedAt = context.Projects.AsEnumerable()
-            //        .Where(p => p.Id == DicId[f.projectid])
-            //        .Select(p => p.CreatedAt)
-            //        .SingleOrDefault(),
-            //    UpdatedAt = context.Projects.AsEnumerable()
-            //        .Where(p => p.Id == DicId[f.projectid])
-            //        .Select(p => p.CreatedAt)
-            //        .SingleOrDefault(),
-            //    DeletedAt = null
-            //})
-            //    .ToList();
+            //SeedDonations(context);
 
-            //context.ProjectImages.AddRange(listImages);
-            //context.SaveChanges();
+            //SeedProjectComments(context);
 
-            //===========================================================================
-            ////ADD DONATION
-            ////Tạo list donation để save vào db
-            //var listDonation = new List<Donation>();
-            ////Đếm số pj trong db
-            //var projectCount = context.Projects.Count();
-            ////var lsProject = context.Projects.Select(p => new {p.Id, p.ApplicationUserId}).ToList();
-            ////Lấy List Id của pj
-            //var lsProject = context.Projects.Select(p => p.Id).ToList();
-            ////Lấy List Id của member
-            //var lsMemberId = (from tb1 in context.Users
-            //                  from tb2 in tb1.Roles
-            //                  join tb3 in context.Roles on tb2.RoleId equals tb3.Id
-            //                  where tb3.Name == "Member"
-            //                  select tb1.Id).ToList();
-
-
-            ////Thêm thông tin donation
-
-            //Array values = Enum.GetValues(typeof(Donation.PaymentMethodEnum));
-            //var rdn = new Random();
-            //for (int i = 0; i < projectCount; i++)
-            //{
-            //    var donationPerPj = rdn.Next(15, 20);
-            //    for (int j = 0; j < donationPerPj; j++)
-            //    {
-            //        var randomPayment = (Donation.PaymentMethodEnum)values.GetValue(rdn.Next(values.Length));
-            //        // var newSpan = new DateTime(0, 0, new Random().Next(0, 8));
-            //        string projectId = lsProject[i];
-            //        listDonation.Add(new Donation()
-            //        {
-            //            Id = Guid.NewGuid().ToString(),
-            //            ApplicationUserId = lsMemberId[j],
-            //            ProjectId = lsProject[i],
-            //            Amount = rdn.Next(1, 100), //cost mỗi donation 1$-100$
-            //            PaymentMethod = randomPayment,
-            //            Status = (Donation.DonationStatusEnum)rdn.Next(1, 3),
-            //            CreatedAt = context.Projects.Where(o => o.Id == projectId).Select(p => p.StartDate).SingleOrDefault().AddDays(rdn.Next(0, 8)),
-            //            DeletedAt = null
-            //        });
-            //    }
-
-            //    foreach (var d in listDonation)
-            //    {
-            //        d.UpdatedAt = d.CreatedAt;
-            //    }
-
-            //    context.Donations.AddRange(listDonation);
-            //    context.SaveChanges();
-            //    listDonation.Clear();
-            //}
-
-            //===========================================================================
-            ////ADD Project comment
-            //var listComment = new List<ProjectComment>();
-            //var listChildComment = new List<ProjectComment>();
-
-            //for (int i = 1; i <= 30; i++)
-            //{
-            //    string projectId = DicId[$"{i}"];
-            //    for (int j = 0; j < 3; j++)
-            //    {
-            //        var spanTime = new Random().Next(1, 3);
-            //        listComment.Add(new ProjectComment
-            //        {
-            //            Id = Guid.NewGuid().ToString(),
-            //            ApplicationUserId = context.Projects.Where(p => p.Id == projectId).Select(p => p.ApplicationUserId).SingleOrDefault(),
-            //            ProjectId = projectId,
-            //            ParentId = null,
-            //            Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
-            //                      " I am parent comment ",
-            //            CreatedAt = context.Projects.Where(p => p.Id == projectId).Select(p => p.StartDate).SingleOrDefault().AddDays(spanTime),
-            //            DeletedAt = null
-            //        });
-            //    }
-
-            //}
-            //foreach (var c in listComment)
-            //{
-            //    c.UpdatedAt = c.CreatedAt;
-            //}
-            //context.ProjectComments.AddRange(listComment);
-            //context.SaveChanges();
-            ////var listComment = context.ProjectComments.Select(row => row).ToList();
-
-            //foreach (var c in listComment)
-            //{
-            //    string projectId = c.ProjectId;
-            //    string parentId = c.Id;
-            //    listChildComment.Add(new ProjectComment
-            //    {
-            //        Id = Guid.NewGuid().ToString(),
-            //        ApplicationUserId = context.Projects.Where(p => p.Id == projectId).Select(p => p.ApplicationUserId).SingleOrDefault(),
-            //        ProjectId = projectId,
-            //        ParentId = parentId,
-            //        Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
-            //                  " ---I am child comment -- hello ",
-            //        CreatedAt = context.ProjectComments.Where(p => p.Id == parentId).Select(p => p.CreatedAt).SingleOrDefault(),
-            //        DeletedAt = null
-            //    });
-            //}
-            //foreach (var p in listChildComment)
-            //{
-            //    p.UpdatedAt = p.CreatedAt;
-            //}
-            //context.ProjectComments.AddRange(listChildComment);
-            //context.SaveChanges();
-            //=======================================================
-
-            ////Add BlogComment
-            var listBlogComments = new List<BlogComment>();
-            var listChildBlogComments = new List<BlogComment>();
-            var listBlog = context.Blogs.ToList();
-
-            var rdn = new Random();
-            Array values = Enum.GetValues(typeof(BlogComment.BlogCommentStatusEnum));
-            foreach (var p in listBlog)
-            {
-                for (int i = 0; i <= 30; i++)
-                {
-                    for (int j = 0; j < 3; j++)
-                    {
-                        var spanTime = new Random().Next(1, 3);
-                        var randomCommentEnum = (BlogComment.BlogCommentStatusEnum)values.GetValue(rdn.Next(values.Length));
-                        listBlogComments.Add(new BlogComment
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            ApplicationUserId = p.ApplicationUserId,
-                            BlogId = p.Id,
-                            ParentId = null,
-                            Content = _blogCommentParent,
-                            Status = (BlogComment.BlogCommentStatusEnum)rdn.Next(0, 2),
-                            CreatedAt = p.CreatedAt.AddDays(spanTime)
-                        });
-                    }
-                }
-            }
-
-            foreach (var c in listBlogComments)
-            {
-                c.UpdatedAt = c.CreatedAt;
-            }
-            context.BlogComments.AddRange(listBlogComments);
-            context.SaveChanges();
-
-
-            foreach (var c in listBlogComments)
-            {
-                listChildBlogComments.Add(new BlogComment
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    ApplicationUserId = c.ApplicationUserId,
-                    BlogId = c.BlogId,
-                    ParentId = c.Id,
-                    Content = _blogCommentChild,
-                    CreatedAt = c.CreatedAt,
-                    DeletedAt = null
-                });
-            }
-            foreach (var p in listChildBlogComments)
-            {
-                p.UpdatedAt = p.CreatedAt;
-            }
-            context.BlogComments.AddRange(listChildBlogComments);
-            context.SaveChanges();
+            //SeedBlogComments(context);
+            
         }
 
-        public void SetUser(GiveAidCharity.Models.ApplicationDbContext context)
+        public void SeedUser(GiveAidCharity.Models.ApplicationDbContext context)
         {
             for (var i = 0; i < 30; i++)
             {
@@ -408,7 +125,7 @@ namespace GiveAidCharity.Migrations
             }
         }
 
-        public void SetRole(GiveAidCharity.Models.ApplicationDbContext context)
+        public void SeedRole(GiveAidCharity.Models.ApplicationDbContext context)
         {
             //add User Roles
             if (!context.Roles.Any(r => r.Name == "Administrator"))
@@ -457,6 +174,321 @@ namespace GiveAidCharity.Migrations
             }
         }
 
+        public void SeedCategories(ApplicationDbContext context)
+        {
+            var listCategory = new List<Category>();
+            listCategory.AddRange(new List<Category>
+            {
+                new Category {Id =_categoryId[0], Name = "Humanitarian", Description = "crimes of war, terrorism"},
+                new Category {Id =_categoryId[1], Name = "Natural disaster", Description = "Save human in disaster"},
+                new Category {Id =_categoryId[2], Name = "Education", Description = "Give the change education"},
+                new Category {Id =_categoryId[3], Name = "Environment", Description = "Save the environment"},
+                new Category {Id =_categoryId[4], Name = "Culture", Description = "Save the cultural building"}
+            });
+            context.Categories.AddRange(listCategory);
+            context.SaveChanges();
+        }
+
+        public void SeedProjects(ApplicationDbContext context)
+        {
+            try
+            {
+                var lsProjects = GetJsonData<Article>(Blog_Url);
+                var lsImages = GetJsonData<ArticleImage>(Image_Url);
+                var dictionaryId = IdGuid();
+                //Lấy List Id của member
+                var lsMemberFund = (from tb1 in context.Users
+                                    from tb2 in tb1.Roles
+                                    join tb3 in context.Roles on tb2.RoleId equals tb3.Id
+                                    where tb3.Name == "FundRaiser"
+                                    select tb1.Id).ToList();
+                var rdn = new Random();
+                var listProjects = lsProjects.Select(f => new Project
+                {
+                    Id = dictionaryId[f.projectid],
+                    ApplicationUserId = lsMemberFund[rdn.Next(1, lsMemberFund.Count - 1)],
+                    Name = f.projectname,
+                    CategoryId = _categoryId[rdn.Next(0, 4)],
+                    Description = f.projectname,
+                    CoverImg = f.CoverImg,
+                    Goal = rdn.Next(100, 1000),
+                    ContentPart1 = f.contentpart1,
+                    ContentPart2 = f.contentpart2,
+                    StartDate = new DateTime(2019, 02, 14).AddDays(rdn.Next(1, 340)),
+                    CurrentFund = 0,
+                    Status = 0,
+                    DeletedAt = null,
+                })
+                    .ToList();
+                foreach (var v in listProjects)
+                {
+                    v.CreatedAt = v.StartDate.AddDays(2);
+                    v.UpdatedAt = v.StartDate.AddDays(-2);
+                    v.ExpireDate = v.StartDate.AddDays(10);
+                    v.ReceiverEmail = context.Users.Find(v.ApplicationUserId).Email.ToString();
+                }
+                context.Projects.AddRange(listProjects);
+                context.SaveChanges();
+            }
+            catch (DbEntityValidationException e)
+            {
+                foreach (var eve in e.EntityValidationErrors)
+                {
+                    Debug.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                    foreach (var ve in eve.ValidationErrors)
+                    {
+                        Debug.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                            ve.PropertyName, ve.ErrorMessage);
+                    }
+                }
+                throw;
+            }
+        }
+
+        public void SeedBlogs(ApplicationDbContext context)
+        {
+            var lsProjects = GetJsonData<Article>(Blog_Url);
+            var lsImages = GetJsonData<ArticleImage>(Image_Url);
+            var dictionaryId = IdGuid();
+            var rdn = new Random();
+
+            var listBlog = lsProjects.Select(f => new Blog()
+            {
+                Id = Guid.NewGuid().ToString(),
+                ApplicationUserId = context.Projects.AsEnumerable()
+                        .Where(p => p.Id.Contains($"{dictionaryId[f.projectid]}"))
+                        .Select(p => p.ApplicationUserId)
+                        .SingleOrDefault(),
+                Rss = dictionaryId[f.projectid],
+                CategoryId = _categoryId[rdn.Next(0, 4)],
+                Title = f.projectname,
+                ContentPart1 = f.contentpart1,
+                ContentPart2 = f.contentpart2,
+                Status = Blog.BlogStatusEnum.Published,
+                CreatedAt = context.Projects.AsEnumerable()
+                        .Where(p => p.Id.Contains($"{dictionaryId[f.projectid]}"))
+                        .Select(p => p.CreatedAt)
+                        .SingleOrDefault(),
+                UpdatedAt = context.Projects.AsEnumerable()
+                        .Where(p => p.Id.Contains($"{dictionaryId[f.projectid]}"))
+                        .Select(p => p.CreatedAt)
+                        .SingleOrDefault(),
+                DeletedAt = null
+            })
+                .ToList();
+            context.Blogs.AddRange(listBlog);
+            context.SaveChanges();
+        }
+
+        public void SeedProjectImages(ApplicationDbContext context)
+        {
+            var lsImages = GetJsonData<ArticleImage>(Image_Url);
+            var dictionaryId = IdGuid();
+            var listImages = lsImages.Select(f => new ProjectImage()
+            {
+
+                Id = Guid.NewGuid().ToString(),
+                ProjectId = dictionaryId[f.projectid],
+                Url = f.imgUrl,
+                Description = f.content,
+                Status = ProjectImage.ProjectImageStatusEnum.Show,
+                CreatedAt = context.Projects.AsEnumerable()
+                    .Where(p => p.Id == dictionaryId[f.projectid])
+                    .Select(p => p.CreatedAt)
+                    .SingleOrDefault(),
+                UpdatedAt = context.Projects.AsEnumerable()
+                    .Where(p => p.Id == dictionaryId[f.projectid])
+                    .Select(p => p.CreatedAt)
+                    .SingleOrDefault(),
+                DeletedAt = null
+            })
+                .ToList();
+
+            context.ProjectImages.AddRange(listImages);
+            context.SaveChanges();
+        }
+
+        public void SeedDonations(ApplicationDbContext context)
+        {
+            
+            var listDonation = new List<Donation>();
+            var projectCount = context.Projects.Count();
+            //var lsProject = context.Projects.Select(p => new {p.Id, p.ApplicationUserId}).ToList();
+            //Lấy List Id của pj
+            var lsProjectId = context.Projects.Select(p => p.Id).ToList();
+            //Lấy List Id của member
+            var lsMemberId = (from tb1 in context.Users
+                              from tb2 in tb1.Roles
+                              join tb3 in context.Roles on tb2.RoleId equals tb3.Id
+                              where tb3.Name == "Member"
+                              select tb1.Id).ToList();
+            Array values = Enum.GetValues(typeof(Donation.PaymentMethodEnum));
+            var rdn = new Random();
+
+            for (int i = 0; i < projectCount; i++)
+            {
+                var donationPerPj = rdn.Next(15, 20);
+                for (int j = 0; j < donationPerPj; j++)
+                {
+                    var randomPayment = (Donation.PaymentMethodEnum)values.GetValue(rdn.Next(values.Length));
+                    // var newSpan = new DateTime(0, 0, new Random().Next(0, 8));
+                    string projectId = lsProjectId[i];
+                    listDonation.Add(new Donation()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        ApplicationUserId = lsMemberId[j],
+                        ProjectId = lsProjectId[i],
+                        Amount = rdn.Next(1, 100), //cost mỗi donation 1$-100$
+                        PaymentMethod = randomPayment,
+                        Status = (Donation.DonationStatusEnum)rdn.Next(1, 3),
+                        CreatedAt = context.Projects.Where(o => o.Id == projectId).Select(p => p.StartDate).SingleOrDefault().AddDays(rdn.Next(0, 8)),
+                        DeletedAt = null
+                    });
+                }
+
+                foreach (var d in listDonation)
+                {
+                    d.UpdatedAt = d.CreatedAt;
+                }
+
+                context.Donations.AddRange(listDonation);
+                context.SaveChanges();
+                listDonation.Clear();
+            }
+        }
+
+        public void SeedProjectComments(ApplicationDbContext context)
+        {
+            var listComment = new List<ProjectComment>();
+            var listChildComment = new List<ProjectComment>();
+            var dictionaryId = IdGuid();
+            for (int i = 1; i <= 30; i++)
+            {
+                string projectId = dictionaryId[$"{i}"];
+                for (int j = 0; j < 3; j++)
+                {
+                    var spanTime = new Random().Next(1, 3);
+                    listComment.Add(new ProjectComment
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        ApplicationUserId = context.Projects.Where(p => p.Id == projectId).Select(p => p.ApplicationUserId).SingleOrDefault(),
+                        ProjectId = projectId,
+                        ParentId = null,
+                        Content = _projectCommentParent,
+                        CreatedAt = context.Projects.Where(p => p.Id == projectId).Select(p => p.StartDate).SingleOrDefault().AddDays(spanTime),
+                        DeletedAt = null
+                    });
+                }
+
+            }
+            foreach (var c in listComment)
+            {
+                c.UpdatedAt = c.CreatedAt;
+            }
+            context.ProjectComments.AddRange(listComment);
+            context.SaveChanges();
+            //var listComment = context.ProjectComments.Select(row => row).ToList();
+            foreach (var c in listComment)
+            {
+                string projectId = c.ProjectId;
+                string parentId = c.Id;
+                listChildComment.Add(new ProjectComment
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ApplicationUserId = context.Projects.Where(p => p.Id == projectId).Select(p => p.ApplicationUserId).SingleOrDefault(),
+                    ProjectId = projectId,
+                    ParentId = parentId,
+                    Content = _projectCommentChild,
+                    CreatedAt = context.ProjectComments.Where(p => p.Id == parentId).Select(p => p.CreatedAt).SingleOrDefault(),
+                    DeletedAt = null
+                });
+            }
+            foreach (var p in listChildComment)
+            {
+                p.UpdatedAt = p.CreatedAt;
+            }
+            context.ProjectComments.AddRange(listChildComment);
+            context.SaveChanges();
+        }
+
+        public void SeedBlogComments(ApplicationDbContext context)
+        {
+            var listBlogComments = new List<BlogComment>();
+            var listChildBlogComments = new List<BlogComment>();
+            var listBlog = context.Blogs.ToList();
+
+            var rdn = new Random();
+            Array values = Enum.GetValues(typeof(BlogComment.BlogCommentStatusEnum));
+            foreach (var p in listBlog)
+            {
+
+                    for (int j = 0; j < 3; j++)
+                    {
+                        var spanTime = new Random().Next(1, 3);
+                        var randomCommentEnum =
+                            (BlogComment.BlogCommentStatusEnum) values.GetValue(rdn.Next(values.Length));
+                        listBlogComments.Add(new BlogComment
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            ApplicationUserId = p.ApplicationUserId,
+                            BlogId = p.Id,
+                            ParentId = null,
+                            Content = _blogCommentParent,
+                            Status = (BlogComment.BlogCommentStatusEnum) rdn.Next(0, 2),
+                            CreatedAt = p.CreatedAt.AddDays(spanTime)
+                        });
+                    }
+            }
+
+            foreach (var c in listBlogComments)
+            {
+                c.UpdatedAt = c.CreatedAt;
+            }
+
+            context.BlogComments.AddRange(listBlogComments);
+            context.SaveChanges();
+
+
+            foreach (var c in listBlogComments)
+            {
+                listChildBlogComments.Add(new BlogComment
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ApplicationUserId = c.ApplicationUserId,
+                    BlogId = c.BlogId,
+                    ParentId = c.Id,
+                    Content = _blogCommentChild,
+                    CreatedAt = c.CreatedAt,
+                    DeletedAt = null
+                });
+            }
+
+            foreach (var p in listChildBlogComments)
+            {
+                p.UpdatedAt = p.CreatedAt;
+            }
+
+            context.BlogComments.AddRange(listChildBlogComments);
+            context.SaveChanges();
+        }
+
+        // Mapping (int) ProjectId in Json file with (GuiId) ProjectId to insert (Guid) ProjectId into db
+        public Dictionary<string, string> IdGuid()
+        {
+            IDictionary<string, string> dicId = new Dictionary<string, string>();
+            var lsIdGuid = GetJsonData<Id>(Id_arr);
+            var lsId = lsIdGuid.Select(f => new Id
+            {
+                num = f.num,
+                gu = f.gu
+            }).ToList();
+            foreach (var v in lsId)
+            {
+                dicId.Add($"{v.num}", $"{v.gu}");
+            }
+            return (Dictionary<string, string>) dicId;
+        }
         //Get Json Data
         private List<T> GetJsonData<T>(string url) where T : new()
         {
@@ -465,10 +497,7 @@ namespace GiveAidCharity.Migrations
             var list = JsonConvert.DeserializeObject<List<T>>(responseContent);
             return list;
         }
-        public static void Main(String[] args)
-        {
-            Console.WriteLine("Main Method");
-        }
+
     }
 
     public class Article
