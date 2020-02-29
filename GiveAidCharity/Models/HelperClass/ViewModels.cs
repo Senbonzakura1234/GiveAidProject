@@ -170,6 +170,7 @@ namespace GiveAidCharity.Models.HelperClass
         public string CategoryId { get; set; }
         public string CategoryName { get; set; }
         public int Vote { get; set; }
+        public int Comment { get; set; }
         //this field showing Vote points of this post
         public string Title { get; set; }
         public string Description { get; set; } // This == ContentPart1 of Blog
@@ -188,6 +189,7 @@ namespace GiveAidCharity.Models.HelperClass
         public Category Category { get; set; }
         public int Vote { get; set; }
         //this field showing Vote points of this post
+        public virtual ICollection<BlogComment> BlogComments { get; set; }
         public string Title { get; set; }
         public string ContentPart1 { get; set; }
         public string ContentPart2 { get; set; }
