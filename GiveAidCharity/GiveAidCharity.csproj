@@ -303,6 +303,7 @@
     <Content Include="Content\HomepageTheme\css\open-iconic-bootstrap.min.css" />
     <Content Include="Content\HomepageTheme\css\owl.carousel.min.css" />
     <Content Include="Content\HomepageTheme\css\owl.theme.default.min.css" />
+    <Content Include="Content\HomepageTheme\css\rating.css" />
     <Content Include="Content\HomepageTheme\css\style.css" />
     <Content Include="Content\HomepageTheme\fonts\flaticon\backup.txt" />
     <Content Include="Content\HomepageTheme\fonts\flaticon\font\flaticon.css" />
@@ -351,6 +352,7 @@
     <Content Include="Content\HomepageTheme\js\bootstrap-datepicker.js" />
     <Content Include="Content\HomepageTheme\js\bootstrap.min.js" />
     <Content Include="Content\HomepageTheme\js\custom.js" />
+    <Content Include="Content\HomepageTheme\js\getRating.js" />
     <Content Include="Content\HomepageTheme\js\google-map.js" />
     <Content Include="Content\HomepageTheme\js\jquery-3.2.1.min.js" />
     <Content Include="Content\HomepageTheme\js\jquery-migrate-3.0.1.min.js" />
@@ -366,6 +368,7 @@
     <Content Include="Content\HomepageTheme\js\popper.min.js" />
     <Content Include="Content\HomepageTheme\js\range.js" />
     <Content Include="Content\HomepageTheme\js\scrollax.min.js" />
+    <Content Include="Content\HomepageTheme\js\submitVote.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />

@@ -151,7 +151,6 @@ namespace GiveAidCharity.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var project = await _db.Projects.FindAsync(id);
-            Debug.WriteLine(project.Status);
 
             if (project == null)
             {
@@ -299,12 +298,12 @@ namespace GiveAidCharity.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var Category = await _db.Categories.FindAsync(id);
-            if (Category == null)
+            var category = await _db.Categories.FindAsync(id);
+            if (category == null)
             {
                 return HttpNotFound();
             }
-            var projects = Category.Projects.ToList();
+            var projects = category.Projects.ToList();
             var projectInCategory = projects.Select(t => new CausesListViewModel
             {
                 Id = t.Id,
@@ -368,31 +367,52 @@ namespace GiveAidCharity.Controllers
             return View(data);
         }
 
-        public ActionResult BlogSingle(string id)
+        public async Task<ActionResult> BlogSingle(string id)
         {
-            var data = _db.Blogs.Find(id);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var data = await _db.Blogs.FindAsync(id);
             if (data == null)
             {
                 return HttpNotFound();
             }
 
-            var resulte = new BlogDetailViewModel
+            if (data.Status != Blog.BlogStatusEnum.Published)
+            {
+                return HttpNotFound();
+            }
+
+            var currentUserVote = Vote.VoteStatusEnum.Neutral;
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                var vote = user.Votes.OrderByDescending(v => v.CreatedAt)
+                    .Where(v => v.Status != Vote.VoteStatusEnum.Neutral).ToList().FirstOrDefault();
+                if (vote != null)
+                {
+                    currentUserVote = vote.Status;
+                }
+            }
+            var result = new BlogDetailViewModel
             {
                 CreatedAt = data.CreatedAt,
                 Avatar = data.ApplicationUser.Avatar,
                 Username = data.ApplicationUser.UserName,
                 Id = data.Id,
-                Vote = data.Votes.Count(v => v.Status == Vote.VoteStatusEnum.UpVote) - data.Votes.Count(v => v.Status == Vote.VoteStatusEnum.DownVote),
+                Vote = await HelperMethod.RatingCount(data.Id),
                 UserId = data.ApplicationUserId,
                 Title = data.Title,
                 BlogComments = data.BlogComments,
                 Category = data.Category,
                 ContentPart1 = data.ContentPart1,
                 ContentPart2 = data.ContentPart2,
-                ContentPart3 = data.ContentPart3
+                ContentPart3 = data.ContentPart3,
+                CurrentUserVoteStatus = currentUserVote
             };
 
-            return View(resulte);
+            return View(result);
         }
 //        public async Task<ActionResult> Test1()
 //        {

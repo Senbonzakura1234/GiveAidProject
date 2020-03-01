@@ -197,6 +197,6 @@ namespace GiveAidCharity.Models.HelperClass
         [DataType(DataType.DateTime)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime CreatedAt { get; set; }
-
+        public Vote.VoteStatusEnum CurrentUserVoteStatus { get; set; }
     }
 }

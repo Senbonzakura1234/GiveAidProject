@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Globalization;
@@ -187,24 +186,25 @@ namespace GiveAidCharity.Controllers
         public async Task<ActionResult> GetProjectData()
         {
             var data = await _db.Projects.OrderByDescending(p => p.StartDate).Take(10).ToListAsync();
-            var listProject = new List<projectJsonModel>();
-            foreach (var item in data)
-            {
-                listProject.Add(new projectJsonModel { name = item.Name, currentFund = item.CurrentFund, startDate = item.StartDate });
-            }
+            var listProject = data.Select(item => new projectJsonModel {name = item.Name, currentFund = item.CurrentFund, startDate = item.StartDate}).ToList();
             return Json(new
             {
                 listProject
             }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Vote(string userId, string blogId, int? status)
         {
             if (status == null || !Enum.IsDefined(typeof(Vote.VoteStatusEnum), status))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
+            if (!User.Identity.IsAuthenticated)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             var currentUserid = User.Identity.GetUserId();
             if (currentUserid == null || userId == null || !currentUserid.Equals(userId))
             {
@@ -232,6 +232,8 @@ namespace GiveAidCharity.Controllers
                     }
                 }
             }
+            Debug.WriteLine(status);
+            Debug.WriteLine((Vote.VoteStatusEnum)status);
             var vote = new Vote
             {
                 ApplicationUserId = userId,
@@ -241,6 +243,13 @@ namespace GiveAidCharity.Controllers
             _db.Votes.Add(vote);
             await _db.SaveChangesAsync();
             return new HttpStatusCodeResult(HttpStatusCode.OK);
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> GetRating(string blogId)
+        {
+            var rating = await HelperMethod.RatingCount(blogId);
+            return Json(new { rating }, JsonRequestBehavior.AllowGet);
         }
     }
 }
