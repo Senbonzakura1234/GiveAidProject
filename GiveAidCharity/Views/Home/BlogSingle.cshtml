@@ -1,14 +1,49 @@
-﻿@using Microsoft.AspNet.Identity
+﻿@using GiveAidCharity.Models.Main
+@using Microsoft.AspNet.Identity
 @model GiveAidCharity.Models.HelperClass.BlogDetailViewModel
+@* ReSharper disable  MarkupTextTypo *@
 
 @{
     ViewBag.Title = "BlogSingle";
+}
+@section style
+{
+    @Styles.Render("~/Content/HomepageTheme/css/rating.css")
 }
 <section class="ftco-section ftco-degree-bg">
     <div class="container">
         <div class="row">
             <div class="col-md-8 ftco-animate">
                 <h2 class="mb-3">@Model.Title</h2>
+                <p class="blog-meta-data">
+                    <div class="rating">
+                        <!-- Thumbs up -->
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="like grow rating-control
+                                 @(Model.CurrentUserVoteStatus == Vote.VoteStatusEnum.UpVote? "active" : "")">
+                                <i class="icon-thumb_up" aria-hidden="true"></i>
+                            </div>
+                        }
+                        <div class="d-inline">
+                            <span id="ratingValueDisplay">@Model.Vote</span>
+                        </div>
+                        <!-- Thumbs down -->
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="dislike grow rating-control
+                                 @(Model.CurrentUserVoteStatus == Vote.VoteStatusEnum.DownVote? "active" : "")">
+                                <i class="icon-thumb_down" aria-hidden="true"></i>
+                            </div>
+                        }
+                        <div class="d-inline">
+                            <span>@Model.CreatedAt</span>
+                        </div>
+                        <div class="d-inline">
+                            <span>by @Model.Username</span>
+                        </div>
+                    </div>
+                </p>
                 <p>@Model.ContentPart1</p>
                 <p>@Model.ContentPart2</p>
                 <p>@Model.ContentPart3</p>
@@ -35,7 +70,7 @@
                         {
                             <li class="comment">
                                 <div class="vcard bio">
-                                    <img src="~/Content/HomepageTheme/images/person_1.jpg" alt="Image placeholder">
+                                    <img src="@item.ApplicationUser.Avatar" alt="Image placeholder">
                                 </div>
                                 <div class="comment-body">
                                     <h3>@item.ApplicationUser.UserName</h3>
@@ -50,7 +85,7 @@
                                     {
                                         <li class="comment">
                                             <div class="vcard bio">
-                                                <img src="~/Content/HomepageTheme/images/person_1.jpg" alt="Image placeholder">
+                                                <img src="@childcomment.ApplicationUser.Avatar" alt="Image placeholder">
                                             </div>
                                             <div class="comment-body">
                                                 <h3>@childcomment.ApplicationUser.UserName</h3>
@@ -108,19 +143,21 @@
                 <div class="sidebar-box ftco-animate">
                     <div class="categories">
                         <h3>Categories</h3>
-                        <li><a href="#">Tour <span>(12)</span></a></li>
-                        <li><a href="#">Hotel <span>(22)</span></a></li>
-                        <li><a href="#">Coffee <span>(37)</span></a></li>
-                        <li><a href="#">Drinks <span>(42)</span></a></li>
-                        <li><a href="#">Foods <span>(14)</span></a></li>
-                        <li><a href="#">Travel <span>(140)</span></a></li>
+                        <ul class="p-0">
+                            <li><a href="#">Tour <span>(12)</span></a></li>
+                            <li><a href="#">Hotel <span>(22)</span></a></li>
+                            <li><a href="#">Coffee <span>(37)</span></a></li>
+                            <li><a href="#">Drinks <span>(42)</span></a></li>
+                            <li><a href="#">Foods <span>(14)</span></a></li>
+                            <li><a href="#">Travel <span>(140)</span></a></li>
+                        </ul>
                     </div>
                 </div>
 
                 <div class="sidebar-box ftco-animate">
                     <h3>Recent Blog</h3>
                     <div class="block-21 mb-4 d-flex">
-                        <a class="blog-img mr-4" style="background-image: url(images/image_1.jpg);"></a>
+                        <a class="blog-img mr-4" style="background-image: url('../../Content/HomepageTheme/images/image_1.jpg');"></a>
                         <div class="text">
                             <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
                             <div class="meta">
@@ -131,7 +168,7 @@
                         </div>
                     </div>
                     <div class="block-21 mb-4 d-flex">
-                        <a class="blog-img mr-4" style="background-image: url(images/image_2.jpg);"></a>
+                        <a class="blog-img mr-4" style="background-image: url('../../Content/HomepageTheme/images/image_2.jpg');"></a>
                         <div class="text">
                             <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
                             <div class="meta">
@@ -142,7 +179,7 @@
                         </div>
                     </div>
                     <div class="block-21 mb-4 d-flex">
-                        <a class="blog-img mr-4" style="background-image: url(images/image_3.jpg);"></a>
+                        <a class="blog-img mr-4" style="background-image: url('../../Content/HomepageTheme/images/image_3.jpg');"></a>
                         <div class="text">
                             <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
                             <div class="meta">
@@ -177,24 +214,22 @@
         </div>
     </div>
 </section> <!-- .section -->
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm", @class = "d-none" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="userId" value="@User.Identity.GetUserId()" />
+    <input type="hidden" name="blogId" value="@Model.Id" />
+    <input type="hidden" name="status" id="statusValue" value="0" />
+}
 
-<input type="hidden" name="userId" value="@User.Identity.GetUserId()"/>
-<input type="hidden" name="blogId" value="@Model.Id" />
-<input type="hidden" name="status" value="1" />
+<input type="hidden" name="rating" id="ratingValue" value="0" />
+<input type="hidden" name="urlSubmit" id="urlSubmit" value="@Url.Action("Vote","Api")" />
+<input type="hidden" name="urlGetRating" id="urlGetRating" value="@Url.Action("GetRating","Api")" />
 @section scripts
 {
-    <script>
-
-        $.ajax({
-            url: '/Api/Vote',
-            data: {
-                userId: $('input[name="userId"]').val(),
-                blogId: $('input[name="blogId"]').val(),
-                status: $('input[name="status"]').val()
-            },
-            success: function(res) {
-                console.log(res);
-            }
-        });
-    </script>
+    @if (User.Identity.IsAuthenticated)
+    {
+        @Scripts.Render("~/Content/HomepageTheme/js/submitVote.js")
+    }
+    @Scripts.Render("~/Content/HomepageTheme/js/getRating.js")
 }
