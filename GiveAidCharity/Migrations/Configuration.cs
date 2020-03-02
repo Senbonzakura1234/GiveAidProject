@@ -13,8 +13,6 @@ using GiveAidCharity.Models.Main;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Newtonsoft.Json;
-using System.Data.Entity.Validation;
-using System.Diagnostics;
 
 
 namespace GiveAidCharity.Migrations

@@ -87,9 +87,13 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Quartz, Version=3.0.7.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.3.0.7\lib\net452\Quartz.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel.Activities" />
     <Reference Include="System.Web.DynamicData" />
@@ -200,9 +204,11 @@
     <Compile Include="Models\HelperClass\Email.cs" />
     <Compile Include="Models\HelperClass\ExtraAttributes.cs" />
     <Compile Include="Models\HelperClass\HelperEnum.cs" />
+    <Compile Include="Models\HelperClass\Job.cs" />
     <Compile Include="Models\HelperClass\JsonModel.cs" />
     <Compile Include="Models\HelperClass\HelperMethod.cs" />
     <Compile Include="Models\HelperClass\Miscellaneous.cs" />
+    <Compile Include="Models\HelperClass\Schedule.cs" />
     <Compile Include="Models\HelperClass\ViewModels.cs" />
     <Compile Include="Models\HelperClass\VnPayLibrary.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -800,6 +806,7 @@
     <Folder Include="Views\Api\" />
     <Folder Include="Views\Chart\" />
     <Folder Include="Views\MailTest\" />
+    <Folder Include="Views\TaskSchedule\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
