@@ -438,6 +438,21 @@ namespace GiveAidCharity.Controllers
             });
             return PartialView(categoryList);
         }
+        public ActionResult CauseSideBar() {
+            var cause = _db.Projects.Where(p => p.Status != Project.ProjectStatusEnum.Canceled
+            && p.Status != Project.ProjectStatusEnum.Suspended
+            && p.Status != Project.ProjectStatusEnum.Establishing
+            && p.Status != Project.ProjectStatusEnum.Pending).OrderByDescending(p => p.StartDate).Take(3).ToList();
+            var causesList = cause.Select(t => new CausesListViewModel
+            {
+                Id = t.Id,
+                CoverImg = t.CoverImg,
+                Name = t.Name,
+                Description = t.Description,
+                StartDate = t.StartDate
+            });
+            return PartialView(causesList);
+        }
 //        public async Task<ActionResult> Test1()
 //        {
 //            var res = await _db.Projects.ToListAsync();

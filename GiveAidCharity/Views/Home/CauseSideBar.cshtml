@@ -1,0 +1,22 @@
+﻿@model IEnumerable<GiveAidCharity.Models.HelperClass.CausesListViewModel>
+
+@foreach (var item in Model)
+{
+    <a class="Cause-img mr-4" style="background-image: url(@item.CoverImg);"></a>
+    <div class="text">
+        <h3 class="heading">
+            <a href="#">@item.Name</a>
+        </h3>
+        <div class="meta">
+            <div>
+                <a href="#"><span class="icon-calendar"></span> @item.StartDate</a>
+            </div>
+            <div>
+                <a href="#"><span class="icon-person"></span> @item.Description</a>
+            </div>
+            <div>
+                <a href="#"><span class="icon-chat"></span> 19</a>
+            </div>
+        </div>
+    </div>
+}

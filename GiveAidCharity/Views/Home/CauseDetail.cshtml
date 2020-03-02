@@ -33,6 +33,7 @@
         <div class="row">
             <div class="col-md-8 ftco-animate">
                 <h2 class="mb-3">@Html.DisplayFor(model => model.Name)</h2>
+                <button class="btn btn-primary" id="followTrigger">Follow</button>
                 <div class="card w-100  ftco-animate mb-2">
                     <div class="card-body">
                         <h5 class="card-title">Cause Progress</h5>
@@ -260,61 +261,7 @@
                 <div class="sidebar-box ftco-animate">
                     <h3>Recent Cause</h3>
                     <div class="block-21 mb-4 d-flex">
-                        <a class="Cause-img mr-4" style="background-image: url(/Content/HomepageTheme/images/image_1.jpg);"></a>
-                        <div class="text">
-                            <h3 class="heading">
-                                <a href="#">Even the all-powerful Pointing has no control about the blind texts</a>
-                            </h3>
-                            <div class="meta">
-                                <div>
-                                    <a href="#"><span class="icon-calendar"></span> July 12, 2018</a>
-                                </div>
-                                <div>
-                                    <a href="#"><span class="icon-person"></span> Admin</a>
-                                </div>
-                                <div>
-                                    <a href="#"><span class="icon-chat"></span> 19</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="block-21 mb-4 d-flex">
-                        <a class="Cause-img mr-4" style="background-image: url(/Content/HomepageTheme/images/image_2.jpg);"></a>
-                        <div class="text">
-                            <h3 class="heading">
-                                <a href="#">Even the all-powerful Pointing has no control about the blind texts</a>
-                            </h3>
-                            <div class="meta">
-                                <div>
-                                    <a href="#"><span class="icon-calendar"></span> July 12, 2018</a>
-                                </div>
-                                <div>
-                                    <a href="#"><span class="icon-person"></span> Admin</a>
-                                </div>
-                                <div>
-                                    <a href="#"><span class="icon-chat"></span> 19</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="block-21 mb-4 d-flex">
-                        <a class="Cause-img mr-4" style="background-image: url(/Content/HomepageTheme/images/image_3.jpg);"></a>
-                        <div class="text">
-                            <h3 class="heading">
-                                <a href="#">Even the all-powerful Pointing has no control about the blind texts</a>
-                            </h3>
-                            <div class="meta">
-                                <div>
-                                    <a href="#"><span class="icon-calendar"></span> July 12, 2018</a>
-                                </div>
-                                <div>
-                                    <a href="#"><span class="icon-person"></span> Admin</a>
-                                </div>
-                                <div>
-                                    <a href="#"><span class="icon-chat"></span> 19</a>
-                                </div>
-                            </div>
-                        </div>
+                        @Html.Action("CauseSideBar", "Home")
                     </div>
                 </div>
 
@@ -381,17 +328,52 @@
         </form>
     }
 }
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm", @class = "d-none" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="userId" value="@User.Identity.GetUserId()" />
+    <input type="hidden" name="projectId" value="@Model.Id" />
+    <input type="hidden" name="status" id="statusValue" value="1" />
+}
+
+<input type="hidden" name="follow" id="followCountValue" value="0" />
+<input type="hidden" name="urlSubmit" id="urlSubmit" value="@Url.Action("Follow","Api")" />
+@*<input type="hidden" name="urlGetRating" id="urlGetRating" value="@Url.Action("GetRating","Api")" />*@
 @section scripts
 {
     @if (User.Identity.IsAuthenticated)
     {
         <script>
             $(function () {
-                $("#paypalbtn").click(function() {
+                $("#paypalbtn").click(function () {
                     $("#paypalForm").submit();
                 });
             });
+            $(function () {
+                function submitFollow() {
+                    
+        const form = $('#__AjaxAntiForgeryForm');
+        const token = $('input[name="__RequestVerificationToken"]', form).val();
+                    $.ajax({
+                        url: $("#urlSubmit").val(),
+                        type: 'POST',
+                        data: {
+                            __RequestVerificationToken: token,
+                            userId: $('input[name="userId"]', form).val(),
+                            projectId: $('input[name="projectId"]', form).val(),
+                            status: $('input[name="status"]', form).val()
+                        },
+                        success: function (res) {
+                            console.log(res);
+                        }
+                    });
+                };
+                $("#followTrigger").click(function () {
+                        submitFollow();
+                    });
+                });
         </script>
+
     }
     <script>
         var value = $("#ariaValuenowInput").val(),
@@ -414,5 +396,6 @@
         $(function () {
             countNumbers();
         });
+
     </script>
 }

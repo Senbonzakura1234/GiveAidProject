@@ -244,6 +244,56 @@ namespace GiveAidCharity.Controllers
             await _db.SaveChangesAsync();
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Follow(string userId, string projectId, int? status)
+        {
+            if (status == null || !Enum.IsDefined(typeof(Follow.FollowStatusEnum), status))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (!User.Identity.IsAuthenticated)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var currentUserid = User.Identity.GetUserId();
+            if (currentUserid == null || userId == null || !currentUserid.Equals(userId))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var user = await UserManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var follows = await _db.Follows.Where(v => v.ApplicationUserId == userId && v.ProjectId == projectId).ToListAsync();
+            if (follows.Count != 0)
+            {
+                follows = follows.Where(v => v.Status != Models.Main.Follow.FollowStatusEnum.Unfollowed).ToList();
+                if (follows.Count > 0)
+                {
+                    foreach (var item in follows)
+                    {
+                        item.Status = Models.Main.Follow.FollowStatusEnum.Unfollowed;
+                        item.UpdatedAt = DateTime.Now;
+                        _db.Entry(item).State = EntityState.Modified;
+                    }
+                }
+            }
+            var follow = new Follow
+            {
+                ApplicationUserId = userId,
+                ProjectId = projectId,
+                Status = (Follow.FollowStatusEnum) status
+            };
+            _db.Follows.Add(follow);
+            await _db.SaveChangesAsync();
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
+        }
 
         [AllowAnonymous]
         public async Task<ActionResult> GetRating(string blogId)
