@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -212,16 +213,54 @@ namespace GiveAidCharity.Controllers
         public ActionResult CreateProject()
         {
             var item = new ProjectCreateViewModel();
+
+            ViewBag.categoryList = _db.Categories.ToList();
+
             return View(item);
         }
+
+        private static List<string> ExtractFromBody(string body, string start, string end)
+        {
+            List<string> matched = new List<string>();
+
+            int indexStart = 0;
+            int indexEnd = 0;
+
+            bool exit = false;
+            while (!exit)
+            {
+                indexStart = body.IndexOf(start);
+
+                if (indexStart != -1)
+                {
+                    indexEnd = indexStart + body.Substring(indexStart).IndexOf(end);
+
+                    matched.Add(start + body.Substring(indexStart + start.Length, indexEnd - indexStart - start.Length) + end);
+
+                    body = body.Substring(indexEnd + end.Length);
+                }
+                else
+                {
+                    exit = true;
+                }
+            }
+
+            return matched;
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateProject(ProjectCreateViewModel item)
         {
+            ViewBag.categoryList = _db.Categories.ToList();
+
             if (!ModelState.IsValid)
             {
                 return View(item);
             }
+
+            var liststring = ExtractFromBody(item.ListImg, "https://", ".png");
+            
             var project = new Project
             {
                 Name = item.Name,
@@ -232,10 +271,69 @@ namespace GiveAidCharity.Controllers
                 Goal = item.Goal,
                 CoverImg = item.CoverImg,
                 ContentPart1 = item.ContentPart1,
-                ContentPart2 = item.ContentPart2
+                ContentPart2 = item.ContentPart2,
+                CategoryId = item.CategoryId,
+                ReceiverEmail = item.ReceiverEmail
             };
+            
+
+            var listImg = new List<ProjectImage>();
+            foreach (var VARIABLE in liststring)
+            {
+                listImg.Add(new ProjectImage
+                {
+                    ProjectId = project.Id,
+                    Url = VARIABLE,
+                    Description = project.Name + " image"
+                });
+            }
+
+            project.ProjectImages = listImg;
             _db.Projects.Add(project);
+
             await _db.SaveChangesAsync();
+            return RedirectToAction("Index", "Dashboard");
+        }
+
+        public ActionResult EditProject(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var res = _db.Projects.Find(id);
+
+            if (res == null)
+            {
+                return HttpNotFound();
+            }
+
+            var data = new EditProjectStatusViewModel
+            {
+                Id = res.Id,
+                Status = res.Status
+            };
+
+            return View(data);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditProject(EditProjectStatusViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var res = _db.Projects.Find(model.Id);
+
+            res.Status = model.Status;
+
+            _db.Entry(res).State = EntityState.Modified;
+            _db.SaveChanges();
+
             return RedirectToAction("Index", "Dashboard");
         }
     }
