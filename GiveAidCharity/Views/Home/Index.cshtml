@@ -138,7 +138,7 @@
                                 <h3><a href="#">@item.Username</a></h3>
                                 <span class="position">@item.DonateDate</span>
                                 <div class="text">
-                                    <p>Donated <span>$@item.Amount</span> for <a href="@Url.Action("Causes", new{id = item.Cause.Id})">@item.Cause.Name</a></p>
+                                    <p>Donated <span>$@item.Amount</span> for <a href="@Url.Action("CauseDetail", new{id = item.Cause.Id})">@item.Cause.Name</a></p>
                                 </div>
                             </div>
                         </div>

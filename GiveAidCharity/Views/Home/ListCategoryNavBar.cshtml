@@ -1,0 +1,7 @@
+﻿@model IEnumerable<GiveAidCharity.Models.HelperClass.CategoryViewModel>
+@foreach (var item in Model)
+{
+    <a class="dropdown-item" href="@Url.Action("CategoryView","Home", new { id = item.Id})">
+        @item.Name
+    </a>
+}

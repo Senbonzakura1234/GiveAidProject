@@ -414,6 +414,30 @@ namespace GiveAidCharity.Controllers
 
             return View(result);
         }
+        public ActionResult ListCategoryNavBar()
+        {
+            var category = _db.Categories.Where(p => p.Status != Category.CategoryStatusEnum.Deleted)
+                .ToList();
+            var categoryList = category.Select(t => new CategoryViewModel
+            {
+                Id = t.Id,
+                Name = t.Name,
+                ProjectCount = t.Projects.Count
+            });
+            return PartialView(categoryList);
+        }        
+        public ActionResult ListCategorySideBar()
+        {
+            var category = _db.Categories.Where(p => p.Status != Category.CategoryStatusEnum.Deleted)
+                .ToList();
+            var categoryList = category.Select(t => new CategoryViewModel
+            {
+                Id = t.Id,
+                Name = t.Name,
+                ProjectCount = t.Projects.Count
+            });
+            return PartialView(categoryList);
+        }
 //        public async Task<ActionResult> Test1()
 //        {
 //            var res = await _db.Projects.ToListAsync();
