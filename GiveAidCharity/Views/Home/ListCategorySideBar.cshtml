@@ -1,0 +1,10 @@
+﻿@model IEnumerable<GiveAidCharity.Models.HelperClass.CategoryViewModel>
+@foreach (var item in Model)
+{
+    <li>
+        <a href="@Url.Action("CategoryView","Home", new { id = item.Id})">
+            @item.Name
+            <span>@item.ProjectCount</span>
+        </a>
+    </li>
+}
