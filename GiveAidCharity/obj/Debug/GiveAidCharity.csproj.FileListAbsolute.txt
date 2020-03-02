@@ -104,3 +104,7 @@ E:\visual studio\Source\GiveAidCharity\GiveAidCharity\obj\Debug\GiveAidCharity.d
 E:\visual studio\Source\GiveAidCharity\GiveAidCharity\obj\Debug\GiveAidCharity.pdb
 E:\visual studio\Source\GiveAidCharity\GiveAidCharity\obj\Debug\GiveAidCharity.csproj.GenerateResource.cache
 E:\visual studio\Source\GiveAidCharity\GiveAidCharity\obj\Debug\GiveAidCharity.Migrations.initialTable.resources
+E:\visual studio\Source\GiveAidCharity\GiveAidCharity\bin\Quartz.dll
+E:\visual studio\Source\GiveAidCharity\GiveAidCharity\bin\Quartz.pdb
+E:\visual studio\Source\GiveAidCharity\GiveAidCharity\bin\Quartz.xml
+E:\visual studio\Source\GiveAidCharity\GiveAidCharity\obj\Debug\GiveAidCharity.csprojAssemblyReference.cache
