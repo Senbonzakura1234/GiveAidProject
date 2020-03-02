@@ -773,7 +773,6 @@
     <Content Include="Views\Shared\_DashboardLayout.cshtml" />
     <Content Include="Views\Shared\_DashboardLoginPartial.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
-    <Content Include="Views\Project\CreateProject.cshtml" />
     <Content Include="Views\Home\Causes.cshtml" />
     <Content Include="Views\Home\CauseDetail.cshtml" />
     <Content Include="Views\Shared\_CauseDetailSideBar.cshtml" />
@@ -803,6 +802,8 @@
     <Content Include="Views\Home\ListCategoryNavBar.cshtml" />
     <Content Include="Views\Home\ListCategorySideBar.cshtml" />
     <Content Include="Views\Home\CauseSideBar.cshtml" />
+    <Content Include="Views\Project\CreateProject.cshtml" />
+    <Content Include="Views\Project\EditProject.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
