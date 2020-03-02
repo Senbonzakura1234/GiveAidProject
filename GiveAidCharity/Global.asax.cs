@@ -1,6 +1,7 @@
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using GiveAidCharity.Models.HelperClass;
 
 namespace GiveAidCharity
 {
@@ -12,6 +13,7 @@ namespace GiveAidCharity
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            Schedule.Start();
         }
     }
 }
