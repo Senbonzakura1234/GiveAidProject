@@ -294,6 +294,7 @@
     <Content Include="Content\DashboardTheme\vendors\css\vendor.bundle.base.css" />
     <Content Include="Content\DashboardTheme\vendors\js\vendor.bundle.base.js" />
     <Content Include="Content\DashboardTheme\vendors\mdi\css\materialdesignicons.min.css" />
+    <Content Include="Content\emailtemp.html" />
     <Content Include="Content\HomepageTheme\css\ajax-loader.gif" />
     <Content Include="Content\HomepageTheme\css\animate.css" />
     <Content Include="Content\HomepageTheme\css\aos.css" />

@@ -13,7 +13,8 @@ namespace GiveAidCharity
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            Schedule.Start();
+            FollowEmailSchedule.Start();
+            RemovePendingTransactionSchedule.Start();
         }
     }
 }

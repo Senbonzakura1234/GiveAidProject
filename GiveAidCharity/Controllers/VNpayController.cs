@@ -165,11 +165,13 @@ namespace GiveAidCharity.Controllers
 
             _db.Entry(donation).State = EntityState.Modified;
             await _db.SaveChangesAsync();
+            HelperMethod.NotifyEmailTransaction("Transaction no " + donation.Id + " is" +
+                                                donation.Status, "Transaction Result", donation);
             return RedirectToAction("VnPayResult", "Payment", new { id = orderId });
         }
 
 
-        private double GetExchangeRate()
+        private static double GetExchangeRate()
         {
             var getPriceVnd = new HttpClient();
             double usdVnd;
