@@ -55,7 +55,7 @@
                         @Html.LabelFor(model => model.CoverImg)
                         <br />
                         <img id="preview" src="https://via.placeholder.com/192x108.png/fff/9d3aff?text=1920x1080" class="hidden img-thumbnail" style="width: 100px" alt="Alternate Text" />
-                        @Html.EditorFor(model => model.CoverImg, new { htmlAttributes = new { @class = "form-control", @type = "hidden", @id = "valueImg-0" } })
+                        @Html.EditorFor(model => model.CoverImg, new { htmlAttributes = new { @class = "form-control", type = "hidden", id = "valueImg-0" } })
                         @Html.ValidationMessageFor(model => model.CoverImg, "", new { @class = "text-danger" })
                         <div style="margin-top: 5px">
                             <button type="button" id="upload_widget" class="btn btn-primary" onclick="uploadImage(0)">Upload files</button>
@@ -68,7 +68,7 @@
                         <div id="previewList">
                             <img src="https://via.placeholder.com/192x108.png/fff/9d3aff?text=1920x1080" class="hidden img-thumbnail" style="width: 100px" alt="Alternate Text" />
                         </div>
-                        @Html.EditorFor(model => model.ListImg, new { htmlAttributes = new { @class = "form-control", @type = "hidden", @id = "valueImgList" } })
+                        @Html.EditorFor(model => model.ListImg, new { htmlAttributes = new { @class = "form-control", type = "hidden", id = "valueImgList" } })
                         @Html.ValidationMessageFor(model => model.ListImg, "", new { @class = "text-danger" })
                         <div style="margin-top: 5px">
                             <button type="button" id="upload_widget_list" class="btn btn-primary" onclick="uploadImage(0)">Upload files</button>
@@ -79,9 +79,12 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.CategoryId)
                             <select name="CategoryId" id="CategoryId" class="form-control">
-                                @foreach (var item in listCategories)
+                                @if (listCategories != null)
                                 {
-                                    <option value="@item.Id">@item.Name</option>
+                                    foreach (var item in listCategories)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
                                 }
                             </select>
                             @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
@@ -109,6 +112,7 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
     <script type="text/javascript">
+        // ReSharper disable PossiblyUnassignedProperty
         var myWidget = cloudinary.createUploadWidget({
                 cloudName: 'leduc911',
                 uploadPreset: 'v686mun2'
@@ -139,8 +143,7 @@
                 if (!error && result && result.event === "success") {
                     const imgLink = result.info.secure_url;
                     document.querySelector("input[name='ListImg']").value += imgLink;
-                    var textHtml =
-                        `<img src="${imgLink}" class="hidden img-thumbnail" style="width: 100px" alt="Alternate Text" />`;
+                    const textHtml = `<img src="${imgLink}" class="hidden img-thumbnail" style="width: 100px" alt="Alternate Text" />`;
                     $('#previewList').append(textHtml);
                     const imgPreview = document.getElementById("previewList");
                     imgPreview.src = imgLink;
