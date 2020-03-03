@@ -37,5 +37,20 @@ namespace GiveAidCharity.Models.HelperClass
             Asc = 0,
             Desc = 1
         }
+
+        public enum BlogSortEnum
+        {
+            CreatedAt = 0,
+            Title = 1,
+            Vote = 2,
+            Comment = 3,
+            Status = 4
+        }
+
+        public enum BlogDirectEnum
+        {
+            Asc = 0,
+            Desc = 1
+        }
     }
 }

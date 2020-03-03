@@ -15,6 +15,7 @@ namespace GiveAidCharity.Models.HelperClass
         public string CoverImg { get; set; }
         public double Goal { get; set; }
         public double CurrentFund { get; set; }
+        public double CurrentProcess { get; set; }
         [DataType(DataType.DateTime)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime StartDate { get; set; }
@@ -91,5 +92,21 @@ namespace GiveAidCharity.Models.HelperClass
     {
         public string Id { get; set; }
         public Project.ProjectStatusEnum Status { get; set; }
+    }
+
+    public class DashBoardBlogListViewModel
+    {
+        public string Id { get; set; }
+        public string CategoryId { get; set; }
+        public string CategoryName { get; set; }
+        public string UserId { get; set; }
+        public string Username { get; set; }
+        public int Vote { get; set; }
+        public int Comment { get; set; }
+        public string Title { get; set; }
+        public Blog.BlogStatusEnum Status { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime CreatedAt { get; set; }
     }
 }

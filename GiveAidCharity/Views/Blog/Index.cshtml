@@ -1,0 +1,290 @@
+﻿@using GiveAidCharity.Models.HelperClass
+@using GiveAidCharity.Models.Main
+@model IEnumerable<GiveAidCharity.Models.HelperClass.DashBoardBlogListViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+
+    var advance = ((int?)ViewBag.advance).Value;
+
+    var totalPage = ((int?)ViewBag.TotalPage).Value;
+    var currentPage = ((int?)ViewBag.CurrentPage).Value;
+    var limit = ((int?)ViewBag.Limit).Value;
+    var start = ViewBag.Start.ToString();
+    var end = ViewBag.End.ToString();
+
+    var status = ((int?)ViewBag.status).Value;
+    var title = ViewBag.BlogTitle.ToString();
+
+    var sortBy = ((int?)ViewBag.sortBy).Value;
+    var direct = ((int?)ViewBag.direct).Value;
+    var directSet = ((int?)ViewBag.directSet).Value;
+
+    var currentPara = "?start=" + ViewBag.Start + "&end=" + ViewBag.End +
+                      "&nameProject=" + title + "&status=" + status +
+                      "&sortBy=" + sortBy + "&direct=" + direct +
+                      "&advance=" + advance;
+
+    var startPage = ((currentPage - 1) * limit + 1);
+    var endPage = ((currentPage - 1) * limit + Model.Count());
+    var totalItem = ((int?)ViewBag.TotalItem).Value;
+}
+@section styles
+{
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    @Styles.Render("~/Content/DashboardTheme/css/paginate.css")
+}
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body table-responsive">
+                <h4 class="card-title">Date filer</h4>
+                <p class="card-description"> Basic form layout </p>
+                @using (Html.BeginForm("Index", "Blog", FormMethod.Get, new { id = "productForm" }))
+                {
+                    <input type="hidden" id="startTime" name="start" value="@start" />
+                    <input type="hidden" id="endTime" name="end" value="@end" />
+
+                    @Html.Hidden("status", status, new { id = "status" })
+                    @Html.Hidden("sortBy", sortBy, new { id = "sortBy" })
+                    @Html.Hidden("direct", direct, new { id = "direct" })
+                    @Html.Hidden("advance", advance, new { id = "advance" })
+                    <div class="form-row">
+                        <div class="col-md-12 form-group">
+                            <label for="title">Search by Blog title</label>
+                            <input type="text" id="title" name="title" value="@title"
+                                   class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-row mb-4">
+                        <a class="btn btn-gradient-primary" data-toggle="collapse" href="#searchCollapseAdvance" role="button" aria-expanded="false"
+                           aria-controls="multiCollapseExample1" id="searchCollapseTrigger">
+                            Advanced Search
+                        </a>
+                        <a href="@Url.Action("Index", "Blog")" class="btn btn-light ml-auto">Clear Filter</a>
+                        <button type="submit" class="btn btn-gradient-primary ml-2">Submit</button>
+                    </div>
+                    <div class="form-row collapse show" id="searchCollapseAdvance">
+                        <div class="col-md-6 form-group">
+                            <label for="dateFilter">Date range picker</label>
+                            <input type="text" id="dateFilter" value=""
+                                   class="form-control" />
+                        </div>
+                        <div class="col-md-6 form-group">
+                            @Html.Label("statusSelect", "Status")
+                            @Html.DropDownList("statusSelect",
+                                EnumHelper.GetSelectList(typeof(Blog.BlogStatusEnum)),
+                                null,
+                                new { @class = "form-control", id = "statusSelect" })
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body table-responsive">
+                <h4 class="card-title">List Project</h4>
+                <p class="card-description d-sm-flex">
+                    <span class="text-muted text-small my-auto">
+                        Showing from @(startPage) to @(endPage)
+                        of @(totalItem) results
+                    </span>
+                </p>
+                <table class="table">
+                    <thead class="text-primary">
+                        <tr>
+                            <th class="text-center">
+                                <a href="#/" class="sortData text-primary" data-direct="@directSet"
+                                   data-sort="@((int) HelperEnum.ProjectSortEnum.ProjectName)">
+                                    @Html.DisplayNameFor(model => model.Title)
+                                    <span style="font-size: 15px" class="mdi
+                                                @(direct == (int) HelperEnum.BlogDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
+                                                @(sortBy == (int) HelperEnum.BlogSortEnum.Title ? "" : "d-none")">
+                                    </span>
+                                </a>
+                            </th>
+                            <th class="text-center">
+                                @Html.DisplayNameFor(model => model.Username)
+                            </th>
+                            <th class="text-center">
+                                @Html.DisplayNameFor(model => model.CategoryName)
+                            </th>
+                            <th class="text-center">
+                                <a href="#/" class="sortData text-primary" data-direct="@directSet"
+                                   data-sort="@((int) HelperEnum.BlogSortEnum.Vote)">
+                                    @Html.DisplayNameFor(model => model.Vote)
+                                    <span style="font-size: 15px" class="mdi
+                                                @(direct == (int) HelperEnum.BlogDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
+                                                @(sortBy == (int) HelperEnum.BlogSortEnum.Vote ? "" : "d-none")">
+                                    </span>
+                                </a>
+                            </th>
+                            <th class="text-center">
+                                <a href="#/" class="sortData text-primary" data-direct="@directSet"
+                                   data-sort="@((int) HelperEnum.BlogSortEnum.Comment)">
+                                    @Html.DisplayNameFor(model => model.Comment)
+                                    <span style="font-size: 15px" class="mdi
+                                                @(direct == (int) HelperEnum.BlogDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
+                                                @(sortBy == (int) HelperEnum.BlogSortEnum.Comment ? "" : "d-none")">
+                                    </span>
+                                </a>
+                            </th>
+                            <th class="text-center">
+                                <a href="#/" class="sortData text-primary" data-direct="@directSet"
+                                   data-sort="@((int) HelperEnum.BlogSortEnum.CreatedAt)">
+                                    @Html.DisplayNameFor(model => model.CreatedAt)
+                                    <span style="font-size: 15px" class="mdi
+                                                @(direct == (int) HelperEnum.BlogDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
+                                                @(sortBy == (int) HelperEnum.BlogSortEnum.CreatedAt ? "" : "d-none")">
+                                    </span>
+                                </a>
+                            </th>
+                            <th class="text-center d-none d-lg-table-cell">
+                                Modify
+                            </th>
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    <a href="#" class="badge w-100 badge-gradient-primary w-100">
+                                        @Html.DisplayFor(modelItem => item.Title)
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="#" class="badge w-100 badge-gradient-success w-100">
+                                        @Html.DisplayFor(modelItem => item.Username)
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="@Url.Action("Details", "Categories",
+                                                     new {id = item.CategoryId})"
+                                       class="badge w-100 badge-gradient-primary w-100">
+                                        @Html.DisplayFor(modelItem => item.CategoryName)
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.Vote)
+                                </td>
+                                <td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.Comment)
+                                </td>
+                                <td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                                </td>
+                                <td class="text-center d-none d-lg-table-cell">
+                                    <a class="badge badge-warning" href="#">
+                                        <span class="mdi mdi-pencil-box-outline"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </thead>
+                </table>
+            </div>
+            <div class="card-footer bg-white border-0">
+                @if (totalPage > 0)
+                {
+                    <div>
+                        <ul class="pagination text-center">
+                            <li class="page-item ml-auto" style="opacity: 0"></li>
+
+                            @if (currentPage > 3)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@currentPara&page=@(1)&limit=@(limit)">
+                                        <i class="mdi mdi-chevron-double-left"></i>
+                                    </a>
+                                </li>
+                            }
+
+                            @if (currentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@currentPara&page=@(currentPage - 1)&limit=@(limit)">
+                                        <i class="mdi mdi-chevron-left"></i>
+                                    </a>
+                                </li>
+                            }
+
+                            @if (currentPage > 2)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@currentPara&page=@(currentPage - 2)&limit=@(limit)">
+                                        @(currentPage - 2)
+                                    </a>
+                                </li>
+                            }
+
+                            @if (currentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@currentPara&page=@(currentPage - 1)&limit=@(limit)">
+                                        @(currentPage - 1)
+                                    </a>
+                                </li>
+                            }
+
+                            <li class="active page-item" aria-current="page">
+                                <a class="page-link" href="@currentPara&page=@(currentPage)&limit=@(limit)">
+                                    @currentPage
+                                </a>
+                            </li>
+
+                            @if (totalPage - currentPage > 0)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@currentPara&page=@(currentPage + 1)&limit=@(limit)">
+                                        @(currentPage + 1)
+                                    </a>
+                                </li>
+                            }
+
+                            @if (totalPage - currentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@currentPara&page=@(currentPage + 2)&limit=@(limit)">
+                                        @(currentPage + 2)
+                                    </a>
+                                </li>
+                            }
+
+                            @if (currentPage < totalPage)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@currentPara&page=@(currentPage + 1)&limit=@(limit)">
+                                        <i class="mdi mdi-chevron-right"></i>
+                                    </a>
+                                </li>
+                            }
+
+                            @if (currentPage < totalPage - 2)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@currentPara&page=@(totalPage)&limit=@(limit)">
+                                        <i class="mdi mdi-chevron-double-right"></i>
+                                    </a>
+                                </li>
+                            }
+
+                            <li class="page-item mr-auto" style="opacity: 0"></li>
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    @Scripts.Render("~/Content/DashboardTheme/js/PageJs/blogs-list.js")
+}

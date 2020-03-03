@@ -180,6 +180,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApiController.cs" />
+    <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\DonationsController.cs" />
@@ -284,7 +285,9 @@
     <Content Include="Content\DashboardTheme\js\hoverable-collapse.js" />
     <Content Include="Content\DashboardTheme\js\misc.js" />
     <Content Include="Content\DashboardTheme\js\off-canvas.js" />
+    <Content Include="Content\DashboardTheme\js\PageJs\blogs-list.js" />
     <Content Include="Content\DashboardTheme\js\PageJs\donations-list.js" />
+    <Content Include="Content\DashboardTheme\js\PageJs\projects-list.js" />
     <Content Include="Content\DashboardTheme\js\todo.js" />
     <Content Include="Content\DashboardTheme\js\todolist.js" />
     <Content Include="Content\DashboardTheme\vendors\chart.js\Chart.min.js" />
@@ -782,10 +785,7 @@
     <Content Include="Views\Home\CausesDonate.cshtml" />
     <Content Include="Views\VNpay\Index.cshtml" />
     <Content Include="Views\VNpay\PaymentResult.cshtml" />
-    <Content Include="Views\Donations\Create.cshtml" />
-    <Content Include="Views\Donations\Delete.cshtml" />
     <Content Include="Views\Donations\Details.cshtml" />
-    <Content Include="Views\Donations\Edit.cshtml" />
     <Content Include="Views\Payment\Result.cshtml" />
     <Content Include="Views\Project\Index.cshtml" />
     <Content Include="Views\Dashboard\DonationList.cshtml" />
@@ -803,7 +803,8 @@
     <Content Include="Views\Home\ListCategorySideBar.cshtml" />
     <Content Include="Views\Home\CauseSideBar.cshtml" />
     <Content Include="Views\Project\CreateProject.cshtml" />
-    <Content Include="Views\Project\EditProject.cshtml" />
+    <Content Include="Views\Project\UpdateStatus.cshtml" />
+    <Content Include="Views\Blog\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

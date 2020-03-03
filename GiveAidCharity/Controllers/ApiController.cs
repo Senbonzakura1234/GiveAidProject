@@ -93,6 +93,19 @@ namespace GiveAidCharity.Controllers
             return Json(list);
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult AjaxFindByBlogTitle(string title)
+        {
+            if (title.IsNullOrWhiteSpace())
+            {
+                title = "";
+            }
+            var list = _db.Blogs.Where(p => p.Title.Contains(title)).Select(p => p.Title);
+
+            return Json(list);
+        }
+
         [AllowAnonymous]
         public async Task<ActionResult> GetDonations(string fromDate, string toDate)
         {

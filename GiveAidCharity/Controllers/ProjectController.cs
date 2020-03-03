@@ -146,7 +146,7 @@ namespace GiveAidCharity.Controllers
                     }
                 case (int)HelperEnum.ProjectSortEnum.ProcessPercent when direct is (int)HelperEnum.ProjectDirectEnum.Asc:
                     {
-                        var dataList = projects.OrderBy(p => p.CurrentFund).ToList();
+                        var dataList = projects.OrderBy(p => p.CurrentFund / p.Goal).ToList();
                         listProduct.AddRange(dataList);
                         break;
                     }
@@ -202,6 +202,7 @@ namespace GiveAidCharity.Controllers
                     CoverImg = item.CoverImg,
                     Goal = item.Goal,
                     CurrentFund = item.CurrentFund,
+                    CurrentProcess = item.CurrentFund >= item.Goal ? 100 : 100 * item.CurrentFund / item.Goal, 
                     StartDate = item.StartDate,
                     ExpireDate = item.ExpireDate,
                     CreatedAt = item.CreatedAt,
@@ -219,21 +220,18 @@ namespace GiveAidCharity.Controllers
             return View(item);
         }
 
-        private static List<string> ExtractFromBody(string body, string start, string end)
+        private static IEnumerable<string> ExtractFromBody(string body, string start, string end)
         {
-            List<string> matched = new List<string>();
+            var matched = new List<string>();
 
-            int indexStart = 0;
-            int indexEnd = 0;
-
-            bool exit = false;
+            var exit = false;
             while (!exit)
             {
-                indexStart = body.IndexOf(start);
+                var indexStart = body.IndexOf(start, StringComparison.Ordinal);
 
                 if (indexStart != -1)
                 {
-                    indexEnd = indexStart + body.Substring(indexStart).IndexOf(end);
+                    var indexEnd = indexStart + body.Substring(indexStart).IndexOf(end, StringComparison.Ordinal);
 
                     matched.Add(start + body.Substring(indexStart + start.Length, indexEnd - indexStart - start.Length) + end);
 
@@ -259,7 +257,7 @@ namespace GiveAidCharity.Controllers
                 return View(item);
             }
 
-            var liststring = ExtractFromBody(item.ListImg, "https://", ".png");
+            var listString = ExtractFromBody(item.ListImg, "https://", ".png");
             
             var project = new Project
             {
@@ -277,16 +275,13 @@ namespace GiveAidCharity.Controllers
             };
             
 
-            var listImg = new List<ProjectImage>();
-            foreach (var VARIABLE in liststring)
-            {
-                listImg.Add(new ProjectImage
+            var listImg = listString.Select(str => 
+                new ProjectImage
                 {
-                    ProjectId = project.Id,
-                    Url = VARIABLE,
+                    ProjectId = project.Id, 
+                    Url = str, 
                     Description = project.Name + " image"
-                });
-            }
+                }).ToList();
 
             project.ProjectImages = listImg;
             _db.Projects.Add(project);
@@ -295,7 +290,7 @@ namespace GiveAidCharity.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
-        public ActionResult EditProject(string id)
+        public ActionResult UpdateStatus(string id)
         {
             if (id == null)
             {
@@ -320,17 +315,19 @@ namespace GiveAidCharity.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditProject(EditProjectStatusViewModel model)
+        public ActionResult UpdateStatus(EditProjectStatusViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-
             var res = _db.Projects.Find(model.Id);
-
+            if (res == null)
+            {
+                return HttpNotFound();
+            }
             res.Status = model.Status;
-
+            res.UpdatedAt = DateTime.Now;
             _db.Entry(res).State = EntityState.Modified;
             _db.SaveChanges();
 
