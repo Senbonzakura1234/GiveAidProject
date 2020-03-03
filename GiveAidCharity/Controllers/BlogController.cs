@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -205,6 +206,93 @@ namespace GiveAidCharity.Controllers
 
             data = data.Skip(((page ?? 1) - 1) * (limit ?? 10)).Take((limit ?? 10)).ToList();
             return View(data);
+        }
+
+        public ActionResult Create()
+        {
+            ViewBag.listCategories = _db.Categories.ToList();
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create(BlogCreateViewModel item)
+        {
+            ViewBag.listCategories = _db.Categories.ToList();
+
+            if (!ModelState.IsValid)
+            {
+                return View(item);
+            }
+
+            var blog = new Blog
+            {
+                Title = item.Title,
+                ContentPart1 = item.ContentPart1,
+                ContentPart2 = item.ContentPart3,
+                ContentPart3 = item.ContentPart3,
+                Rss = item.Rss,
+                ApplicationUserId = CurrentUserId,
+                CategoryId = item.CategoryId
+            };
+
+            _db.Blogs.Add(blog);
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Index", "Dashboard");
+        }
+
+        public ActionResult Edit(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var data = _db.Blogs.Find(id);
+            if (data == null)
+            {
+                return HttpNotFound();
+            }
+
+            var res = new BlogEditViewModel
+            {
+                Id = data.Id,
+                ContentPart1 = data.ContentPart1,
+                ContentPart2 = data.ContentPart2,
+                ContentPart3 = data.ContentPart3,
+                Title = data.Title,
+                Status = data.Status,
+                CategoryId = data.CategoryId
+            };
+
+            ViewBag.listCategories = _db.Categories.ToList();
+            return View(res);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(BlogEditViewModel item)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.listCategories = _db.Categories.ToList();
+                return View(item);
+            }
+
+            var data = _db.Blogs.Find(item.Id);
+
+            data.Title = item.Title;
+            data.ContentPart1 = item.ContentPart1;
+            data.ContentPart2 = item.ContentPart2;
+            data.ContentPart3 = item.ContentPart3;
+            data.Status = item.Status;
+            data.UpdatedAt = DateTime.Now;
+            data.CategoryId = item.CategoryId;
+
+            _db.Entry(data).State = EntityState.Modified;
+            _db.SaveChanges();
+
+            return RedirectToAction("Index", "Dashboard");
         }
     }
 }

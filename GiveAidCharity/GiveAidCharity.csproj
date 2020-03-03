@@ -805,6 +805,9 @@
     <Content Include="Views\Project\CreateProject.cshtml" />
     <Content Include="Views\Project\UpdateStatus.cshtml" />
     <Content Include="Views\Blog\Index.cshtml" />
+    <Content Include="Views\Blog\Edit.cshtml" />
+    <Content Include="Views\Blog\Create.cshtml" />
+    <Content Include="Views\Project\EditProject.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

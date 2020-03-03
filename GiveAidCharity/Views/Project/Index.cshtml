@@ -233,7 +233,7 @@
                                             @Html.DisplayFor(modelItem => item.Status)
                                         </td>
                                         <td class="text-center d-none d-lg-table-cell">
-                                            <a class="badge badge-warning" href="#">
+                                            <a class="badge badge-warning" href="@Url.Action("UpdateStatus", new {id = item.Id})">
                                                 <span class="mdi mdi-pencil-box-outline"></span>
                                             </a>
                                         </td>

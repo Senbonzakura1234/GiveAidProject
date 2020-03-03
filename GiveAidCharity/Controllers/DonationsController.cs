@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using GiveAidCharity.Models;
@@ -215,19 +216,19 @@ namespace GiveAidCharity.Controllers
         }
 
         //// GET: Donations/Details/5
-        //public ActionResult Details(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Donation donation = db.Donations.Find(id);
-        //    if (donation == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(donation);
-        //}
+        public ActionResult Details(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Donation donation = _db.Donations.Find(id);
+            if (donation == null)
+            {
+                return HttpNotFound();
+            }
+            return View(donation);
+        }
 
         //// GET: Donations/Create
         //public ActionResult Create()

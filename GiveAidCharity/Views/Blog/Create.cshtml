@@ -1,0 +1,73 @@
+﻿@using GiveAidCharity.Models.Main
+@model GiveAidCharity.Models.HelperClass.BlogCreateViewModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    var listCategories = ViewBag.listCategories as List<Category>;
+}
+
+<div class="row">
+    <div class="col-md-8 mx-auto grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title">Blog</h4>
+                <p class="card-description">Create New</p>
+                @using (Html.BeginForm("Create", "Blog", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Title)
+                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Rss)
+                        @Html.EditorFor(model => model.Rss, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Rss, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ContentPart1)
+                        @Html.EditorFor(model => model.ContentPart1, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ContentPart1, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ContentPart2)
+                        @Html.EditorFor(model => model.ContentPart2, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ContentPart2, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ContentPart3)
+                        @Html.EditorFor(model => model.ContentPart3, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ContentPart3, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CategoryId)
+                            <select name="CategoryId" id="CategoryId" class="form-control">
+                                @if (listCategories != null)
+                                {
+                                    foreach (var item in listCategories)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                            @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <input type="submit" class="btn btn-gradient-primary mr-2" value="Create New" />
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

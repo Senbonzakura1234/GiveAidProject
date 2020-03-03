@@ -1,83 +1,113 @@
-﻿@model GiveAidCharity.Models.Main.Donation
+﻿@using GiveAidCharity.Models.Main
+@model GiveAidCharity.Models.Main.Donation
 
 @{
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
-
-<h2>Details</h2>
-
-<div>
-    <h4>Donation</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.ApplicationUser.FirstName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ApplicationUser.FirstName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Project.ApplicationUserId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Project.ApplicationUserId)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Amount)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Amount)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.PaymentMethod)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PaymentMethod)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.UpdatedAt)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UpdatedAt)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DeletedAt)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DeletedAt)
-        </dd>
-
-    </dl>
+<div class="row">
+    <div class="col-lg-12 col-xl-4 grid-margin stretch-card style-detail">
+        <div class="card">
+            <div class="card-img-top text-center pt-3">
+                <img class="border-primary" src="~/Content/HomepageTheme/images/bg_1.jpg"
+                     style="max-width: 100%; max-height: 180px; padding: 4px; border: 2px solid; border-radius: 100%" alt="Avatar" />
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">
+                    <b>ID # @Html.DisplayFor(model => model.Id)</b>
+                </h5>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.ApplicationUser.UserName): </b>
+                    @Html.DisplayFor(model => model.ApplicationUser.UserName)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.Project.Name): </b>
+                    @Html.DisplayFor(model => model.Project.Name)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.Amount): </b>
+                    @Html.DisplayFor(model => model.Amount)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.CreatedAt): </b>
+                    @Html.DisplayFor(model => model.CreatedAt)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.UpdatedAt): </b>
+                    @Html.DisplayFor(model => model.UpdatedAt)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.PaymentMethod): </b>
+                    @Html.DisplayFor(model => model.PaymentMethod)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.Status): </b>
+                    <span class="badge @(Model.Status == Donation.DonationStatusEnum.Pending ? "badge-gradient-secondary" : "badge-gradient-primary")">
+                        @Html.DisplayFor(model => model.Status)
+                    </span>
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.txn_id): </b>
+                    @Html.DisplayFor(model => model.txn_id)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.business): </b>
+                    @Html.DisplayFor(model => model.business)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.receiver_id): </b>
+                    @Html.DisplayFor(model => model.receiver_id)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.payer_id): </b>
+                    @Html.DisplayFor(model => model.payer_id)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.payer_email): </b>
+                    @Html.DisplayFor(model => model.payer_email)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.payment_gross): </b>
+                    @Html.DisplayFor(model => model.payment_gross)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.vnp_BankCode): </b>
+                    @Html.DisplayFor(model => model.vnp_BankCode)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.vnp_BankTranNo): </b>
+                    @Html.DisplayFor(model => model.vnp_BankTranNo)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.vnp_CardType): </b>
+                    @Html.DisplayFor(model => model.vnp_CardType)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.vnp_OrderInfo): </b>
+                    @Html.DisplayFor(model => model.vnp_OrderInfo)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.vnp_PayDate): </b>
+                    @Html.DisplayFor(model => model.vnp_PayDate)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.vnp_TmnCode): </b>
+                    @Html.DisplayFor(model => model.vnp_TmnCode)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.vnp_ResponseCode): </b>
+                    @Html.DisplayFor(model => model.vnp_ResponseCode)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.vnp_TransactionNo): </b>
+                    @Html.DisplayFor(model => model.vnp_TransactionNo)
+                </p>
+                <div class="d-sm-flex">
+                    <a class="btn btn-light btn-sm mt-2 mt-sm-0" href="@Url.Action("Index")">
+                        Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
