@@ -179,7 +179,7 @@
                                     @Html.DisplayFor(modelItem => item.CreatedAt)
                                 </td>
                                 <td class="text-center d-none d-lg-table-cell">
-                                    <a class="badge badge-warning" href="#">
+                                    <a class="badge badge-warning" href="@Url.Action("Edit", new {id = item.Id})">
                                         <span class="mdi mdi-pencil-box-outline"></span>
                                     </a>
                                 </td>

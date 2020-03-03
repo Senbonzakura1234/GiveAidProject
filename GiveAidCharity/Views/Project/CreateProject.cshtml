@@ -12,7 +12,7 @@
         <div class="card">
             <div class="card-body">
 
-                <h4 class="card-title">Category</h4>
+                <h4 class="card-title">Project</h4>
                 <p class="card-description">Create New</p>
                 @using (Html.BeginForm("CreateProject", "Project", FormMethod.Post))
                 {
@@ -102,7 +102,7 @@
                         @Html.EditorFor(model => model.ExpireDate, new { htmlAttributes = new { @class = "form-control", type = "date" } })
                         @Html.ValidationMessageFor(model => model.ExpireDate, "", new { @class = "text-danger" })
                     </div>
-                    <input type="submit" class="btn btn-gradient-primary mr-2" value="Tạo danh mục mới" />
+                    <input type="submit" class="btn btn-gradient-primary mr-2" value="Create New" />
                 }
             </div>
         </div>

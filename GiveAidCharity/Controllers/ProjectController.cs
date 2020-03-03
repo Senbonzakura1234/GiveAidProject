@@ -333,5 +333,52 @@ namespace GiveAidCharity.Controllers
 
             return RedirectToAction("Index", "Dashboard");
         }
+
+        public ActionResult EditProject(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var data = _db.Projects.Find(id);
+            if (data == null)
+            {
+                return HttpNotFound();
+            }
+
+            var res = new EditProjectViewModel
+            {
+                Id = data.Id,
+                ContentPart1 = data.ContentPart1,
+                ContentPart2 = data.ContentPart2,
+                CategoryId = data.CategoryId
+            };
+            ViewBag.listCategories = _db.Categories.ToList();
+            return View(res);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditProject(EditProjectViewModel mode)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.listCategories = _db.Categories.ToList();
+                return View(mode);
+            }
+
+            var data = _db.Projects.Find(mode.Id);
+
+            data.ContentPart1 = mode.ContentPart1;
+            data.ContentPart2 = mode.ContentPart2;
+            data.CategoryId = mode.CategoryId;
+            data.UpdatedAt = DateTime.Now;
+
+            _db.Entry(data).State = EntityState.Modified;
+            _db.SaveChanges();
+
+            return RedirectToAction("Index", "Dashboard");
+        }
     }
 }
