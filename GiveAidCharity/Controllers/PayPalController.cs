@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using GiveAidCharity.Models;
+using GiveAidCharity.Models.HelperClass;
 using GiveAidCharity.Models.Main;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -151,6 +152,8 @@ namespace GiveAidCharity.Controllers
             var result = donation.Status == Donation.DonationStatusEnum.Success;
             Db.Donations.Add(donation);
             await Db.SaveChangesAsync();
+            HelperMethod.NotifyEmailTransaction("Transaction no " + donation.Id + " is" +
+                                                donation.Status, "Transaction Result" , donation);
             return result;
             // check that Payment_status=Completed
             // check that Txn_id has not been previously processed
