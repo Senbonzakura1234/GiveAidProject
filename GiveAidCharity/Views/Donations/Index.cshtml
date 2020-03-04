@@ -230,7 +230,7 @@
                                 {
                                     <tr>
                                         <td class="text-center">
-                                            <a class="badge badge-gradient-info" href="#">
+                                            <a class="badge badge-gradient-info" href="@Url.Action("Details",new{id = item.Id})">
                                                 <span class="mdi mdi-search-web"></span>
                                             </a>
                                         </td>
@@ -241,7 +241,7 @@
                                             </a>
                                         </td>
                                         <td>
-                                            <a href="#" class="badge w-100 badge-gradient-primary w-100">
+                                            <a href="@Url.Action("Details", "Project",new{id = item.ProjectId})" class="badge w-100 badge-gradient-primary w-100">
                                                 @item.ProjectName
                                             </a>
                                         </td>

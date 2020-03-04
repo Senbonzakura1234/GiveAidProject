@@ -207,7 +207,7 @@
                                             current < 100 && current >= 70 ? "bg-gradient-success" : "bg-gradient-primary";
                                     <tr>
                                         <td class="text-center">
-                                            <a href="#" class="badge w-100 badge-gradient-primary w-100">
+                                            <a href="@Url.Action("Details", new{id = item.Id})" class="badge w-100 badge-gradient-primary w-100">
                                                 @Html.DisplayFor(modelItem => item.Name)
                                             </a>
                                         </td>
@@ -230,10 +230,12 @@
                                             @Html.DisplayFor(modelItem => item.ExpireDate)
                                         </td>
                                         <td class="text-center">
-                                            @Html.DisplayFor(modelItem => item.Status)
+                                            <a class="badge badge-warning" href="@Url.Action("UpdateStatus", new {id = item.Id})">
+                                                @Html.DisplayFor(modelItem => item.Status)
+                                            </a>
                                         </td>
                                         <td class="text-center d-none d-lg-table-cell">
-                                            <a class="badge badge-warning" href="@Url.Action("UpdateStatus", new {id = item.Id})">
+                                            <a class="badge badge-warning" href="@Url.Action("EditProject", new {id = item.Id})">
                                                 <span class="mdi mdi-pencil-box-outline"></span>
                                             </a>
                                         </td>
