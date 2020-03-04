@@ -147,4 +147,29 @@ namespace GiveAidCharity.Models.HelperClass
         public string ContentPart2 { get; set; }
         public string ContentPart3 { get; set; }
     }
+
+    public class RoleListViewModel
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public int UserCount { get; set; }
+    }
+    public class UserListViewModel
+    {
+        public string Id { get; set; }
+        public string Username { get; set; }
+        public double TotalDonate { get; set; }
+        public string Avatar { get; set; }
+        public string Role { get; set; }
+        public ApplicationUser.GenderEnum Gender { get; set; }
+        public ApplicationUser.UserStatusEnum Status { get; set; }
+    }
+
+    public class UpdateRoleViewModal
+    {
+        [Required]
+        public string UserId { get; set; }
+        [Required]
+        public string Role { get; set; }
+    }
 }

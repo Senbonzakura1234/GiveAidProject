@@ -1,0 +1,55 @@
+﻿@model IEnumerable<GiveAidCharity.Models.HelperClass.RoleListViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+    <div class="row">
+        <div class="col-md-6 grid-margin stretch-card mx-auto">
+            <div class="card">
+                <div class="card-body table-responsive">
+                    <h4 class="card-title">List Role</h4>
+                    <p class="d-flex">
+                        <a class="btn btn-sm btn-primary ml-auto mr-2 mt-2 mt-sm-0" href="@Url.Action("AddRole")">
+                            Add New <span class="mdi mdi-plus-circle"></span>
+                        </a>
+                    </p>
+                    <table class="table">
+                        <thead class="text-primary">
+                            <tr>
+                                <th class="text-center">
+                                    @Html.DisplayNameFor(model => model.Name)
+
+                                </th>
+                                <th class="text-center">
+                                    @Html.DisplayNameFor(model => model.Description)
+                                </th>
+                                <th class="text-center">
+                                    @Html.DisplayNameFor(model => model.UserCount)
+                                </th>
+                            </tr>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        <span href="#" class="badge w-100 badge-gradient-primary">
+                                            @Html.DisplayFor(modelItem => item.Name)
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        @Html.DisplayFor(modelItem => item.Description)
+                                    </td>
+                                    <td class="text-center">
+                                        @Html.DisplayFor(modelItem => item.UserCount)
+                                    </td>
+                                </tr>
+                            }
+                        </thead>
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+    </div>
