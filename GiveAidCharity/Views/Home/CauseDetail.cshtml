@@ -1,4 +1,5 @@
 ﻿@using System.Globalization
+@using GiveAidCharity.Models.Main
 @using Microsoft.AspNet.Identity
 @model GiveAidCharity.Models.HelperClass.CausesDetailViewModel
 
@@ -11,10 +12,15 @@
         ariaValuenow < 50 && ariaValuenow >= 20 ? "bg-warning" :
         ariaValuenow < 75 && ariaValuenow >= 50 ? "bg-info" : "bg-success";
     var animated = ariaValuenow >= 100 ? "" : "progress-bar-striped progress-bar-animated";
+    var index = 0;
 
 }
 @* ReSharper disable  MarkupTextTypo *@
 @Html.Hidden("ariaValuenowInput", ariaValuenow, new { id = "ariaValuenowInput" })
+@section style
+{
+    @Styles.Render("~/Content/HomepageTheme/css/rating.css")
+}
 @section hero_wrap
 {
     <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
@@ -33,10 +39,14 @@
         <div class="row">
             <div class="col-md-8 ftco-animate">
                 <h2 class="mb-3">@Html.DisplayFor(model => model.Name)</h2>
-                <button class="btn btn-primary" id="followTrigger">Follow</button>
                 <div class="card w-100  ftco-animate mb-2">
                     <div class="card-body">
                         <h5 class="card-title">Cause Progress</h5>
+                        <span>
+                            Follow this project
+                            <span class="icon-favorite @(Model.CurrentUserFollowStatus == Follow.FollowStatusEnum.Followed ? "active" : "")
+                                  like" id="followTrigger"></span>
+                        </span>
                         <p class="card-text">
                             $@Html.DisplayFor(model => model.CurrentFund) raised of $@Html.DisplayFor(model => model.Goal)
                         </p>
@@ -155,9 +165,29 @@
                 <div class="pt-5 mt-5">
                     <h3 class="mb-5">@Model.ProjectComments.Count Comments</h3>
                     <ul class="comment-list">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="comment root-comment-box">
+                                <div class="vcard bio">
+                                    <img src="~/Content/HomepageTheme/images/person_1.jpg" alt="Image placeholder">
+                                </div>
+                                <div class="comment-body">
+                                    <h3 class="replaceUsername"></h3>
+                                    <div class="form-group">
+                                        <textarea class="form-control newComment newParentComment"
+                                                  id="commentInput" namde="commentInput" rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group d-flex">
+                                        <button class="btn btn-primary ml-auto">Comment</button>
+                                    </div>
+                                </div>
+                            </li>
+                        }
                         @foreach (var item in Model.ProjectComments.Where(item => item.ParentId == null))
                         {
-                            <li class="comment">
+                            //var indexChild = 0;
+                            ++index;
+                            <li class="comment" data-commentId="@item.Id">
                                 <div class="vcard bio">
                                     <img src="~/Content/HomepageTheme/images/person_1.jpg" alt="Image placeholder">
                                 </div>
@@ -166,13 +196,13 @@
                                     <div class="meta">@item.CreatedAt</div>
                                     <p>@item.Content</p>
                                     <p>
-                                        <a href="#" class="reply">Reply</a>
+                                        <a href="#/" class="reply replyToParent" data-parentId="@index">Reply</a>
                                     </p>
                                 </div>
-                                <ul class="children">
+                                <ul class="children" data-parentId="@index">
                                     @foreach (var childcomment in Model.ProjectComments.Where(childcomment => childcomment.ParentId == item.Id))
                                     {
-                                        <li class="comment">
+                                        <li class="comment" data-parentId="@index" id="@("children" + childcomment.Id)">
                                             <div class="vcard bio">
                                                 <img src="~/Content/HomepageTheme/images/person_1.jpg" alt="Image placeholder">
                                             </div>
@@ -181,7 +211,9 @@
                                                 <div class="meta">@childcomment.CreatedAt</div>
                                                 <p>@childcomment.Content</p>
                                                 <p>
-                                                    <a href="#" class="reply">Reply</a>
+                                                    <a href="#/" class="reply replyToChild"
+                                                       data-childId="@childcomment.Id" data-parentId="@index"
+                                                       data-replyTag="@childcomment.ApplicationUser.UserName">Reply</a>
                                                 </p>
                                             </div>
                                         </li>
@@ -191,32 +223,6 @@
                         }
                     </ul>
                     <!-- END comment-list -->
-
-                    <div class="comment-form-wrap pt-5">
-                        <h3 class="mb-5">Leave a comment</h3>
-                        <form action="#" class="p-5 bg-light">
-                            <div class="form-group">
-                                <label for="name">Name *</label>
-                                <input type="text" class="form-control" id="name">
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email *</label>
-                                <input type="email" class="form-control" id="email">
-                            </div>
-                            <div class="form-group">
-                                <label for="website">Website</label>
-                                <input type="url" class="form-control" id="website">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="message">Message</label>
-                                <textarea name="" id="message" cols="30" rows="10" class="form-control"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" value="Post Comment" class="btn py-3 px-4 btn-primary">
-                            </div>
-                        </form>
-                    </div>
                 </div>
 
             </div> <!-- .col-md-8 -->
@@ -328,22 +334,89 @@
         </form>
     }
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm", @class = "d-none" }))
+
+@if (User.Identity.IsAuthenticated)
 {
-    @Html.AntiForgeryToken()
-    <input type="hidden" name="userId" value="@User.Identity.GetUserId()" />
-    <input type="hidden" name="projectId" value="@Model.Id" />
-    <input type="hidden" name="status" id="statusValue" value="1" />
+    using (Html.BeginForm(null, null, FormMethod.Post,
+        new { id = "__AjaxAntiForgeryForm", @class = "d-none" }))
+    {
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="userId" value="@User.Identity.GetUserId()" />
+        <input type="hidden" name="projectId" value="@Model.Id" />
+        <input type="hidden" name="status" id="statusValue" value="@(Model.CurrentUserFollowStatus == Follow.FollowStatusEnum.Followed ? "0" : "1")" />
+    }
+    <input type="hidden" name="userName" id="userName" value="@User.Identity.GetUserName()" />
+    <input type="hidden" name="follow" id="followCountValue" value="0" />
+    <input type="hidden" name="urlSubmit" id="urlSubmit" value="@Url.Action("Follow","Api")" />
 }
 
-<input type="hidden" name="follow" id="followCountValue" value="0" />
-<input type="hidden" name="urlSubmit" id="urlSubmit" value="@Url.Action("Follow","Api")" />
 @*<input type="hidden" name="urlGetRating" id="urlGetRating" value="@Url.Action("GetRating","Api")" />*@
 @section scripts
 {
     @if (User.Identity.IsAuthenticated)
     {
         <script>
+            function replaceUsername() {
+                $(".replaceUsername").html($("#userName").val());
+            }
+
+            $(function () {
+                replaceUsername();
+                $(".reply").click(function () {
+                    if ($(this).hasClass("replyToParent")) {
+                        const parentId = $(this).data("parentId");
+                        $(".child-comment-box").remove();
+                        const data = `<li class="comment child-comment-box" >
+                                        <div class="vcard bio">
+                                            <img src="~/Content/HomepageTheme/images/person_1.jpg" alt="Image placeholder">
+                                        </div>
+                                        <div class="comment-body">
+                                            <h3 class="replaceUsername"></h3>
+                                            <form name="form${parentId}" id="form${parentId}">
+                                                <div class="form-group">
+                                                    <textarea class="form-control newComment newParentComment"
+                                                          id="commentInput" namde="commentInput" rows="3"></textarea>
+                                                    <input type="hidden" name="childOf" id="childOf" value="${parentId}"/>
+                                                </div>
+                                                <div class="form-group d-flex">
+                                                    <button class="btn btn-primary ml-auto">Comment</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </li>`;
+                        console.log(data);
+                        $(`.children[data-parentId=${parentId}]`).prepend(data);
+                    }
+                    else {
+                        const parentId = $(this).data("parentId");
+                        const tag = $(this).data("replyTag");
+                        $(".child-comment-box").remove();
+                        const data = `<li class="comment child-comment-box" >
+                                        <div class="vcard bio">
+                                            <img src="~/Content/HomepageTheme/images/person_1.jpg" alt="Image placeholder">
+                                        </div>
+                                        <div class="comment-body">
+                                            <h3 class="replaceUsername"></h3>
+                                            <form name="form${parentId}" id="form${parentId}">
+                                                <div class="form-group">
+                                                    <textarea class="form-control newComment newParentComment"
+                                                          id="commentInput" namde="commentInput" rows="3">@@${tag}</textarea>
+                                                    <input type="hidden" name="childOf" id="childOf" value="${parentId}"/>
+                                                </div>
+                                                <div class="form-group d-flex">
+                                                    <button class="btn btn-primary ml-auto">Comment</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </li>`;
+                        $(`#children${parentId}`).after(data);
+                    }
+                    replaceUsername();
+                });
+
+            });
+
+
             $(function () {
                 $("#paypalbtn").click(function () {
                     $("#paypalForm").submit();
@@ -351,9 +424,9 @@
             });
             $(function () {
                 function submitFollow() {
-                    
-        const form = $('#__AjaxAntiForgeryForm');
-        const token = $('input[name="__RequestVerificationToken"]', form).val();
+
+                    const form = $('#__AjaxAntiForgeryForm');
+                    const token = $('input[name="__RequestVerificationToken"]', form).val();
                     $.ajax({
                         url: $("#urlSubmit").val(),
                         type: 'POST',
@@ -365,13 +438,23 @@
                         },
                         success: function (res) {
                             console.log(res);
+                            // ReSharper disable once CoercedEqualsUsing
+                            if ($("#statusValue").val() == 1) {
+                                $("#statusValue").val(0);
+                            } else {
+                                $("#statusValue").val(1);
+                            }
+
                         }
                     });
                 };
+
                 $("#followTrigger").click(function () {
-                        submitFollow();
-                    });
+                    $(this).toggleClass("active");
+                    submitFollow();
+
                 });
+            });
         </script>
 
     }
@@ -379,6 +462,7 @@
         var value = $("#ariaValuenowInput").val(),
             i = value < 100 ? 0 : 99;
         var progressBar = $(".cause-progress");
+
         function countNumbers() {
             if (i < value) {
                 if (i < value - 5) {
@@ -393,6 +477,7 @@
             // Wait for sometime before running this script again
             setTimeout("countNumbers()", 20);
         }
+
         $(function () {
             countNumbers();
         });

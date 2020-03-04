@@ -310,7 +310,7 @@ namespace GiveAidCharity.Controllers
             {
                 return View(model);
             }
-            model.Email = removeDotInGoogleEmail(model.Email);
+            model.Email = RemoveDotInGoogleEmail(model.Email);
             var user = await UserManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
@@ -390,7 +390,7 @@ namespace GiveAidCharity.Controllers
             {
                 return RedirectToAction("Login");
             }
-            loginInfo.Email = removeDotInGoogleEmail(loginInfo.Email);
+            loginInfo.Email = RemoveDotInGoogleEmail(loginInfo.Email);
 
             // Sign in the user with this external login provider if the user already has a login
             var result = await SignInManager.ExternalSignInAsync(loginInfo, true);
@@ -554,7 +554,7 @@ namespace GiveAidCharity.Controllers
             }
         }
 
-        private string removeDotInGoogleEmail(string email)
+        private static string RemoveDotInGoogleEmail(string email)
         {
             var mailAddress = new MailAddress(email);
             if (!mailAddress.Host.Equals("gmail.com", StringComparison.OrdinalIgnoreCase) &&
