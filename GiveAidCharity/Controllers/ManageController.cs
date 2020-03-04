@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using GiveAidCharity.Models;
+using System.Diagnostics;
 
 namespace GiveAidCharity.Controllers
 {
@@ -14,7 +15,7 @@ namespace GiveAidCharity.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
         public ManageController()
         {
         }
@@ -49,10 +50,27 @@ namespace GiveAidCharity.Controllers
                 : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
                 : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
                 : "";
-
             var userId = User.Identity.GetUserId();
+            var user = await UserManager.FindByIdAsync(userId);
+            var total = _db.Donations.Where(p => p.ApplicationUserId == userId
+                && p.Status != Models.Main.Donation.DonationStatusEnum.Fail
+                && p.Status != Models.Main.Donation.DonationStatusEnum.Pending
+                && p.Status != Models.Main.Donation.DonationStatusEnum.Cancel)
+                .Select(t => t.Amount).ToList();
+            double amount = 0;
+            foreach(var item in total)
+            {
+                amount += item;
+            }
+            var followed = _db.Follows.Where(p => p.ApplicationUserId == userId && p.Status != Models.Main.Follow.FollowStatusEnum.Followed).ToList();
+            var recentList = followed.Select(p => p.Project.Name).Take(3).ToList();
             var model = new IndexViewModel
             {
+                UserName = user.UserName,
+                TotalAmount = amount,
+                DonationCount = user.Donations.Where(p => p.Status == Models.Main.Donation.DonationStatusEnum.Success).ToList().Count,
+                Followed = followed.Count,
+                ListFollowed = recentList,
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
@@ -320,7 +338,6 @@ namespace GiveAidCharity.Controllers
 
             base.Dispose(disposing);
         }
-
 #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";

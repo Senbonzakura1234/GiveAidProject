@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using GiveAidCharity.Models.Main;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 
@@ -7,6 +8,11 @@ namespace GiveAidCharity.Models
 {
     public class IndexViewModel
     {
+        public string UserName { get; set; }
+        public double TotalAmount { get; set; }
+        public int DonationCount { get; set; }
+        public int Followed { get; set; }
+        public List<string> ListFollowed { get; set; }
         public bool HasPassword { get; set; }
         public IList<UserLoginInfo> Logins { get; set; }
         public string PhoneNumber { get; set; }
