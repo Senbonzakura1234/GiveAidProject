@@ -102,8 +102,8 @@ namespace GiveAidCharity.Models
 
         public ApplicationUserRole()
         {
-            CreatedAt = DateTime.Now;
-            UpdatedAt = DateTime.Now;
+            CreatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
+            UpdatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
         }
     }
 
