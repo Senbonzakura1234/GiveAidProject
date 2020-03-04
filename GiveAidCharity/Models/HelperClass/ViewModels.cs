@@ -56,6 +56,7 @@ namespace GiveAidCharity.Models.HelperClass
         public int FollowCount { get; set; }
         public virtual List<ProjectImage> ProjectImages { get; set; }
         public virtual List<ProjectComment> ProjectComments { get; set; }
+        public Follow.FollowStatusEnum CurrentUserFollowStatus { get; set; }
     }
     public class SingleDonationViewModel {
         public string UserId { get; set; }

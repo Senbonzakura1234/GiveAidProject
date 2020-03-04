@@ -160,6 +160,18 @@ namespace GiveAidCharity.Controllers
             {
                 return HttpNotFound();
             }
+
+            var currentFollow = Follow.FollowStatusEnum.Unfollowed;
+            if (User.Identity.IsAuthenticated)
+            {
+                var follow = _db.Follows.Where(f => f.Status == Follow.FollowStatusEnum.Followed &&
+                                                    f.ApplicationUserId == CurrentUserId && f.ProjectId == project.Id)
+                    .ToList();
+                if (follow.Count > 0)
+                {
+                    currentFollow = Follow.FollowStatusEnum.Followed;
+                }
+            }
             var host = await UserManager.FindByIdAsync(project.ApplicationUserId);
             var images = await _db.ProjectImages.Where(p => p.ProjectId == id && p.Description != null).ToListAsync();
             var comments = await _db.ProjectComments.Where(p => p.ProjectId == id).ToListAsync();
@@ -183,7 +195,8 @@ namespace GiveAidCharity.Controllers
                 HostDescription = host == null ? "" : host.Description,
                 HostEmail = host == null ? "" : host.Email,
                 HostPhone = host == null ? "" : host.PhoneNumber,
-                HostAvatar = host == null ? "" : host.Avatar
+                HostAvatar = host == null ? "" : host.Avatar,
+                CurrentUserFollowStatus = currentFollow
             };
             return View(cause);
         }
@@ -453,58 +466,61 @@ namespace GiveAidCharity.Controllers
             });
             return PartialView(causesList);
         }
-//        public async Task<ActionResult> Test1()
-//        {
-//            var res = await _db.Projects.ToListAsync();
-//            foreach (var item in res)
-//            {
-//                item.CurrentFund = 0;
-//                foreach (var donate in item.Donations)
-//                {
-//                    if (donate.Status == Donation.DonationStatusEnum.Success)
-//                    {
-//                        item.CurrentFund += donate.Amount;
-//                    }
-//                }
-//                _db.Entry(item).State = EntityState.Modified;
-//                await _db.SaveChangesAsync();
-//            }
-//            return RedirectToAction("Index");
-//        }
-//        public async Task<ActionResult> Test2()
-//        {
-//            var res = await _db.Users.ToArrayAsync();
-//            foreach (var item in res)
-//            {
-//                item.Avatar =
-//                    "https://res.cloudinary.com/bangnguyen/image/upload/v1581844808/ProjectCharity/person_1_kvy425.jpg";
-//                _db.Entry(item).State = EntityState.Modified;
-//                await _db.SaveChangesAsync();
-//            }
-//            return RedirectToAction("Index");
-//        }
-//        public async Task<ActionResult> Test3()
-//        {
-//            var res = await _db.Projects.ToListAsync();
-//            foreach (var item in res)
-//            {
-//                item.Status = item.CurrentFund >= item.Goal ?
-//                    Project.ProjectStatusEnum.Success : Project.ProjectStatusEnum.Ongoing;
-//                _db.Entry(item).State = EntityState.Modified;
-//                await _db.SaveChangesAsync();
-//            }
-//            return RedirectToAction("Index");
-//        }
-//        public async Task<ActionResult> Test4()
-//        {
-//            var res = await _db.Blogs.ToListAsync();
-//            foreach (var item in res)
-//            {
-//                item.Status = Blog.BlogStatusEnum.Published;
-//                _db.Entry(item).State = EntityState.Modified;
-//                await _db.SaveChangesAsync();
-//            }
-//            return RedirectToAction("Index");
-//        }
+
+
+
+        //public async Task<ActionResult> Test1()
+        //{
+        //    var res = await _db.Projects.ToListAsync();
+        //    foreach (var item in res)
+        //    {
+        //        item.CurrentFund = 0;
+        //        foreach (var donate in item.Donations)
+        //        {
+        //            if (donate.Status == Donation.DonationStatusEnum.Success)
+        //            {
+        //                item.CurrentFund += donate.Amount;
+        //            }
+        //        }
+        //        _db.Entry(item).State = EntityState.Modified;
+        //        await _db.SaveChangesAsync();
+        //    }
+        //    return RedirectToAction("Index");
+        //}
+        //public async Task<ActionResult> Test2()
+        //{
+        //    var res = await _db.Users.ToArrayAsync();
+        //    foreach (var item in res)
+        //    {
+        //        item.Avatar =
+        //            "https://res.cloudinary.com/bangnguyen/image/upload/v1581844808/ProjectCharity/person_1_kvy425.jpg";
+        //        _db.Entry(item).State = EntityState.Modified;
+        //        await _db.SaveChangesAsync();
+        //    }
+        //    return RedirectToAction("Index");
+        //}
+        //public async Task<ActionResult> Test3()
+        //{
+        //    var res = await _db.Projects.ToListAsync();
+        //    foreach (var item in res)
+        //    {
+        //        item.Status = item.CurrentFund >= item.Goal ?
+        //            Project.ProjectStatusEnum.Success : Project.ProjectStatusEnum.Ongoing;
+        //        _db.Entry(item).State = EntityState.Modified;
+        //        await _db.SaveChangesAsync();
+        //    }
+        //    return RedirectToAction("Index");
+        //}
+        //public async Task<ActionResult> Test4()
+        //{
+        //    var res = await _db.Blogs.ToListAsync();
+        //    foreach (var item in res)
+        //    {
+        //        item.Status = Blog.BlogStatusEnum.Published;
+        //        _db.Entry(item).State = EntityState.Modified;
+        //        await _db.SaveChangesAsync();
+        //    }
+        //    return RedirectToAction("Index");
+        //}
     }
 }
