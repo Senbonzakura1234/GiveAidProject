@@ -74,7 +74,7 @@ namespace GiveAidCharity.Migrations
 
             //SeedProjectComments(context);
 
-            SeedBlogComments(context);
+            //SeedBlogComments(context);
             
         }
 
@@ -200,6 +200,7 @@ namespace GiveAidCharity.Migrations
                                     join tb3 in context.Roles on tb2.RoleId equals tb3.Id
                                     where tb3.Name == "FundRaiser"
                                     select tb1.Id).ToList();
+                Array values = Enum.GetValues(typeof(Project.ProjectStatusEnum));
                 var rdn = new Random();
                 var listProjects = lsProjects.Select(f => new Project
                 {
@@ -214,7 +215,7 @@ namespace GiveAidCharity.Migrations
                     ContentPart2 = f.contentpart2,
                     StartDate = new DateTime(2019, 02, 14).AddDays(rdn.Next(1, 340)),
                     CurrentFund = 0,
-                    Status = 0,
+                    Status = (Project.ProjectStatusEnum) rdn.Next(2,3),
                     DeletedAt = null,
                 })
                     .ToList();
@@ -251,10 +252,9 @@ namespace GiveAidCharity.Migrations
             var lsImages = GetJsonData<ArticleImage>(Image_Url);
             var dictionaryId = IdGuid();
             var rdn = new Random();
-
             var listBlog = lsProjects.Select(f => new Blog()
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = dictionaryId[f.projectid],
                 ApplicationUserId = context.Projects.AsEnumerable()
                         .Where(p => p.Id.Contains($"{dictionaryId[f.projectid]}"))
                         .Select(p => p.ApplicationUserId)
