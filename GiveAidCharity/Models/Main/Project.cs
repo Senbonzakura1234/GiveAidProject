@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using GiveAidCharity.Models.HelperClass;
 
 namespace GiveAidCharity.Models.Main
 {
@@ -69,11 +70,11 @@ namespace GiveAidCharity.Models.Main
         public string ReceiverEmail { get; set; }
     
 
-    public Project()
+        public Project()
         {
             Id = Guid.NewGuid().ToString();
-            CreatedAt = DateTime.Now;
-            UpdatedAt = DateTime.Now;
+            CreatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
+            UpdatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
             CurrentFund = 0;
             Status = ProjectStatusEnum.Establishing;
         }

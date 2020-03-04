@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using GiveAidCharity.Models.HelperClass;
+
 // ReSharper disable  UnusedMember.Global
 namespace GiveAidCharity.Models.Main
 {
@@ -72,8 +74,8 @@ namespace GiveAidCharity.Models.Main
         public Donation()
         {
             Id = Guid.NewGuid().ToString();
-            CreatedAt = DateTime.Now.ToLocalTime();
-            UpdatedAt = DateTime.Now.ToLocalTime();
+            CreatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
+            UpdatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
             Status = DonationStatusEnum.Pending;
         }
     }
@@ -110,8 +112,8 @@ namespace GiveAidCharity.Models.Main
         public Follow()
         {
             Id = Guid.NewGuid().ToString();
-            CreatedAt = DateTime.Now;
-            UpdatedAt = DateTime.Now;
+            CreatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
+            UpdatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
             Status = FollowStatusEnum.Followed;
         }
     }
@@ -148,8 +150,8 @@ namespace GiveAidCharity.Models.Main
         public Vote()
         {
             Id = Guid.NewGuid().ToString();
-            CreatedAt = DateTime.Now;
-            UpdatedAt = DateTime.Now;
+            CreatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
+            UpdatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
             Status = VoteStatusEnum.UpVote;
         }
     }
@@ -180,8 +182,8 @@ namespace GiveAidCharity.Models.Main
         public Category()
         {
             Id = Guid.NewGuid().ToString();
-            CreatedAt = DateTime.Now;
-            UpdatedAt = DateTime.Now;
+            CreatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
+            UpdatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
             Status = CategoryStatusEnum.Show;
         }
     }

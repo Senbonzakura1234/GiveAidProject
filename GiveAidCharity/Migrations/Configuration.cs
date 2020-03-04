@@ -1,37 +1,36 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
-using System.Web.Razor.Generator;
-using System.Web.Security;
-using System.Web.Services.Configuration;
 using GiveAidCharity.Models;
 using GiveAidCharity.Models.Main;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Newtonsoft.Json;
 
+// ReSharper disable  UnusedMember.Global
+// ReSharper disable  UnusedVariable
+// ReSharper disable  ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
 
 namespace GiveAidCharity.Migrations
 {
     using System.Data.Entity.Migrations;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<GiveAidCharity.Models.ApplicationDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
     {
-        private const string Blog_Url = "https://api.myjson.com/bins/15gsvi";
-        private const string Image_Url = "https://api.myjson.com/bins/dd54e";
-        private const string Id_arr = "https://api.myjson.com/bins/khq06";
-        private string[] UserName = { "Mary", "Patricia", "Linda", "Barbara", "Elizabeth", 
+        private const string BlogUrl = "https://api.myjson.com/bins/15gsvi";
+        private const string ImageUrl = "https://api.myjson.com/bins/dd54e";
+        private const string IdArr = "https://api.myjson.com/bins/khq06";
+        private readonly string[] _userName = { "Mary", "Patricia", "Linda", "Barbara", "Elizabeth", 
             "Jennifer", "Maria", "Susan", "Margaret", "Dorothy", "Lisa", "Nancy", "Karen", 
             "Betty", "Helen", "Sandra", "Donna", "Carol", "Ruth", "Sharon", "Michelle", 
             "Laura", "Sarah", "Kimberly", "Deborah", "James", "John", "Robert", "Michael", 
             "William", "David", "Richard", "Charles", "Joseph", "Thomas", "Christopher", 
             "Daniel", "Paul", "Mark", "Donald", "George", "Kenneth", "Steven", "Edward", 
             "Brian", "Ronald", "Anthony", "Kevin", "Jason", "Jeff" };
-        private string[] _categoryId =
+        private readonly string[] _categoryId =
         {
             "9104390c-469d-4647-aaf0-8c2998d31213",
             "57e2b432-3542-49af-9ec0-704d744b715d",
@@ -56,7 +55,7 @@ namespace GiveAidCharity.Migrations
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(GiveAidCharity.Models.ApplicationDbContext context)
+        protected override void Seed(ApplicationDbContext context)
         {
             //SeedRole(context);
             
@@ -78,7 +77,7 @@ namespace GiveAidCharity.Migrations
             
         }
 
-        public void SeedUser(GiveAidCharity.Models.ApplicationDbContext context)
+        public void SeedUser(ApplicationDbContext context)
         {
             for (var i = 0; i < 30; i++)
             {
@@ -86,8 +85,8 @@ namespace GiveAidCharity.Migrations
                 var manager = new UserManager<ApplicationUser>(store);
                 var user = new ApplicationUser
                 {
-                    UserName = UserName[i],
-                    Email = UserName[i] + "@gmail.com",
+                    UserName = _userName[i],
+                    Email = _userName[i] + "@gmail.com",
                     Id = Guid.NewGuid().ToString()
                 };
                 manager.Create(user, "123456");
@@ -99,8 +98,8 @@ namespace GiveAidCharity.Migrations
                 var manager = new UserManager<ApplicationUser>(store);
                 var user = new ApplicationUser
                 {
-                    UserName = UserName[j],
-                    Email = UserName[j] + "@gmail.com",
+                    UserName = _userName[j],
+                    Email = _userName[j] + "@gmail.com",
                     Id = Guid.NewGuid().ToString()
                 };
 
@@ -113,8 +112,8 @@ namespace GiveAidCharity.Migrations
                 var manager = new UserManager<ApplicationUser>(store);
                 var user = new ApplicationUser
                 {
-                    UserName = UserName[k],
-                    Email = UserName[k] + "@gmail.com",
+                    UserName = _userName[k],
+                    Email = _userName[k] + "@gmail.com",
                     Id = Guid.NewGuid().ToString()
                 };
 
@@ -123,7 +122,7 @@ namespace GiveAidCharity.Migrations
             }
         }
 
-        public void SeedRole(GiveAidCharity.Models.ApplicationDbContext context)
+        public void SeedRole(ApplicationDbContext context)
         {
             //add User Roles
             if (!context.Roles.Any(r => r.Name == "Administrator"))
@@ -162,7 +161,7 @@ namespace GiveAidCharity.Migrations
                 manager.Create(role);
             }
 
-            if (!context.Roles.Any(r => r.Name == "Member"))
+            if (context.Roles.Any(r => r.Name == "Member")) return;
             {
                 var store = new RoleStore<IdentityRole>(context);
                 var manager = new RoleManager<IdentityRole>(store);
@@ -191,8 +190,8 @@ namespace GiveAidCharity.Migrations
         {
             try
             {
-                var lsProjects = GetJsonData<Article>(Blog_Url);
-                var lsImages = GetJsonData<ArticleImage>(Image_Url);
+                var lsProjects = GetJsonData<Article>(BlogUrl);
+                var lsImages = GetJsonData<ArticleImage>(ImageUrl);
                 var dictionaryId = IdGuid();
                 //Lấy List Id của member
                 var lsMemberFund = (from tb1 in context.Users
@@ -200,7 +199,7 @@ namespace GiveAidCharity.Migrations
                                     join tb3 in context.Roles on tb2.RoleId equals tb3.Id
                                     where tb3.Name == "FundRaiser"
                                     select tb1.Id).ToList();
-                Array values = Enum.GetValues(typeof(Project.ProjectStatusEnum));
+                var values = Enum.GetValues(typeof(Project.ProjectStatusEnum));
                 var rdn = new Random();
                 var listProjects = lsProjects.Select(f => new Project
                 {
@@ -224,7 +223,7 @@ namespace GiveAidCharity.Migrations
                     v.CreatedAt = v.StartDate.AddDays(2);
                     v.UpdatedAt = v.StartDate.AddDays(-2);
                     v.ExpireDate = v.StartDate.AddDays(10);
-                    v.ReceiverEmail = context.Users.Find(v.ApplicationUserId).Email.ToString();
+                    v.ReceiverEmail = context.Users.Find(v.ApplicationUserId).Email;
                 }
 
                 context.Projects.AddRange(listProjects);
@@ -248,8 +247,8 @@ namespace GiveAidCharity.Migrations
 
         public void SeedBlogs(ApplicationDbContext context)
         {
-            var lsProjects = GetJsonData<Article>(Blog_Url);
-            var lsImages = GetJsonData<ArticleImage>(Image_Url);
+            var lsProjects = GetJsonData<Article>(BlogUrl);
+            var lsImages = GetJsonData<ArticleImage>(ImageUrl);
             var dictionaryId = IdGuid();
             var rdn = new Random();
             var listBlog = lsProjects.Select(f => new Blog()
@@ -282,7 +281,7 @@ namespace GiveAidCharity.Migrations
 
         public void SeedProjectImages(ApplicationDbContext context)
         {
-            var lsImages = GetJsonData<ArticleImage>(Image_Url);
+            var lsImages = GetJsonData<ArticleImage>(ImageUrl);
             var dictionaryId = IdGuid();
             var listImages = lsImages.Select(f => new ProjectImage()
             {
@@ -322,17 +321,17 @@ namespace GiveAidCharity.Migrations
                               join tb3 in context.Roles on tb2.RoleId equals tb3.Id
                               where tb3.Name == "Member"
                               select tb1.Id).ToList();
-            Array values = Enum.GetValues(typeof(Donation.PaymentMethodEnum));
+            var values = Enum.GetValues(typeof(Donation.PaymentMethodEnum));
             var rdn = new Random();
 
-            for (int i = 0; i < projectCount; i++)
+            for (var i = 0; i < projectCount; i++)
             {
                 var donationPerPj = rdn.Next(15, 20);
-                for (int j = 0; j < donationPerPj; j++)
+                for (var j = 0; j < donationPerPj; j++)
                 {
                     var randomPayment = (Donation.PaymentMethodEnum)values.GetValue(rdn.Next(values.Length));
                     // var newSpan = new DateTime(0, 0, new Random().Next(0, 8));
-                    string projectId = lsProjectId[i];
+                    var projectId = lsProjectId[i];
                     listDonation.Add(new Donation()
                     {
                         Id = Guid.NewGuid().ToString(),
@@ -363,10 +362,10 @@ namespace GiveAidCharity.Migrations
             var listChildComment = new List<ProjectComment>();
             var dictionaryId = IdGuid();
             var projectCount = context.Projects.Count();
-            for (int i = 1; i <= projectCount; i++)
+            for (var i = 1; i <= projectCount; i++)
             {
-                string projectId = dictionaryId[$"{i}"];
-                for (int j = 0; j < 3; j++)
+                var projectId = dictionaryId[$"{i}"];
+                for (var j = 0; j < 3; j++)
                 {
                     var spanTime = new Random().Next(1, 3);
                     listComment.Add(new ProjectComment
@@ -391,8 +390,8 @@ namespace GiveAidCharity.Migrations
             //var listComment = context.ProjectComments.Select(row => row).ToList();
             foreach (var c in listComment)
             {
-                string projectId = c.ProjectId;
-                string parentId = c.Id;
+                var projectId = c.ProjectId;
+                var parentId = c.Id;
                 listChildComment.Add(new ProjectComment
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -419,11 +418,11 @@ namespace GiveAidCharity.Migrations
             var listBlog = context.Blogs.ToList();
 
             var rdn = new Random();
-            Array values = Enum.GetValues(typeof(BlogComment.BlogCommentStatusEnum));
+            var values = Enum.GetValues(typeof(BlogComment.BlogCommentStatusEnum));
             foreach (var p in listBlog)
             {
 
-                    for (int j = 0; j < 3; j++)
+                    for (var j = 0; j < 3; j++)
                     {
                         var spanTime = new Random().Next(1, 3);
                         var randomCommentEnum =
@@ -477,7 +476,7 @@ namespace GiveAidCharity.Migrations
         public Dictionary<string, string> IdGuid()
         {
             IDictionary<string, string> dicId = new Dictionary<string, string>();
-            var lsIdGuid = GetJsonData<Id>(Id_arr);
+            var lsIdGuid = GetJsonData<Id>(IdArr);
             var lsId = lsIdGuid.Select(f => new Id
             {
                 num = f.num,
@@ -490,7 +489,7 @@ namespace GiveAidCharity.Migrations
             return (Dictionary<string, string>) dicId;
         }
         //Get Json Data
-        private List<T> GetJsonData<T>(string url) where T : new()
+        private static List<T> GetJsonData<T>(string url) where T : new()
         {
             var client = new HttpClient();
             var responseContent = client.GetAsync(url).Result.Content.ReadAsStringAsync().Result;
@@ -502,6 +501,8 @@ namespace GiveAidCharity.Migrations
 
     public class Article
     { 
+        // ReSharper disable  IdentifierTypo
+        // ReSharper disable  InconsistentNaming
         public string projectid { get; set; }
         public string CoverImg { get; set; }
         public string projectname { get; set; }

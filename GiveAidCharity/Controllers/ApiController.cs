@@ -40,7 +40,7 @@ namespace GiveAidCharity.Controllers
 
         public async Task<ActionResult> Banner1Data()
         {
-            var start = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd");
+            var start = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow).AddDays(-7).ToString("yyyy-MM-dd");
             var startDate = DateTime.ParseExact(start, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             var list = await _db.Donations.Where(d => d.CreatedAt >= startDate && d.Status == Donation.DonationStatusEnum.Success).ToListAsync();
             
@@ -112,12 +112,12 @@ namespace GiveAidCharity.Controllers
             Debug.WriteLine(fromDate + " " + toDate);
             if (string.IsNullOrWhiteSpace(fromDate) && !HelperMethod.CheckValidDate(fromDate))
             {
-                fromDate = DateTime.Now.AddYears(-1).ToString("yyyy-MM-dd");
+                fromDate = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow).AddYears(-1).ToString("yyyy-MM-dd");
             }
             var startDate = DateTime.ParseExact(fromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             if (string.IsNullOrWhiteSpace(toDate) && !HelperMethod.CheckValidDate(toDate))
             {
-                toDate = DateTime.Now.ToString("yyyy-MM-dd");
+                toDate = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow).ToString("yyyy-MM-dd");
             }
             var endDate = DateTime.ParseExact(toDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             var list = await _db.Donations.Where(d => d.CreatedAt >= startDate && d.CreatedAt <= endDate).ToListAsync();
@@ -240,7 +240,7 @@ namespace GiveAidCharity.Controllers
                     foreach (var item in votes)
                     {
                         item.Status = Models.Main.Vote.VoteStatusEnum.Neutral;
-                        item.UpdatedAt = DateTime.Now;
+                        item.UpdatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
                         _db.Entry(item).State = EntityState.Modified;
                     }
                 }
@@ -292,7 +292,7 @@ namespace GiveAidCharity.Controllers
                     foreach (var item in follows)
                     {
                         item.Status = Models.Main.Follow.FollowStatusEnum.Unfollowed;
-                        item.UpdatedAt = DateTime.Now;
+                        item.UpdatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
                         _db.Entry(item).State = EntityState.Modified;
                     }
                 }

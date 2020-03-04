@@ -42,10 +42,7 @@ namespace GiveAidCharity.Controllers
             get => _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             private set => _userManager = value;
         }
-        public ActionResult Index()
-        {
-            return View();
-        }
+
 
         [HttpPost]
         public async Task<ActionResult> Donate(string userId, string projectId, double? amountVnpay)
@@ -93,14 +90,6 @@ namespace GiveAidCharity.Controllers
 
             return Redirect(paymentUrl);
 
-        }
-        public ActionResult PaymentResult(PaymentResultViewModel paymentResult)
-        {
-            if (paymentResult == null)
-            {
-                return HttpNotFound();
-            }
-            return View(paymentResult);
         }
         public async Task<ActionResult> Ipn()
         {
@@ -160,7 +149,7 @@ namespace GiveAidCharity.Controllers
             {
                 donation.Status = Donation.DonationStatusEnum.Cancel;
             }
-            donation.UpdatedAt = DateTime.Now;
+            donation.UpdatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
 
 
             _db.Entry(donation).State = EntityState.Modified;

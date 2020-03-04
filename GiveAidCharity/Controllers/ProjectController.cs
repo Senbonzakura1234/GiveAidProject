@@ -69,12 +69,12 @@ namespace GiveAidCharity.Controllers
             Debug.WriteLine(start + " " + end);
             if (string.IsNullOrWhiteSpace(start) && !HelperMethod.CheckValidDate(start))
             {
-                start = DateTime.Now.AddYears(-1).ToString("yyyy-MM-dd");
+                start = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow).AddYears(-1).ToString("yyyy-MM-dd");
             }
             var startDate = DateTime.ParseExact(start, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             if (string.IsNullOrWhiteSpace(end) && !HelperMethod.CheckValidDate(end))
             {
-                end = DateTime.Now.ToString("yyyy-MM-dd");
+                end = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow).ToString("yyyy-MM-dd");
             }
             var endDate = DateTime.ParseExact(end, "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
@@ -327,7 +327,7 @@ namespace GiveAidCharity.Controllers
                 return HttpNotFound();
             }
             res.Status = model.Status;
-            res.UpdatedAt = DateTime.Now;
+            res.UpdatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
             _db.Entry(res).State = EntityState.Modified;
             _db.SaveChanges();
 
@@ -369,11 +369,14 @@ namespace GiveAidCharity.Controllers
             }
 
             var data = _db.Projects.Find(mode.Id);
-
+            if (data == null)
+            {
+                return HttpNotFound();
+            }
             data.ContentPart1 = mode.ContentPart1;
             data.ContentPart2 = mode.ContentPart2;
             data.CategoryId = mode.CategoryId;
-            data.UpdatedAt = DateTime.Now;
+            data.UpdatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
 
             _db.Entry(data).State = EntityState.Modified;
             _db.SaveChanges();

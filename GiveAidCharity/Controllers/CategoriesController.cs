@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using GiveAidCharity.Models;
 using GiveAidCharity.Models.HelperClass;
@@ -14,12 +11,12 @@ namespace GiveAidCharity.Controllers
 {
     public class CategoriesController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
         // GET: Categories
         public ActionResult Index()
         {
-            return View(db.Categories.ToList());
+            return View(_db.Categories.ToList());
         }
 
         // GET: Categories/Details/5
@@ -29,13 +26,13 @@ namespace GiveAidCharity.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = db.Categories.Find(id);
+            var category = _db.Categories.Find(id);
             if (category == null)
             {
                 return HttpNotFound();
             }
 
-            var listBlog = db.Blogs.OrderByDescending(b => b.UpdatedAt).Where(b => b.CategoryId == id).Select(b => new BlogListViewModel
+            var listBlog = _db.Blogs.OrderByDescending(b => b.UpdatedAt).Where(b => b.CategoryId == id).Select(b => new BlogListViewModel
             {
                 Id = b.Id,
                 CreatedAt = b.CreatedAt,
@@ -50,7 +47,7 @@ namespace GiveAidCharity.Controllers
                 Comment = b.BlogComments.Count
             }).Take(5).ToList();
 
-            var listProject = db.Projects.OrderByDescending(p => p.UpdatedAt).Where(b => b.CategoryId == id).Select(p =>
+            var listProject = _db.Projects.OrderByDescending(p => p.UpdatedAt).Where(b => b.CategoryId == id).Select(p =>
                 new ProjectListViewModel
                 {
                     CreatedAt = p.CreatedAt,
@@ -82,16 +79,11 @@ namespace GiveAidCharity.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,Description,CreatedAt,UpdatedAt,DeletedAt,Status")] Category category)
         {
-            category.CreatedAt = DateTime.Now;
-            category.UpdatedAt = DateTime.Now;
-            if (ModelState.IsValid)
-            {
-                db.Categories.Add(category);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+            if (!ModelState.IsValid) return View(category);
+            _db.Categories.Add(category);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
 
-            return View(category);
         }
 
         // GET: Categories/Edit/5
@@ -101,7 +93,7 @@ namespace GiveAidCharity.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = db.Categories.Find(id);
+            var category = _db.Categories.Find(id);
             if (category == null)
             {
                 return HttpNotFound();
@@ -116,14 +108,11 @@ namespace GiveAidCharity.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,Description,CreatedAt,UpdatedAt,DeletedAt,Status")] Category category)
         {
-            category.UpdatedAt = DateTime.Now;
-            if (ModelState.IsValid)
-            {
-                db.Entry(category).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(category);
+            if (!ModelState.IsValid) return View(category);
+            category.UpdatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
+            _db.Entry(category).State = EntityState.Modified;
+            _db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         // GET: Categories/Delete/5
@@ -133,7 +122,7 @@ namespace GiveAidCharity.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = db.Categories.Find(id);
+            var category = _db.Categories.Find(id);
             if (category == null)
             {
                 return HttpNotFound();
@@ -146,11 +135,15 @@ namespace GiveAidCharity.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            Category category = db.Categories.Find(id);
+            var category = _db.Categories.Find(id);
+            if (category == null)
+            {
+                return HttpNotFound();
+            }
             category.Status = Category.CategoryStatusEnum.Deleted;
-            category.DeletedAt = DateTime.Now;
-            db.Entry(category).State = EntityState.Modified;
-            db.SaveChanges();
+            category.DeletedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
+            _db.Entry(category).State = EntityState.Modified;
+            _db.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -158,7 +151,7 @@ namespace GiveAidCharity.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _db.Dispose();
             }
             base.Dispose(disposing);
         }

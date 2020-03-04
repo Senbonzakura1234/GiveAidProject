@@ -64,12 +64,12 @@ namespace GiveAidCharity.Controllers
             Debug.WriteLine(start + " " + end);
             if (string.IsNullOrWhiteSpace(start) && !HelperMethod.CheckValidDate(start))
             {
-                start = DateTime.Now.AddYears(-1).ToString("yyyy-MM-dd");
+                start = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow).AddYears(-1).ToString("yyyy-MM-dd");
             }
             var startDate = DateTime.ParseExact(start, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             if (string.IsNullOrWhiteSpace(end) && !HelperMethod.CheckValidDate(end))
             {
-                end = DateTime.Now.ToString("yyyy-MM-dd");
+                end = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow).ToString("yyyy-MM-dd");
             }
             var endDate = DateTime.ParseExact(end, "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
@@ -280,13 +280,16 @@ namespace GiveAidCharity.Controllers
             }
 
             var data = _db.Blogs.Find(item.Id);
-
+            if (data == null)
+            {
+                return HttpNotFound();
+            }
             data.Title = item.Title;
             data.ContentPart1 = item.ContentPart1;
             data.ContentPart2 = item.ContentPart2;
             data.ContentPart3 = item.ContentPart3;
             data.Status = item.Status;
-            data.UpdatedAt = DateTime.Now;
+            data.UpdatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
             data.CategoryId = item.CategoryId;
 
             _db.Entry(data).State = EntityState.Modified;
