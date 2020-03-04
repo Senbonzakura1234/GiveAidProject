@@ -51,7 +51,8 @@ namespace GiveAidCharity.Models.HelperClass
             try
             {
                 var donations = await _db.Donations
-                    .Where(d => d.CreatedAt <= DateTime.Now.AddMinutes(-5) && d.Status == Donation.DonationStatusEnum.Pending)
+                    .Where(d => d.CreatedAt <= HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow).AddMinutes(-5) && 
+                                d.Status == Donation.DonationStatusEnum.Pending)
                     .ToListAsync();
                 foreach (var item in donations)
                 {

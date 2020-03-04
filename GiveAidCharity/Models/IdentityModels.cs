@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using GiveAidCharity.Models.HelperClass;
 using GiveAidCharity.Models.Main;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -71,8 +72,8 @@ namespace GiveAidCharity.Models
 
         public ApplicationUser()
         {
-            CreatedAt = DateTime.Now;
-            UpdatedAt = DateTime.Now;
+            CreatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
+            UpdatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
             Status = UserStatusEnum.Activated;
         }
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)

@@ -219,7 +219,6 @@
     <Compile Include="Models\Main\Image.cs" />
     <Compile Include="Models\Main\Project.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\PaymentResultViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -784,8 +783,6 @@
     <Content Include="Views\Account\CompleteUserProfile.cshtml" />
     <Content Include="Views\Home\SingleTopDonate.cshtml" />
     <Content Include="Views\Home\CausesDonate.cshtml" />
-    <Content Include="Views\VNpay\Index.cshtml" />
-    <Content Include="Views\VNpay\PaymentResult.cshtml" />
     <Content Include="Views\Donations\Details.cshtml" />
     <Content Include="Views\Payment\Result.cshtml" />
     <Content Include="Views\Project\Index.cshtml" />

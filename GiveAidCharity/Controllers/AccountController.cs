@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using GiveAidCharity.Models;
+using GiveAidCharity.Models.HelperClass;
 using Microsoft.Ajax.Utilities;
 
 // ReSharper disable  RedundantCaseLabel
@@ -193,7 +194,7 @@ namespace GiveAidCharity.Controllers
                 return View(model);
             }
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            user.UpdatedAt = DateTime.Now;
+            user.UpdatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
             if (model.FirstName != null)
             {
                 user.FirstName = model.FirstName;

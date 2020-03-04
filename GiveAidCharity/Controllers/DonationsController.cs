@@ -46,12 +46,12 @@ namespace GiveAidCharity.Controllers
             Debug.WriteLine(start + " " + end);
             if (string.IsNullOrWhiteSpace(start) && !HelperMethod.CheckValidDate(start))
             {
-                start = DateTime.Now.AddYears(-1).ToString("yyyy-MM-dd");
+                start = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow).AddYears(-1).ToString("yyyy-MM-dd");
             }
             var startDate = DateTime.ParseExact(start, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             if (string.IsNullOrWhiteSpace(end) && !HelperMethod.CheckValidDate(end))
             {
-                end = DateTime.Now.ToString("yyyy-MM-dd");
+                end = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow).ToString("yyyy-MM-dd");
             }
             var endDate = DateTime.ParseExact(end, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             var donations = await _db.Donations.Where(d => d.CreatedAt >= startDate && d.CreatedAt <= endDate && 
@@ -216,13 +216,13 @@ namespace GiveAidCharity.Controllers
         }
 
         //// GET: Donations/Details/5
-        public ActionResult Details(string id)
+        public async Task<ActionResult> Details(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Donation donation = _db.Donations.Find(id);
+            var donation = await _db.Donations.FindAsync(id);
             if (donation == null)
             {
                 return HttpNotFound();
