@@ -21,9 +21,9 @@ namespace GiveAidCharity.Migrations
 
     internal sealed class Configuration : DbMigrationsConfiguration<GiveAidCharity.Models.ApplicationDbContext>
     {
-        private const string Blog_Url = "https://api.myjson.com/bins/j9cuo";
-        private const string Image_Url = "https://api.myjson.com/bins/7l7uo";
-        private const string Id_arr = "https://api.myjson.com/bins/k6los";
+        private const string Blog_Url = "https://api.myjson.com/bins/15gsvi";
+        private const string Image_Url = "https://api.myjson.com/bins/dd54e";
+        private const string Id_arr = "https://api.myjson.com/bins/khq06";
         private string[] UserName = { "Mary", "Patricia", "Linda", "Barbara", "Elizabeth", 
             "Jennifer", "Maria", "Susan", "Margaret", "Dorothy", "Lisa", "Nancy", "Karen", 
             "Betty", "Helen", "Sandra", "Donna", "Carol", "Ruth", "Sharon", "Michelle", 
@@ -177,11 +177,11 @@ namespace GiveAidCharity.Migrations
             var listCategory = new List<Category>();
             listCategory.AddRange(new List<Category>
             {
-                new Category {Id =_categoryId[0], Name = "Humanitarian", Description = "crimes of war, terrorism"},
+                new Category {Id =_categoryId[0], Name = "Humanitarian", Description = "Women & girls"},
                 new Category {Id =_categoryId[1], Name = "Natural disaster", Description = "Save human in disaster"},
                 new Category {Id =_categoryId[2], Name = "Education", Description = "Give the change education"},
                 new Category {Id =_categoryId[3], Name = "Environment", Description = "Save the environment"},
-                new Category {Id =_categoryId[4], Name = "Culture", Description = "Save the cultural building"}
+                new Category {Id =_categoryId[4], Name = "Children", Description = "Save the next generations"}
             });
             context.Categories.AddRange(listCategory);
             context.SaveChanges();
@@ -200,21 +200,22 @@ namespace GiveAidCharity.Migrations
                                     join tb3 in context.Roles on tb2.RoleId equals tb3.Id
                                     where tb3.Name == "FundRaiser"
                                     select tb1.Id).ToList();
+                Array values = Enum.GetValues(typeof(Project.ProjectStatusEnum));
                 var rdn = new Random();
                 var listProjects = lsProjects.Select(f => new Project
                 {
                     Id = dictionaryId[f.projectid],
                     ApplicationUserId = lsMemberFund[rdn.Next(1, lsMemberFund.Count - 1)],
                     Name = f.projectname,
-                    CategoryId = _categoryId[rdn.Next(0, 4)],
-                    Description = f.projectname,
+                    CategoryId = f.categoryId,
+                    Description = f.description,
                     CoverImg = f.CoverImg,
                     Goal = rdn.Next(100, 1000),
                     ContentPart1 = f.contentpart1,
                     ContentPart2 = f.contentpart2,
                     StartDate = new DateTime(2019, 02, 14).AddDays(rdn.Next(1, 340)),
                     CurrentFund = 0,
-                    Status = 0,
+                    Status = (Project.ProjectStatusEnum) rdn.Next(2,3),
                     DeletedAt = null,
                 })
                     .ToList();
@@ -225,6 +226,7 @@ namespace GiveAidCharity.Migrations
                     v.ExpireDate = v.StartDate.AddDays(10);
                     v.ReceiverEmail = context.Users.Find(v.ApplicationUserId).Email.ToString();
                 }
+
                 context.Projects.AddRange(listProjects);
                 context.SaveChanges();
             }
@@ -250,16 +252,15 @@ namespace GiveAidCharity.Migrations
             var lsImages = GetJsonData<ArticleImage>(Image_Url);
             var dictionaryId = IdGuid();
             var rdn = new Random();
-
             var listBlog = lsProjects.Select(f => new Blog()
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = dictionaryId[f.projectid],
                 ApplicationUserId = context.Projects.AsEnumerable()
                         .Where(p => p.Id.Contains($"{dictionaryId[f.projectid]}"))
                         .Select(p => p.ApplicationUserId)
                         .SingleOrDefault(),
                 Rss = dictionaryId[f.projectid],
-                CategoryId = _categoryId[rdn.Next(0, 4)],
+                CategoryId = f.categoryId,
                 Title = f.projectname,
                 ContentPart1 = f.contentpart1,
                 ContentPart2 = f.contentpart2,
@@ -361,7 +362,8 @@ namespace GiveAidCharity.Migrations
             var listComment = new List<ProjectComment>();
             var listChildComment = new List<ProjectComment>();
             var dictionaryId = IdGuid();
-            for (int i = 1; i <= 30; i++)
+            var projectCount = context.Projects.Count();
+            for (int i = 1; i <= projectCount; i++)
             {
                 string projectId = dictionaryId[$"{i}"];
                 for (int j = 0; j < 3; j++)
@@ -505,6 +507,8 @@ namespace GiveAidCharity.Migrations
         public string projectname { get; set; }
         public string contentpart1 { get; set; }
         public string contentpart2 { get; set; }
+        public string categoryId { get; set; }
+        public string description { get; set; }
     }
 
     public class ArticleImage
