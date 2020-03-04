@@ -1,0 +1,87 @@
+﻿@using GiveAidCharity.Models.Main
+@model GiveAidCharity.Models.Main.Project
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+<div class="row">
+    <div class="col-lg-12 col-xl-12 grid-margin stretch-card style-detail">
+        <div class="card">
+            <div class="card-img-top text-center pt-3">
+                <img class="border-primary" src="@Model.CoverImg"
+                     style="max-width: 100%; max-height: 180px; padding: 4px; border: 2px solid; border-radius: 100%" alt="Avatar" />
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">
+                    <b>ID # @Html.DisplayFor(model => model.Id)</b>
+                </h5>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.ApplicationUser.UserName): </b>
+                    @Html.DisplayFor(model => model.ApplicationUser.UserName)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.Name): </b>
+                    @Html.DisplayFor(model => model.Name)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.Category.Name): </b>
+                    @Html.DisplayFor(model => model.Category.Name)
+                </p>
+
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.Description): </b>
+                    @Html.DisplayFor(model => model.Description)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.ContentPart1): </b>
+                    @Html.DisplayFor(model => model.ContentPart1)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.ContentPart2): </b>
+                    @Html.DisplayFor(model => model.ContentPart2)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.Status): </b>
+                    <span class="badge @(Model.Status == Project.ProjectStatusEnum.Canceled ? "badge-gradient-secondary" : "badge-gradient-primary")">
+                        @Html.DisplayFor(model => model.Status)
+                    </span>
+                </p>
+
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.Goal): </b>
+                    @Html.DisplayFor(model => model.Goal)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.CurrentFund): </b>
+                    @Html.DisplayFor(model => model.CurrentFund)
+                </p>
+
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.ReceiverEmail): </b>
+                    @Html.DisplayFor(model => model.ReceiverEmail)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.CreatedAt): </b>
+                    @Html.DisplayFor(model => model.CreatedAt)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.UpdatedAt): </b>
+                    @Html.DisplayFor(model => model.UpdatedAt)
+                </p>
+                <p class="card-text">
+                    <b>@Html.DisplayNameFor(model => model.ExpireDate): </b>
+                    @Html.DisplayFor(model => model.ExpireDate)
+                </p>
+                <div class="d-sm-flex">
+                    @Html.ActionLink("Edit Status", "UpdateStatus", new { id = Model.Id }, new { @class = "btn btn-sm btn-warning mr-3" })
+                    @Html.ActionLink("Edit Content", "EditProject", new { id = Model.Id }, new { @class = "btn btn-sm btn-warning mr-3" })
+                    <a class="btn btn-light btn-sm mt-2 mt-sm-0" href="@Url.Action("Index")">
+                        Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

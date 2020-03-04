@@ -290,6 +290,23 @@ namespace GiveAidCharity.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
+        public ActionResult Details(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var data = _db.Projects.Find(id);
+
+            if (data == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(data);
+        }
+
         public ActionResult UpdateStatus(string id)
         {
             if (id == null)
