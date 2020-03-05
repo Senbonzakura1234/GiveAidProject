@@ -297,5 +297,48 @@ namespace GiveAidCharity.Controllers
 
             return RedirectToAction("Index", "Dashboard");
         }
+
+        public async Task<ActionResult> EditStatus(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var blog = await _db.Blogs.FindAsync(id);
+            if (blog == null)
+            {
+                return HttpNotFound();
+            }
+
+            var data = new EditStatusBlogViewModel
+            {
+                Id = blog.Id,
+                Status = blog.Status
+            };
+
+            return View(data);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditStatus(EditStatusBlogViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var res = _db.Blogs.Find(model.Id);
+            if (res == null)
+            {
+                return HttpNotFound();
+            }
+
+            res.Status = model.Status;
+            res.UpdatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
+            _db.Entry(res).State = EntityState.Modified;
+            _db.SaveChanges();
+
+            return RedirectToAction("Index", "Dashboard");
+        }
     }
 }

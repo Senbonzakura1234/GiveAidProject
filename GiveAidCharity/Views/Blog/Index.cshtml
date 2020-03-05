@@ -145,45 +145,56 @@
                                 </a>
                             </th>
                             <th class="text-center d-none d-lg-table-cell">
+                                Status
+                            </th>
+                            <th class="text-center d-none d-lg-table-cell">
                                 Modify
                             </th>
                         </tr>
 
                         @foreach (var item in Model)
                         {
-                            <tr>
-                                <td class="text-center">
-                                    <a href="#" class="badge w-100 badge-gradient-primary w-100">
-                                        @Html.DisplayFor(modelItem => item.Title)
-                                    </a>
-                                </td>
-                                <td class="text-center">
-                                    <a href="#" class="badge w-100 badge-gradient-success w-100">
-                                        @Html.DisplayFor(modelItem => item.Username)
-                                    </a>
-                                </td>
-                                <td class="text-center">
-                                    <a href="@Url.Action("Details", "Categories",
+                    <tr>
+                        <td class="text-center">
+                            <a href="#" class="badge w-100 badge-gradient-primary w-100">
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a href="#" class="badge w-100 badge-gradient-success w-100">
+                                @Html.DisplayFor(modelItem => item.Username)
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a href="@Url.Action("Details", "Categories",
                                                      new {id = item.CategoryId})"
-                                       class="badge w-100 badge-gradient-primary w-100">
-                                        @Html.DisplayFor(modelItem => item.CategoryName)
-                                    </a>
-                                </td>
-                                <td class="text-center">
-                                    @Html.DisplayFor(modelItem => item.Vote)
-                                </td>
-                                <td class="text-center">
-                                    @Html.DisplayFor(modelItem => item.Comment)
-                                </td>
-                                <td class="text-center">
-                                    @Html.DisplayFor(modelItem => item.CreatedAt)
-                                </td>
-                                <td class="text-center d-none d-lg-table-cell">
-                                    <a class="badge badge-warning" href="@Url.Action("Edit", new {id = item.Id})">
-                                        <span class="mdi mdi-pencil-box-outline"></span>
-                                    </a>
-                                </td>
-                            </tr>
+                               class="badge w-100 badge-gradient-primary w-100">
+                                @Html.DisplayFor(modelItem => item.CategoryName)
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(modelItem => item.Vote)
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(modelItem => item.Comment)
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(modelItem => item.CreatedAt)
+                        </td>
+                        <td class="d-none d-xl-table-cell ">
+                            <a href="@Url.Action("EditStatus", new{id = item.Id})" class="badge text-white w-100
+                                                @(item.Status == Blog.BlogStatusEnum.Published ? "badge-gradient-primary"
+                                                    : item.Status == Blog.BlogStatusEnum.Pending ? "badge-gradient-warning"
+                                                        : "badge-secondary")">
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </a>
+                        </td>
+                        <td class="text-center d-none d-lg-table-cell">
+                            <a class="badge badge-warning" href="@Url.Action("Edit", new {id = item.Id})">
+                                <span class="mdi mdi-pencil-box-outline"></span>
+                            </a>
+                        </td>
+                    </tr>
                         }
                     </thead>
                 </table>
