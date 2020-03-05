@@ -183,4 +183,30 @@ namespace GiveAidCharity.Models.HelperClass
         public string Id { get; set; }
         public Blog.BlogStatusEnum Status { get; set; }
     }
+
+    public class UpdateUserStatusViewModel
+    {
+        public string Id { get; set; }
+        public ApplicationUser.UserStatusEnum Status { get; set; }
+    }
+
+    public class UserDetailDashBoardViewModel
+    {
+        public string Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Avatar { get; set; }
+        public string Description { get; set; }
+        public string Address { get; set; }
+        public string Zipcode { get; set; }
+        public string CompanyName { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime? Birthday { get; set; }
+        public ApplicationUser.GenderEnum Gender { get; set; }
+        public ApplicationUser.UserStatusEnum Status { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        public DateTime CreatedAt { get; set; }
+    }
 }

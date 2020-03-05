@@ -814,6 +814,8 @@
     <Content Include="Views\Users\UpdateRole.cshtml" />
     <Content Include="Views\Donations\EditStatus.cshtml" />
     <Content Include="Views\Blog\EditStatus.cshtml" />
+    <Content Include="Views\Users\UpdateStatus.cshtml" />
+    <Content Include="Views\Users\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

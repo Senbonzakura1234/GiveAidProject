@@ -195,5 +195,81 @@ namespace GiveAidCharity.Controllers
             }
             return RedirectToAction("Index");
         }
+
+
+
+        public async Task<ActionResult> Details(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var user = await UserManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(new UserDetailDashBoardViewModel
+            {
+                Id = user.Id,
+                Status = user.Status,
+                CreatedAt = user.CreatedAt,
+                Avatar = user.Avatar,
+                Description = user.Description,
+                FirstName = user.FirstName,
+                Gender = user.Gender,
+                LastName = user.LastName,
+                Birthday = user.Birthday,
+                Zipcode = user.Zipcode,
+                Address = user.Address,
+                CompanyName = user.CompanyName
+            });
+        }
+
+        public async Task<ActionResult> UpdateStatus(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var user = await UserManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(new UpdateUserStatusViewModel
+            {
+                Id = user.Id,
+                Status = user.Status
+            });
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UpdateStatus(UpdateUserStatusViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+            if (model.Id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var user = await UserManager.FindByIdAsync(model.Id);
+
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            user.Status = model.Status;
+            await UserManager.UpdateAsync(user);
+            return RedirectToAction("Index");
+        }
+
+
     }
 }

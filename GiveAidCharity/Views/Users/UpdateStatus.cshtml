@@ -1,9 +1,10 @@
-﻿@model GiveAidCharity.Models.HelperClass.EditStatusBlogViewModel
+﻿@model GiveAidCharity.Models.HelperClass.UpdateUserStatusViewModel
 
 @{
-    ViewBag.Title = "EditStatus";
+    ViewBag.Title = "UpdateStatus";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
+
 <div class="row">
     <div class="col-md-8 mx-auto grid-margin stretch-card">
         <div class="card">
@@ -21,7 +22,7 @@
                         @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
                     </div>
                     <a class="btn btn-white" href="@Url.Action("Index")"></a>
-                    <input type="submit" class="btn btn-gradient-primary mr-2" value="Submit" />
+                    <input type="submit" class="btn btn-gradient-primary mr-2" value="Tạo danh mục mới" />
                 }
             </div>
         </div>

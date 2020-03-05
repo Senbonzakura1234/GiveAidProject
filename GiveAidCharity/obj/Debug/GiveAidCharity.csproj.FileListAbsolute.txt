@@ -107,3 +107,4 @@ E:\visual studio\Source\GiveAidCharity\GiveAidCharity\obj\Debug\GiveAidCharity.M
 E:\visual studio\Source\GiveAidCharity\GiveAidCharity\bin\Quartz.dll
 E:\visual studio\Source\GiveAidCharity\GiveAidCharity\bin\Quartz.pdb
 E:\visual studio\Source\GiveAidCharity\GiveAidCharity\bin\Quartz.xml
+E:\visual studio\Source\GiveAidCharity\GiveAidCharity\obj\Debug\GiveAidCharity.csprojAssemblyReference.cache
