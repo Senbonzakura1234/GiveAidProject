@@ -64,6 +64,7 @@ namespace GiveAidCharity.Controllers
             }
             var followed = _db.Follows.Where(p => p.ApplicationUserId == userId && p.Status != Models.Main.Follow.FollowStatusEnum.Followed).ToList();
             var recentList = followed.Select(p => p.Project.Name).Take(3).ToList();
+            var donationHistory = _db.Donations.Where(p => p.ApplicationUserId == userId).ToList();
             var model = new IndexViewModel
             {
                 UserName = user.UserName,
@@ -71,6 +72,7 @@ namespace GiveAidCharity.Controllers
                 DonationCount = user.Donations.Where(p => p.Status == Models.Main.Donation.DonationStatusEnum.Success).ToList().Count,
                 Followed = followed.Count,
                 ListFollowed = recentList,
+                DonationHistory = donationHistory,
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
