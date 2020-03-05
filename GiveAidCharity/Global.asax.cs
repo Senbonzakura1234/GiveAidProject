@@ -15,6 +15,8 @@ namespace GiveAidCharity
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             FollowEmailSchedule.Start();
             RemovePendingTransactionSchedule.Start();
+            NotifyProjectProgressSchedule.Start();
+            ExpireProjectSchedule.Start();
         }
     }
 }

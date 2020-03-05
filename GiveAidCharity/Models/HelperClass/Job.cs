@@ -60,7 +60,76 @@ namespace GiveAidCharity.Models.HelperClass
                     _db.Entry(item).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
                     HelperMethod.NotifyEmailTransaction("Transaction no " + item.Id + " is" +
-                                                        item.Status, "Transaction Result", item);
+                                                        item.Status, "Transaction Result", 
+                                                        item, "Transaction result", 
+                                                        "anhdungpham090@gmail.com");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+    }
+
+    public class NotifyProjectProgressJob : IJob
+    {
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
+        public async Task Execute(IJobExecutionContext context)
+        {
+            try
+            {
+                var projects = await _db.Projects.Where(p => p.Status == Project.ProjectStatusEnum.Ongoing)
+                    .ToListAsync();
+                foreach (var mailer in from project in projects where project != null 
+                    let body = HelperMethod.ProjectPrepareTemplate(project) 
+                    select new Email {
+                        ToEmail = project.ApplicationUser.Email,
+                        Subject = "Keep Track On your Cause",
+                        Body = body,
+                        IsHtml = true
+                    })
+                {
+                    mailer.Send();
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+    }
+
+    public class ExpireProjectJob : IJob
+    {
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
+        public async Task Execute(IJobExecutionContext context)
+        {
+            try
+            {
+                var projects = await _db.Projects.Where(p => p.Status == Project.ProjectStatusEnum.Ongoing && 
+                                                             p.ExpireDate <= HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow))
+                    .ToListAsync();
+                foreach (var item in projects)
+                {
+                    if(item.CurrentFund < item.Goal)
+                    {
+                        item.Status = Project.ProjectStatusEnum.Suspended;
+                        _db.Entry(item).State = EntityState.Modified;
+                        await _db.SaveChangesAsync();
+                        await HelperMethod.FailProject(item.Id);
+                    }
+                    else
+                    {
+                        item.Status = Project.ProjectStatusEnum.Success;
+                        _db.Entry(item).State = EntityState.Modified;
+                        await _db.SaveChangesAsync();
+                        await HelperMethod.SuccessProject(item.Id);
+                    }
                 }
             }
             catch (Exception e)

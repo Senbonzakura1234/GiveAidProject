@@ -155,7 +155,8 @@ namespace GiveAidCharity.Controllers
             _db.Entry(donation).State = EntityState.Modified;
             await _db.SaveChangesAsync();
             HelperMethod.NotifyEmailTransaction("Transaction no " + donation.Id + " is" +
-                                                donation.Status, "Transaction Result", donation);
+                                                donation.Status, "Transaction Result", donation,
+                "Transaction Result", "anhdungpham090@gmail.com");
             return RedirectToAction("VnPayResult", "Payment", new { id = orderId });
         }
 
