@@ -13,6 +13,7 @@ namespace GiveAidCharity.Models
         public int DonationCount { get; set; }
         public int Followed { get; set; }
         public List<string> ListFollowed { get; set; }
+        public List<Donation> DonationHistory { get;set; }
         public bool HasPassword { get; set; }
         public IList<UserLoginInfo> Logins { get; set; }
         public string PhoneNumber { get; set; }
