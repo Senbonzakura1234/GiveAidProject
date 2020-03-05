@@ -153,7 +153,8 @@ namespace GiveAidCharity.Controllers
             Db.Donations.Add(donation);
             await Db.SaveChangesAsync();
             HelperMethod.NotifyEmailTransaction("Transaction no " + donation.Id + " is" +
-                                                donation.Status, "Transaction Result" , donation);
+                                                donation.Status, "Transaction Result" , donation, 
+                "Transaction Result", "anhdungpham090@gmail.com");
             return result;
             // check that Payment_status=Completed
             // check that Txn_id has not been previously processed
