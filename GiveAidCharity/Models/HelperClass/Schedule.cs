@@ -66,7 +66,7 @@ namespace GiveAidCharity.Models.HelperClass
                 await scheduler.Start();
                 var job = JobBuilder.Create<NotifyProjectProgressJob>().Build();
                 var trigger = TriggerBuilder.Create()
-                    .WithIdentity("trigger1", "group1")
+                    .WithIdentity("trigger3", "group3")
                     .WithSchedule(CronScheduleBuilder
                         .WeeklyOnDayAndHourAndMinute(DayOfWeek.Monday, 8, 45)
                         .InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time")))
@@ -91,7 +91,7 @@ namespace GiveAidCharity.Models.HelperClass
                 await scheduler.Start();
                 var job = JobBuilder.Create<ExpireProjectJob>().Build();
                 var trigger = TriggerBuilder.Create()
-                    .WithIdentity("trigger1", "group1")
+                    .WithIdentity("trigger4", "group4")
                     .WithSchedule(CronScheduleBuilder
                         .DailyAtHourAndMinute( 23, 59)
                         .InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time")))

@@ -47,5 +47,18 @@
             Asc = 0,
             Desc = 1
         }
+        public enum UserSortEnum
+        {
+            Role = 0,
+            UserName = 1,
+            TotalDonate = 2
+
+        }
+
+        public enum UserDirectEnum
+        {
+            Asc = 0,
+            Desc = 1
+        }
     }
 }
