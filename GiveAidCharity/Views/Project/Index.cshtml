@@ -213,7 +213,10 @@
                                         </td>
                                         <td class="text-center">
                                             <a href="#">
-                                                <img src="@item.CoverImg" alt="" />
+                                                <img src="@(string.IsNullOrWhiteSpace(item.CoverImg)?
+                                                            "https://res.cloudinary.com/bangnguyen/image/upload/v1581844808/ProjectCharity/person_1_kvy425.jpg" 
+                                                              : item.CoverImg)"
+                                                     alt="" />
                                             </a>
                                         </td>
                                         <td class="text-center">

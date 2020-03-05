@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -9,12 +10,14 @@ using System.Web.Mvc;
 using GiveAidCharity.Models;
 using GiveAidCharity.Models.HelperClass;
 using GiveAidCharity.Models.Main;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 
 namespace GiveAidCharity.Controllers
 {
+    [Authorize]
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
@@ -46,9 +49,17 @@ namespace GiveAidCharity.Controllers
             private set => _roleManager = value;
         }
         // GET: Users
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? page, int? limit,
+            string userName, int? sortBy, int? direct)
         {
-            var users = await _db.Users.ToListAsync();
+
+            if (userName.IsNullOrWhiteSpace())
+            {
+                userName = "";
+            }
+
+            var users = await _db.Users.Where(d => d.UserName.Contains(userName)).ToListAsync();
+            
             var listUser = users.Select(item => new UserListViewModel
                 {
                     Id = item.Id,
@@ -61,8 +72,80 @@ namespace GiveAidCharity.Controllers
                     Role = GetUserRoleName(item.Roles.FirstOrDefault()?.RoleId) ?? "8NotSet"
             })
                 .ToList();
-            listUser = listUser.OrderBy(u => u.Role).ToList();
-            return View(listUser);
+
+
+            if (sortBy == null || !Enum.IsDefined(typeof(HelperEnum.UserSortEnum), sortBy))
+            {
+                Debug.WriteLine(sortBy);
+                sortBy = 0;
+            }
+
+            if (direct == null || !Enum.IsDefined(typeof(HelperEnum.UserDirectEnum), direct))
+            {
+                Debug.WriteLine(direct);
+                direct = 0;
+            }
+            var data = new List<UserListViewModel>();
+
+            switch (sortBy)
+            {
+                case (int)HelperEnum.UserSortEnum.Role when direct is (int)HelperEnum.UserDirectEnum.Asc:
+                    {
+                        var dataList = listUser.OrderBy(p => p.Role).ToList();
+                        data.AddRange(dataList);
+                        break;
+                    }
+                case (int)HelperEnum.UserSortEnum.Role:
+                    {
+                        var dataList = listUser.OrderByDescending(p => p.Role).ToList();
+                        data.AddRange(dataList);
+                        break;
+                    }
+                case (int)HelperEnum.UserSortEnum.UserName when direct is (int)HelperEnum.UserDirectEnum.Asc:
+                    {
+                        var dataList = listUser.OrderBy(p => p.Username).ToList();
+                        data.AddRange(dataList);
+                        break;
+                    }
+                case (int)HelperEnum.UserSortEnum.UserName:
+                    {
+                        var dataList = listUser.OrderByDescending(p => p.Username).ToList();
+                        data.AddRange(dataList);
+                        break;
+                    }
+                case (int)HelperEnum.UserSortEnum.TotalDonate when direct is (int)HelperEnum.UserDirectEnum.Asc:
+                    {
+                        var dataList = listUser.OrderBy(p => p.TotalDonate).ToList();
+                        data.AddRange(dataList);
+                        break;
+                    }
+                case (int)HelperEnum.UserSortEnum.TotalDonate:
+                    {
+                        var dataList = listUser.OrderByDescending(p => p.TotalDonate).ToList();
+                        data.AddRange(dataList);
+                        break;
+                    }
+                default:
+                    {
+                        var dataList = listUser.OrderBy(p => p.Role).ToList();
+                        data.AddRange(dataList);
+                        break;
+                    }
+            }
+
+            ViewBag.CurrentPage = page ?? 1;
+            ViewBag.TotalItem = data.Count;
+            ViewBag.Limit = limit ?? 10;
+            ViewBag.TotalPage = Math.Ceiling((double)data.Count / (limit ?? 10));
+            ViewBag.userName = userName;
+
+            ViewBag.sortBy = sortBy;
+            ViewBag.direct = direct;
+            ViewBag.directSet = direct is (int)HelperEnum.DonationDirectEnum.Asc ? (int)HelperEnum.DonationDirectEnum.Desc : (int)HelperEnum.DonationDirectEnum.Asc;
+
+            data = data.Skip(((page ?? 1) - 1) * (limit ?? 10)).Take((limit ?? 10)).ToList();
+
+            return View(data);
         }
 
         public string GetUserRoleName(string id)

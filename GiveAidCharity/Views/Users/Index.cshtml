@@ -1,51 +1,289 @@
-﻿@model IEnumerable<GiveAidCharity.Models.HelperClass.UserListViewModel>
+﻿@using GiveAidCharity.Models
+@using GiveAidCharity.Models.HelperClass
+@model IEnumerable<GiveAidCharity.Models.HelperClass.UserListViewModel>
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+
+
+    var totalPage = ((int?)ViewBag.TotalPage).Value;
+    var currentPage = ((int?)ViewBag.CurrentPage).Value;
+    var limit = ((int?)ViewBag.Limit).Value;
+
+    var userName = ViewBag.userName.ToString();
+
+    var sortBy = ((int?)ViewBag.sortBy).Value;
+    var direct = ((int?)ViewBag.direct).Value;
+    var directSet = ((int?)ViewBag.directSet).Value;
+
+    var currentPara = "?userName=" + userName + "&sortBy=" + sortBy + "&direct=" + direct;
+
+    var startPage = ((currentPage - 1) * limit + 1);
+    var endPage = ((currentPage - 1) * limit + Model.Count());
+    var totalItem = ((int?)ViewBag.TotalItem).Value;
+}
+@section styles
+{
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    @Styles.Render("~/Content/DashboardTheme/css/paginate.css")
 }
 
-<h2>Index</h2>
+<div class="row">
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body table-responsive">
+                <h4 class="card-title">Date filer</h4>
+                <p class="card-description"> Basic form layout </p>
+                @using (Html.BeginForm("Index", "Users", FormMethod.Get, new { id = "productForm" }))
+                {
+                    @Html.Hidden("sortBy", sortBy, new { id = "sortBy" })
+                    @Html.Hidden("direct", direct, new { id = "direct" })
+                    <div class="form-row">
+                        <div class="col-md-12 form-group">
+                            <label for="userName">Search by Username</label>
+                            <input type="text" id="userName" name="userName" value="@userName"
+                                   class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-row mb-4">
+                        <a href="@Url.Action("Index", "Users")" class="btn btn-light ml-auto">Clear Filter</a>
+                        <button type="submit" class="btn btn-gradient-primary ml-2">Submit</button>
+                    </div>
+                }
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Username)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TotalDonate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Avatar)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Role)
-        </th>
-        <th></th>
-    </tr>
+            </div>
+        </div>
+    </div>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Username)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TotalDonate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Avatar)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Role).ToString().Substring(1)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "UpdateRole", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-        </td>
-    </tr>
+
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body table-responsive">
+                <h4 class="card-title">List Project</h4>
+                <p class="card-description d-sm-flex">
+                    <span class="text-muted text-small my-auto">
+                        Showing from @(startPage) to @(endPage)
+                        of @(totalItem) results
+                    </span>
+                </p>
+                <table class="table">
+                    <thead class="text-primary">
+                        <tr>
+                            <th class="text-center">
+                                View
+                            </th>
+                            <th class="text-center">
+                                @Html.DisplayNameFor(model => model.Avatar)
+                            </th>
+                            <th class="text-center">
+                                <a href="#/" class="sortData text-primary" data-direct="@directSet"
+                                   data-sort="@((int) HelperEnum.UserSortEnum.Role)">
+                                    @Html.DisplayNameFor(model => model.Role)
+                                    <span style="font-size: 15px" class="mdi
+                                                @(direct == (int) HelperEnum.UserDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
+                                                @(sortBy == (int) HelperEnum.UserSortEnum.Role ? "" : "d-none")">
+                                    </span>
+                                </a>
+                            </th>
+                            <th class="text-center">
+                                <a href="#/" class="sortData text-primary" data-direct="@directSet"
+                                   data-sort="@((int) HelperEnum.UserSortEnum.UserName)">
+                                    @Html.DisplayNameFor(model => model.Username)
+                                    <span style="font-size: 15px" class="mdi
+                                                @(direct == (int) HelperEnum.UserDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
+                                                @(sortBy == (int) HelperEnum.UserSortEnum.UserName ? "" : "d-none")">
+                                    </span>
+                                </a>
+                            </th>
+                            <th class="text-center">
+                                <a href="#/" class="sortData text-primary" data-direct="@directSet"
+                                   data-sort="@((int) HelperEnum.UserSortEnum.TotalDonate)">
+                                    @Html.DisplayNameFor(model => model.TotalDonate)
+                                    <span style="font-size: 15px" class="mdi
+                                                @(direct == (int) HelperEnum.UserDirectEnum.Asc ? "mdi-menu-down" : "mdi-menu-up")
+                                                @(sortBy == (int) HelperEnum.UserSortEnum.TotalDonate ? "" : "d-none")">
+                                    </span>
+                                </a>
+                            </th>
+                            <th class="text-center">
+                                @Html.DisplayNameFor(model => model.Gender)
+                            </th>
+                            <th class="text-center">
+                                @Html.DisplayNameFor(model => model.Status)
+                            </th>
+                            <th class="text-center d-none d-lg-table-cell">
+                                Modify
+                            </th>
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    <a class="badge badge-gradient-info" href="@Url.Action("",new{id = item.Id})">
+                                        <span class="mdi mdi-search-web"></span>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <img src="@(string.IsNullOrWhiteSpace(item.Avatar)?
+                                                  "https://res.cloudinary.com/bangnguyen/image/upload/v1581844808/ProjectCharity/person_1_kvy425.jpg"
+                                                  : item.Avatar)" alt="" class="border @(item.Role == "1Administrator" ? "border-primary"
+                                                                                     : item.Role == "2Moderator" ? "border-warning"
+                                                                                         : item.Role == "3FundRaiser" ? "border-danger"
+                                                                                             : item.Role == "4Volunteer" ? "border-success" :
+                                                                                                 "border-dark")" />
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge @(item.Role == "1Administrator" ? "badge-gradient-primary"
+                                                                  : item.Role == "2Moderator" ? "badge-gradient-warning"
+                                                                      : item.Role == "3FundRaiser" ? "badge-gradient-danger"
+                                                                          : item.Role == "4Volunteer" ? "badge-gradient-success" : "badge-gradient-dark")">
+                                        <span data-toggle="tooltip" data-placement="top"
+                                              title="@Html.DisplayFor(modelItem => item.Role).ToString().Substring(1)"
+                                              class="mdi @(item.Role == "1Administrator" ? "mdi-account-star"
+                                                             : item.Role == "2Moderator" ? "mdi-account-key"
+                                                                 : item.Role == "3FundRaiser" ? "mdi-arrow-up-bold-hexagon-outline"
+                                                                     : item.Role == "4Volunteer" ? "mdi-account" : "mdi-account-outline")"></span>
+                                    </span>
+                                    
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge  w-100 @(item.Role == "1Administrator" ? "badge-gradient-primary"
+                                                                  : item.Role == "2Moderator" ? "badge-gradient-warning"
+                                                                      : item.Role == "3FundRaiser" ? "badge-gradient-danger"
+                                                                          : item.Role == "4Volunteer" ? "badge-gradient-success" : "badge-gradient-dark")">
+                                        @Html.DisplayFor(modelItem => item.Username)
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    $@Html.DisplayFor(modelItem => item.TotalDonate)
+                                </td>
+                                <td class="text-center">
+
+                                    <span class="badge w-100 @(item.Gender == ApplicationUser.GenderEnum.Male ? "badge-gradient-info"
+                                                                 : item.Gender == ApplicationUser.GenderEnum.Female ? "badge-gradient-danger"
+                                                                     : item.Gender == ApplicationUser.GenderEnum.Others ? "badge-gradient-primary"
+                                                                         : item.Gender == ApplicationUser.GenderEnum.Private ? "badge-gradient-dark" : 
+                                                                             "badge-gradient-secondary")">
+                                        @Html.DisplayFor(modelItem => item.Gender)
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge w-100 @(item.Status == ApplicationUser.UserStatusEnum.Activated ? "badge-gradient-primary"
+                                                                 : item.Status == ApplicationUser.UserStatusEnum.Inactivated ? "badge-gradient-secondary"
+                                                                     : item.Status ==  ApplicationUser.UserStatusEnum.Banned ? "badge-gradient-danger"
+                                                                         : "badge-gradient-dark")">
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </span>
+                                </td>
+                               
+                                <td class="text-center d-none d-lg-table-cell">
+                                    <a class="badge badge-warning" href="@Url.Action("UpdateRole", new {id = item.Id})">
+                                        <span class="mdi mdi-pencil-box-outline"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </thead>
+                </table>
+            </div>
+            <div class="card-footer bg-white border-0">
+                @if (totalPage > 0)
+                {
+                    <div>
+                        <ul class="pagination text-center">
+                            <li class="page-item ml-auto" style="opacity: 0"></li>
+
+                            @if (currentPage > 3)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@currentPara&page=@(1)&limit=@(limit)">
+                                        <i class="mdi mdi-chevron-double-left"></i>
+                                    </a>
+                                </li>
+                            }
+
+                            @if (currentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@currentPara&page=@(currentPage - 1)&limit=@(limit)">
+                                        <i class="mdi mdi-chevron-left"></i>
+                                    </a>
+                                </li>
+                            }
+
+                            @if (currentPage > 2)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@currentPara&page=@(currentPage - 2)&limit=@(limit)">
+                                        @(currentPage - 2)
+                                    </a>
+                                </li>
+                            }
+
+                            @if (currentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@currentPara&page=@(currentPage - 1)&limit=@(limit)">
+                                        @(currentPage - 1)
+                                    </a>
+                                </li>
+                            }
+
+                            <li class="active page-item" aria-current="page">
+                                <a class="page-link" href="@currentPara&page=@(currentPage)&limit=@(limit)">
+                                    @currentPage
+                                </a>
+                            </li>
+
+                            @if (totalPage - currentPage > 0)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@currentPara&page=@(currentPage + 1)&limit=@(limit)">
+                                        @(currentPage + 1)
+                                    </a>
+                                </li>
+                            }
+
+                            @if (totalPage - currentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@currentPara&page=@(currentPage + 2)&limit=@(limit)">
+                                        @(currentPage + 2)
+                                    </a>
+                                </li>
+                            }
+
+                            @if (currentPage < totalPage)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@currentPara&page=@(currentPage + 1)&limit=@(limit)">
+                                        <i class="mdi mdi-chevron-right"></i>
+                                    </a>
+                                </li>
+                            }
+
+                            @if (currentPage < totalPage - 2)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@currentPara&page=@(totalPage)&limit=@(limit)">
+                                        <i class="mdi mdi-chevron-double-right"></i>
+                                    </a>
+                                </li>
+                            }
+
+                            <li class="page-item mr-auto" style="opacity: 0"></li>
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    @Scripts.Render("~/Content/DashboardTheme/js/PageJs/users-list.js")
 }
-
-</table>
