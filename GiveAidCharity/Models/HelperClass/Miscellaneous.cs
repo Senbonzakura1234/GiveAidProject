@@ -1,6 +1,6 @@
 ﻿namespace GiveAidCharity.Models.HelperClass
 {
-    public class CurrencyConvertModel
+    internal class CurrencyConvertModel
     {
         // ReSharper disable once UnusedMember.Global
         // ReSharper disable once InconsistentNaming

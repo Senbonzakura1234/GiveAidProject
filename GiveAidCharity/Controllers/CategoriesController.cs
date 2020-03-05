@@ -9,6 +9,7 @@ using GiveAidCharity.Models.Main;
 
 namespace GiveAidCharity.Controllers
 {
+    [Authorize(Roles = "1Administrator, 2Moderator")]
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _db = new ApplicationDbContext();

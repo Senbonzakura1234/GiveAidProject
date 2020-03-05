@@ -38,7 +38,7 @@ namespace GiveAidCharity.Models.HelperClass
             {
                 Debug.WriteLine(e);
                 Console.WriteLine(e);
-                throw;
+                
             }
         }
     }
@@ -69,7 +69,7 @@ namespace GiveAidCharity.Models.HelperClass
             {
                 Debug.WriteLine(e);
                 Console.WriteLine(e);
-                throw;
+                
             }
         }
     }
@@ -99,7 +99,7 @@ namespace GiveAidCharity.Models.HelperClass
             {
                 Debug.WriteLine(e);
                 Console.WriteLine(e);
-                throw;
+                
             }
         }
     }
@@ -136,7 +136,7 @@ namespace GiveAidCharity.Models.HelperClass
             {
                 Debug.WriteLine(e);
                 Console.WriteLine(e);
-                throw;
+                
             }
         }
     }

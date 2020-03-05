@@ -165,7 +165,7 @@ namespace GiveAidCharity.Models.HelperClass
         public ApplicationUser.UserStatusEnum Status { get; set; }
     }
 
-    public class UpdateRoleViewModal
+    public class UpdateRoleViewModel
     {
         [Required]
         public string UserId { get; set; }

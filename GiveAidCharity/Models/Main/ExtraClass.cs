@@ -36,7 +36,8 @@ namespace GiveAidCharity.Models.Main
             Pending = 0,
             Success = 1,
             Fail = 2,
-            Cancel = 3
+            Cancel = 3,
+            Refund = 4
         }
 
         [DataType(DataType.DateTime)]

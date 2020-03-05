@@ -91,6 +91,7 @@ namespace GiveAidCharity.Controllers
             return Redirect(paymentUrl);
 
         }
+        [AllowAnonymous]
         public async Task<ActionResult> Ipn()
         {
             const string vnpHashSecret = "OWESKVDWDQHLTYAIZCVYVSNSAOBITQDX"; //Secret key

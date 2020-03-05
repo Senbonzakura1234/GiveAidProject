@@ -47,6 +47,7 @@
             Asc = 0,
             Desc = 1
         }
+
         public enum UserSortEnum
         {
             Role = 0,

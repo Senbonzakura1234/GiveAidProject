@@ -8,7 +8,7 @@ using Microsoft.AspNet.Identity.Owin;
 
 namespace GiveAidCharity.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "1Administrator, 2Moderator, 3FundRaiser")]
     public class DashboardController : Controller
     {
         private ApplicationUserManager _userManager;
@@ -35,7 +35,7 @@ namespace GiveAidCharity.Controllers
         {
             return View();
         }
-
+        [AllowAnonymous]
         public ActionResult DonationList()
         {
             var data = _db.Donations
@@ -54,7 +54,7 @@ namespace GiveAidCharity.Controllers
 
             return PartialView(listDonation);
         }
-
+        [AllowAnonymous]
         public ActionResult ProjectList()
         {
             var data = _db.Projects.Where(d => d.Status == Project.ProjectStatusEnum.Ongoing)

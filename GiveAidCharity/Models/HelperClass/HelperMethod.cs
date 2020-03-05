@@ -15,7 +15,7 @@ namespace GiveAidCharity.Models.HelperClass
     {
         private static readonly ApplicationDbContext Db = new ApplicationDbContext();
 
-        public static bool CheckValidDate(string date)
+        internal static bool CheckValidDate(string date)
         {
             return DateTime.TryParse(date, out _);
         }
@@ -38,7 +38,7 @@ namespace GiveAidCharity.Models.HelperClass
             var votes = await Db.Votes.Where(d => d.Status != Vote.VoteStatusEnum.Neutral && d.BlogId == id).ToListAsync();
             return votes.Sum(item => (int) item.Status);
         }
-        public static string ProjectPrepareTemplate(Project project)
+        internal static string ProjectPrepareTemplate(Project project)
         {
             string body;
             try
@@ -70,7 +70,7 @@ namespace GiveAidCharity.Models.HelperClass
             return body;
         }
 
-        public static DateTime GetCurrentDateTimeWithTimeZone(DateTime dateIn) // dateIn must be UTC, DateTime.UtcNow
+        internal static DateTime GetCurrentDateTimeWithTimeZone(DateTime dateIn) // dateIn must be UTC, DateTime.UtcNow
         {
             try
             {
@@ -85,7 +85,7 @@ namespace GiveAidCharity.Models.HelperClass
             }
         }
 
-        public static string ProjectSuccessPrepareTemplate(string message, string title, Project project)
+        internal static string ProjectSuccessPrepareTemplate(string message, string title, Project project)
         {
             string body;
             try
@@ -112,7 +112,7 @@ namespace GiveAidCharity.Models.HelperClass
             }
             return body;
         }
-        public static string TransactionPrepareTemplate(string message, string title, Donation donation)
+        internal static string TransactionPrepareTemplate(string message, string title, Donation donation)
         {
             string body;
             try
@@ -139,7 +139,7 @@ namespace GiveAidCharity.Models.HelperClass
             }
             return body;
         }
-        public static void NotifyEmailProjectSuccess(string message, string title, Project project, string subject, string email)
+        internal static void NotifyEmailProjectSuccess(string message, string title, Project project, string subject, string email)
         {
             try
             {
@@ -161,7 +161,7 @@ namespace GiveAidCharity.Models.HelperClass
                 throw;
             }
         }
-        public static void NotifyEmailTransaction(string message, string title, Donation donation, string subject, string email)
+        internal static void NotifyEmailTransaction(string message, string title, Donation donation, string subject, string email)
         {
             try
             {
@@ -184,23 +184,26 @@ namespace GiveAidCharity.Models.HelperClass
             }
         }
 
-        public static async Task FailProject(string id)
+        internal static async Task FailProject(string id)
         {
             if (id == null) return;
             var project = await Db.Projects.FindAsync(id);
             if(project == null) return;
             foreach (var item in project.Donations.Where(d => d.Status == Donation.DonationStatusEnum.Success).ToList())
             {
-                Refund(item, "Refund donation due to the project you donated to fail to success");
+                await Refund(item, "Refund donation due to the project you donated to fail to success");
             }
         }
 
-        public static void Refund(Donation donation , string message)
+        private static async Task Refund(Donation donation , string message)
         {
+            donation.Status = Donation.DonationStatusEnum.Refund;
+            Db.Entry(donation).State = EntityState.Modified;
+            await Db.SaveChangesAsync();
             NotifyEmailTransaction(message,"Refund", donation, "Refund", "anhdungpham090@gmail.com");
         }
 
-        public static async Task SuccessProject(string id)
+        internal static async Task SuccessProject(string id)
         {
             if (id == null) return;
             var project = await Db.Projects.FindAsync(id);

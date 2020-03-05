@@ -5,7 +5,7 @@ using Quartz.Impl;
 
 namespace GiveAidCharity.Models.HelperClass
 {
-    public class FollowEmailSchedule
+    internal class FollowEmailSchedule
     {
         public static async void Start()
         {
@@ -26,12 +26,12 @@ namespace GiveAidCharity.Models.HelperClass
             {
                 Debug.WriteLine(e);
                 Console.WriteLine(e);
-                throw;
+               
             }
         }
     }
 
-    public class RemovePendingTransactionSchedule
+    internal class RemovePendingTransactionSchedule
     {
         public static async void Start()
         {
@@ -52,11 +52,12 @@ namespace GiveAidCharity.Models.HelperClass
             {
                 Debug.WriteLine(e);
                 Console.WriteLine(e);
-                throw;
+               
             }
         }
     }
-    public class NotifyProjectProgressSchedule
+
+    internal class NotifyProjectProgressSchedule
     {
         public static async void Start()
         {
@@ -77,11 +78,12 @@ namespace GiveAidCharity.Models.HelperClass
             {
                 Debug.WriteLine(e);
                 Console.WriteLine(e);
-                throw;
+               
             }
         }
     }
-    public class ExpireProjectSchedule
+
+    internal class ExpireProjectSchedule
     {
         public static async void Start()
         {
@@ -102,7 +104,7 @@ namespace GiveAidCharity.Models.HelperClass
             {
                 Debug.WriteLine(e);
                 Console.WriteLine(e);
-                throw;
+               
             }
         }
     }

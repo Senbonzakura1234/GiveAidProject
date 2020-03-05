@@ -37,7 +37,7 @@ namespace GiveAidCharity.Controllers
             get => _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             private set => _userManager = value;
         }
-
+        [Authorize(Roles = "1Administrator, 2Moderator")]
         public async Task<ActionResult> Banner1Data()
         {
             var start = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow).AddDays(-7).ToString("yyyy-MM-dd");
@@ -49,6 +49,7 @@ namespace GiveAidCharity.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "1Administrator, 2Moderator")]
         public async Task<ActionResult> Banner2Data()
         {
             var list = await _db.Donations.Where(d => d.Status == Donation.DonationStatusEnum.Success).ToListAsync();
@@ -56,6 +57,7 @@ namespace GiveAidCharity.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "1Administrator, 2Moderator")]
         public async Task<ActionResult> Banner3Data()
         {
             var data = await _db.Donations.Where(d => d.Status == Donation.DonationStatusEnum.Success).ToListAsync();
@@ -106,7 +108,7 @@ namespace GiveAidCharity.Controllers
             return Json(list);
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "1Administrator, 2Moderator")]
         public async Task<ActionResult> GetDonations(string fromDate, string toDate)
         {
             Debug.WriteLine(fromDate + " " + toDate);
@@ -178,7 +180,8 @@ namespace GiveAidCharity.Controllers
                 amountPerMonth
             }, JsonRequestBehavior.AllowGet);
         }
-        [AllowAnonymous]
+
+        [Authorize(Roles = "1Administrator, 2Moderator")]
         public async Task<ActionResult> GetPaymentMethod()
         {
             var list = await _db.Donations.ToListAsync();
@@ -195,7 +198,7 @@ namespace GiveAidCharity.Controllers
                 paymentMethod
             }, JsonRequestBehavior.AllowGet);
         }
-        [AllowAnonymous]
+        [Authorize(Roles = "1Administrator, 2Moderator")]
         public async Task<ActionResult> GetProjectData()
         {
             var data = await _db.Projects.OrderByDescending(p => p.StartDate).Take(10).ToListAsync();
@@ -206,6 +209,7 @@ namespace GiveAidCharity.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Vote(string userId, string blogId, int? status)
@@ -258,6 +262,7 @@ namespace GiveAidCharity.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
         
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Follow(string userId, string projectId, int? status)

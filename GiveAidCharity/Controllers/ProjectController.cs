@@ -18,7 +18,7 @@ using Microsoft.AspNet.Identity.Owin;
 
 namespace GiveAidCharity.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "1Administrator, 2Moderator")]
     public class ProjectController : Controller
     {
         private readonly ApplicationDbContext _db = new ApplicationDbContext();

@@ -341,6 +341,7 @@ namespace GiveAidCharity.Controllers
 
             return View(projectInCategory);
         }
+
         public ActionResult Blogs(int? page, int? limit)
         {
             if (page == null)

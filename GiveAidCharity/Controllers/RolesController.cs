@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using GiveAidCharity.Models;
 using GiveAidCharity.Models.HelperClass;
@@ -12,6 +9,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace GiveAidCharity.Controllers
 {
+    [Authorize(Roles = "1Administrator, 2Moderator")]
     public class RolesController : Controller
     {
         private readonly ApplicationDbContext _db = new ApplicationDbContext();

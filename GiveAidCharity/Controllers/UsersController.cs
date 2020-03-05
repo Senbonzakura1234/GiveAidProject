@@ -17,7 +17,7 @@ using Microsoft.AspNet.Identity.Owin;
 
 namespace GiveAidCharity.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "1Administrator, 2Moderator")]
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
@@ -167,7 +167,7 @@ namespace GiveAidCharity.Controllers
                 return HttpNotFound();
             }
 
-            var userRole = new UpdateRoleViewModal
+            var userRole = new UpdateRoleViewModel
             {
                 UserId = user.Id,
                 Role = GetUserRoleName(user.Id) ?? "1Administrator"
@@ -176,13 +176,23 @@ namespace GiveAidCharity.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UpdateRole(UpdateRoleViewModal modal)
+        [Authorize(Roles = "1Administrator")]
+        public async Task<ActionResult> UpdateRole(UpdateRoleViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return View(modal);
+                return View(model);
             }
-            await UserManager.AddToRoleAsync(modal.UserId, modal.Role);
+
+            try
+            {
+                await UserManager.AddToRoleAsync(model.UserId, model.Role);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return View(model);
+            }
             return RedirectToAction("Index");
         }
     }
