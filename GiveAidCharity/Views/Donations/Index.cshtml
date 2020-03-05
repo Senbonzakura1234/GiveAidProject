@@ -259,7 +259,7 @@
                                             </a>
                                         </td>
                                         <td class="d-none d-xl-table-cell ">
-                                            <a class="badge text-white w-100
+                                            <a href="@Url.Action("EditStatus", new{id = item.Id})" class="badge text-white w-100
                                                 @(item.Status == Donation.DonationStatusEnum.Success ? "badge-gradient-primary"
                                                 : item.Status == Donation.DonationStatusEnum.Pending ? "badge-gradient-warning"
                                                 : "badge-secondary")">

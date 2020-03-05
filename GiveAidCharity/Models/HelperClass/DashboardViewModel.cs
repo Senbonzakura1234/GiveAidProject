@@ -172,4 +172,15 @@ namespace GiveAidCharity.Models.HelperClass
         [Required]
         public string Role { get; set; }
     }
+
+    public class EditStatusDonationViewModel
+    {
+        public string Id { get; set; }
+        public Donation.DonationStatusEnum Status { get; set; }
+    }
+    public class EditStatusBlogViewModel
+    {
+        public string Id { get; set; }
+        public Blog.BlogStatusEnum Status { get; set; }
+    }
 }

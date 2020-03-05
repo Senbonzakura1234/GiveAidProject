@@ -1,17 +1,16 @@
-﻿@model GiveAidCharity.Models.HelperClass.EditProjectStatusViewModel
+﻿@model GiveAidCharity.Models.HelperClass.EditStatusDonationViewModel
 
 @{
-    ViewBag.Title = "UpdateStatus";
+    ViewBag.Title = "EditStatus";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
-
 <div class="row">
     <div class="col-md-8 mx-auto grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Category</h4>
                 <p class="card-description">Create New</p>
-                @using (Html.BeginForm("CreateProject", "Project", FormMethod.Post))
+                @using (Html.BeginForm("EditStatus", "Donations", FormMethod.Post))
                 {
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(model => model.Id)

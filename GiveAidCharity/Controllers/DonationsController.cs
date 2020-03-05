@@ -230,6 +230,48 @@ namespace GiveAidCharity.Controllers
             return View(donation);
         }
 
+        public async Task<ActionResult> EditStatus(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var donation = await _db.Donations.FindAsync(id);
+            if (donation == null)
+            {
+                return HttpNotFound();
+            }
+
+            var data = new EditStatusDonationViewModel
+            {
+                Id = donation.Id,
+                Status = donation.Status
+            };
+
+            return View(data);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditStatus(EditStatusDonationViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var res = _db.Donations.Find(model.Id);
+            if (res == null)
+            {
+                return HttpNotFound();
+            }
+
+            res.Status = model.Status;
+            res.UpdatedAt = HelperMethod.GetCurrentDateTimeWithTimeZone(DateTime.UtcNow);
+            _db.Entry(res).State = EntityState.Modified;
+            _db.SaveChanges();
+
+            return RedirectToAction("Index", "Dashboard");
+        }
         //// GET: Donations/Create
         //public ActionResult Create()
         //{
